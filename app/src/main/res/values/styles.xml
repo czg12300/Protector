@@ -1,0 +1,21 @@
+<resources>
+
+    <style name="activity_style" parent="base_activity_style"></style>
+
+    <style name="swipe_activity_style" parent="base_swipe_activity_style"></style>
+
+    <style name="app_theme" parent="AppBaseTheme"></style>
+
+    <style name="btn_blue">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:textColor">@drawable/text_selector_btn_blue</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:background">@drawable/btn_selector_blue</item>
+    </style>
+    <!-- 上面进出动画样式 -->
+    <style name="slide_top_bottom_animation" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/hucn_slide_in_top</item>
+        <item name="android:windowExitAnimation">@anim/hucn_slide_out_top</item>
+    </style>
+</resources>

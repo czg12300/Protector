@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">守护者</string>
+    <string name="register">注册</string>
+    <string name="register_btn">注册并登录</string>
+    <string name="register_title">新用户注册</string>
+    <string name="forget_pw">忘记密码</string>
+    <string name="pw_hint">输入密码</string>
+    <string name="mobile_hint">输入手机号码 </string>
+    <string name="set_pw_hint">设置密码</string>
+    <string name="code_hint">输入验证码</string>
+    <string name="code_btn">发送验证码</string>
+    <string name="login">登录</string>
+    <string name="login_ing">登录中</string>
+    <string name="login_title">欢迎使用守护者</string>
+</resources>
