@@ -17,7 +17,7 @@ public class RegisterActivity extends CommonTitleActivity implements View.OnClic
 
     private ImageEditText mEvPw;
 
-    private EditText mEvCode;
+    private ImageEditText mEvCode;
 
     private Button mBtnOk;
 
@@ -29,7 +29,7 @@ public class RegisterActivity extends CommonTitleActivity implements View.OnClic
         setContentView(R.layout.activity_register);
         mEvMobile = (ImageEditText) findViewById(R.id.ev_mobile);
         mEvPw = (ImageEditText) findViewById(R.id.ev_pw);
-        mEvCode = (EditText) findViewById(R.id.ev_code);
+        mEvCode = (ImageEditText) findViewById(R.id.ev_code);
         mBtnOk = (Button) findViewById(R.id.btn_ok);
         mBtnCode = (Button) findViewById(R.id.btn_code);
 
@@ -37,8 +37,10 @@ public class RegisterActivity extends CommonTitleActivity implements View.OnClic
         mEvPw.setLeftDrawable(R.drawable.img_selector_pw_left_select);
         mEvMobile.setInputType(InputType.TYPE_CLASS_PHONE);
         mEvPw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        mEvCode.setInputType(InputType.TYPE_CLASS_TEXT);
         mEvMobile.setHint(R.string.mobile_hint);
         mEvPw.setHint(R.string.set_pw_hint);
+        mEvCode.setHint(R.string.code_hint);
         mBtnOk.setOnClickListener(this);
         mBtnCode.setOnClickListener(this);
     }

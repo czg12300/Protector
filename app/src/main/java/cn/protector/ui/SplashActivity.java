@@ -6,7 +6,6 @@ import android.os.Message;
 import android.widget.ImageView;
 
 import cn.common.ui.activity.BaseWorkerFragmentActivity;
-import cn.protector.MainActivity;
 import cn.protector.R;
 
 /**

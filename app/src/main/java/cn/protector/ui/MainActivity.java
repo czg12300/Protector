@@ -1,9 +1,10 @@
 
-package cn.protector;
+package cn.protector.ui;
 
 import android.os.Bundle;
 
 import cn.common.ui.activity.BaseWorkerFragmentActivity;
+import cn.protector.R;
 
 public class MainActivity extends BaseWorkerFragmentActivity {
     @Override

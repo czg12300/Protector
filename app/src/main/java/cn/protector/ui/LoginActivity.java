@@ -61,6 +61,7 @@ public class LoginActivity extends CommonTitleActivity
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
             showTipDialog(R.drawable.ico_spinner_white, R.string.login_ing, true);
+            goActivity(MainActivity.class);
         } else if (v.getId() == R.id.tv_register) {
             goActivity(RegisterActivity.class);
         } else if (v.getId() == R.id.tv_forget) {
