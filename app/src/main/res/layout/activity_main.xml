@@ -1,16 +1,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context=".MainActivity">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/v_line" />
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/rg_menu"
+        android:background="@color/gray_cccccc" />
+
+    <RadioGroup
+        android:id="@+id/rg_menu"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_bottom_menu_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white_f9f9f9"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rb_menu_location"
+            style="@style/main_menu"
+            android:checked="true"
+            android:drawableTop="@drawable/ic_launcher"
+            android:text="@string/main_location" />
+
+        <RadioButton
+            android:id="@+id/rb_menu_history"
+            style="@style/main_menu"
+            android:drawableTop="@drawable/ic_launcher"
+            android:text="@string/main_history" />
+
+        <RadioButton
+            android:id="@+id/rb_menu_message"
+            style="@style/main_menu"
+            android:drawableTop="@drawable/ic_launcher"
+            android:text="@string/main_message" />
+
+        <RadioButton
+            android:id="@+id/rb_menu_health"
+            style="@style/main_menu"
+            android:drawableTop="@drawable/ic_launcher"
+            android:text="@string/main_health" />
+
+        <RadioButton
+            android:id="@+id/rb_menu_setting"
+            style="@style/main_menu"
+            android:drawableTop="@drawable/ic_launcher"
+            android:text="@string/main_setting" />
+    </RadioGroup>
 
 </RelativeLayout>

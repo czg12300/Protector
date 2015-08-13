@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -43,7 +44,9 @@ public abstract class BaseFragment extends Fragment implements IUi {
             if (mActivityReference.get() != null) {
                 mActivityReference.get().handleUiMessage(msg);
             }
-        };
+        }
+
+        ;
     }
 
     private ArrayList<String> mActions;
@@ -54,7 +57,8 @@ public abstract class BaseFragment extends Fragment implements IUi {
         return getActivity().getLayoutInflater();
     }
 
-    protected View convertView;
+
+    private FrameLayout mDecorView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,16 +130,25 @@ public abstract class BaseFragment extends Fragment implements IUi {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        convertView = initView();
-        return convertView;
+                             Bundle savedInstanceState) {
+        mDecorView = new FrameLayout(getActivity());
+        initView();
+        return mDecorView;
     }
 
     protected View findViewById(int id) {
-        return convertView.findViewById(id);
+        return mDecorView.findViewById(id);
     }
 
-    public abstract View initView();
+    public abstract void initView();
+
+    public void setContentView(int layoutId) {
+        getLayoutInflater().inflate(layoutId, mDecorView);
+    }
+
+    public void setContentView(View view) {
+        mDecorView.addView(view, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    }
 
     @Override
     public void goActivity(Class<?> clazz) {
