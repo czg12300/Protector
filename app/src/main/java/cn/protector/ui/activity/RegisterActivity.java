@@ -1,10 +1,9 @@
 
-package cn.protector.ui;
+package cn.protector.ui.activity;
 
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import cn.protector.R;
 import cn.protector.ui.widget.ImageEditText;
@@ -12,7 +11,7 @@ import cn.protector.ui.widget.ImageEditText;
 /**
  * 登录页面
  */
-public class RegisterActivity extends CommonTitleActivity implements View.OnClickListener {
+public class RegisterActivity extends CommonTitleActivity {
     private ImageEditText mEvMobile;
 
     private ImageEditText mEvPw;
@@ -41,11 +40,8 @@ public class RegisterActivity extends CommonTitleActivity implements View.OnClic
         mEvMobile.setHint(R.string.mobile_hint);
         mEvPw.setHint(R.string.set_pw_hint);
         mEvCode.setHint(R.string.code_hint);
-        mBtnOk.setOnClickListener(this);
-        mBtnCode.setOnClickListener(this);
     }
 
-    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
             showTipDialog(R.drawable.ico_spinner_white, R.string.login_ing);

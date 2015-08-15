@@ -1,5 +1,5 @@
 
-package cn.protector.ui;
+package cn.protector.ui.activity;
 
 import android.graphics.Paint;
 import android.text.Editable;
@@ -17,7 +17,7 @@ import cn.protector.ui.widget.ImageEditText;
  * 登录页面
  */
 public class LoginActivity extends CommonTitleActivity
-        implements View.OnClickListener, TextWatcher {
+        implements TextWatcher {
     private ImageEditText mEvMobile;
 
     private ImageEditText mEvPw;
@@ -47,9 +47,6 @@ public class LoginActivity extends CommonTitleActivity
         mEvPw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         mEvMobile.setHint(R.string.mobile_hint);
         mEvPw.setHint(R.string.pw_hint);
-        mBtnOk.setOnClickListener(this);
-        mTvRegister.setOnClickListener(this);
-        mTvForgetPw.setOnClickListener(this);
         mEvPw.addTextChangedListener(this);
         mEvMobile.addTextChangedListener(this);
         mBtnOk.setEnabled(false);
@@ -57,11 +54,10 @@ public class LoginActivity extends CommonTitleActivity
         setHideInputView(R.id.root);
     }
 
-    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
             showTipDialog(R.drawable.ico_spinner_white, R.string.login_ing, true);
-            goActivity(MainActivity.class);
+            goActivity(AddDeviceActivity.class);
         } else if (v.getId() == R.id.tv_register) {
             goActivity(RegisterActivity.class);
         } else if (v.getId() == R.id.tv_forget) {

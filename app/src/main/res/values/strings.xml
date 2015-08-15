@@ -22,5 +22,9 @@
     <string name="main_health_title">健康</string>
     <string name="main_setting">设置</string>
     <string name="main_setting_title">设置</string>
+    <string name="add_device_hint">扫描产品说明书里面的二维码</string>
+    <string name="add_now">直接添加</string>
+    <string name="add_device_title">添加设备</string>
+    <string name="scan_qa_code_title">扫描二维码</string>
 
 </resources>

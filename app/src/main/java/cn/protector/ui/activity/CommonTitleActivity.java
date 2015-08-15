@@ -1,5 +1,5 @@
 
-package cn.protector.ui;
+package cn.protector.ui.activity;
 
 import android.text.TextUtils;
 import android.view.KeyEvent;

@@ -1,5 +1,5 @@
 
-package cn.protector.ui;
+package cn.protector.ui.activity;
 
 import android.os.Message;
 import android.support.v4.app.Fragment;

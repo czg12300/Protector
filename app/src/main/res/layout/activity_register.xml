@@ -1,5 +1,4 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -18,49 +17,37 @@
         <cn.protector.ui.widget.ImageEditText
             android:id="@+id/ev_mobile"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
+
             <cn.protector.ui.widget.ImageEditText
                 android:id="@+id/ev_code"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5dp"
-                android:layout_weight="1"/>
-            <!--<EditText-->
-            <!--android:id="@+id/ev_code"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginRight="5dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:background="@drawable/bg_selector_input_select"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:hint="@string/code_hint"-->
-            <!--android:paddingLeft="10dp"-->
-            <!--android:singleLine="true"-->
-            <!--android:textColor="@color/gray_757575"-->
-            <!--android:textColorHint="@color/gray_bababa"-->
-            <!--android:textSize="16dp"/>-->
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/btn_code"
                 android:layout_width="123dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/btn_selector_code"
+                android:onClick="onClick"
                 android:text="@string/code_btn"
                 android:textColor="@color/gray_757575"
-                android:textSize="16dp"/>
+                android:textSize="16dp" />
         </LinearLayout>
 
         <cn.protector.ui.widget.ImageEditText
             android:id="@+id/ev_pw"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp" />
 
 
         <RelativeLayout
@@ -70,9 +57,10 @@
             <Button
                 android:id="@+id/btn_ok"
                 style="@style/btn_blue"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="15dp"
-                android:text="@string/register_btn"/>
+                android:layout_marginTop="20dp"
+                android:onClick="onClick"
+                android:text="@string/register_btn" />
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

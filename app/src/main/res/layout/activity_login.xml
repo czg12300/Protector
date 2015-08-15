@@ -35,6 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:onClick="onClick"
                 android:paddingBottom="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
@@ -48,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/tv_register"
                 android:layout_alignParentRight="true"
+                android:onClick="onClick"
                 android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
@@ -65,6 +67,7 @@
                 style="@style/btn_blue"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="20dp"
+                android:onClick="onClick"
                 android:text="@string/login" />
         </RelativeLayout>
     </LinearLayout>
