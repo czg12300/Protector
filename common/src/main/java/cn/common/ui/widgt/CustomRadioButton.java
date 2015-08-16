@@ -1,9 +1,6 @@
 
 package cn.common.ui.widgt;
 
-import com.kugou.common.utils.BitmapUtil;
-import com.kugou.game.R;
-import com.kugou.game.utils.GameUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,9 +15,13 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.widget.RadioButton;
 
+import cn.common.R;
+import cn.common.utils.BitmapUtil;
+import cn.common.utils.DisplayUtil;
+
 /**
  * 描述:带消息提醒的RadioButton
- * 
+ *
  * @author chenys
  * @since 2013-11-6 下午5:05:12
  */
@@ -45,8 +46,7 @@ public class CustomRadioButton extends RadioButton {
     public CustomRadioButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupPaint();
-        bitmap = BitmapUtil.decodeResource(context.getResources(),
-                R.drawable.game_img_red_round_white_border);
+        bitmap = BitmapUtil.decodeResource(R.drawable.img_shadow_bottom);
     }
 
     private void setupPaint() {
@@ -118,8 +118,8 @@ public class CustomRadioButton extends RadioButton {
             paint.setAntiAlias(true);
             paint.setColor(Color.RED);
             paint.setStyle(Paint.Style.FILL);
-            canvas.drawCircle(t.right - offset, rect.top + GameUtil.dip2px(getContext(), 10),
-                    GameUtil.dip2px(getContext(), 5), paint);
+            canvas.drawCircle(t.right - offset, rect.top + DisplayUtil.dip(10),
+                    DisplayUtil.dip(5), paint);
 
         }
 

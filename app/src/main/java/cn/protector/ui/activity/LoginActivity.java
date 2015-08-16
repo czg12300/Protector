@@ -17,7 +17,7 @@ import cn.protector.ui.widget.ImageEditText;
  * 登录页面
  */
 public class LoginActivity extends CommonTitleActivity
-        implements TextWatcher {
+        implements TextWatcher, View.OnClickListener {
     private ImageEditText mEvMobile;
 
     private ImageEditText mEvPw;
@@ -50,10 +50,14 @@ public class LoginActivity extends CommonTitleActivity
         mEvPw.addTextChangedListener(this);
         mEvMobile.addTextChangedListener(this);
         mBtnOk.setEnabled(false);
+        mBtnOk.setOnClickListener(this);
+        mTvRegister.setOnClickListener(this);
+        mTvForgetPw.setOnClickListener(this);
         // 设置点击页面其他地方隐藏软键盘
         setHideInputView(R.id.root);
     }
 
+    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
             showTipDialog(R.drawable.ico_spinner_white, R.string.login_ing, true);
