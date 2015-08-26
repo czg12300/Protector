@@ -23,6 +23,7 @@ import android.hardware.Camera.PreviewCallback;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -132,8 +133,7 @@ public class CaptureHelper implements SurfaceHolder.Callback, Handler.Callback {
     /**
      * A valid barcode has been found, so give an indication of success and show
      * the results.
-     * 
-     * @param rawResult The contents of the barcode.
+     *
      * @param msg The extras
      */
     private void handleDecode(Message msg) {
@@ -163,18 +163,29 @@ public class CaptureHelper implements SurfaceHolder.Callback, Handler.Callback {
                 drawResultPoints(barcode, scaleFactor, rawResult);
             }
         }
-        if (mListener != null) {
-            mListener.handleCodeResult(code, barcode);
+        if (!TextUtils.isEmpty(code) && barcode != null) {
+            if (mListener != null) {
+                mListener.handleCodeResult(code, barcode);
+            }
+        } else {
+            scanQA();
         }
+    }
+
+    /**
+     * 开始扫描二维码
+     */
+    public void scanQA() {
+        mHandler.sendEmptyMessage(MSG_RESTART_PREVIEW);
     }
 
     /**
      * Superimpose a line for 1D or dots for 2D to highlight the key features of
      * the barcode.
      *
-     * @param barcode A bitmap of the captured image.
+     * @param barcode     A bitmap of the captured image.
      * @param scaleFactor amount by which thumbnail was scaled
-     * @param rawResult The decoded results which contains the points to draw.
+     * @param rawResult   The decoded results which contains the points to draw.
      */
     private void drawResultPoints(Bitmap barcode, float scaleFactor, Result rawResult) {
         ResultPoint[] points = rawResult.getResultPoints();
@@ -204,7 +215,7 @@ public class CaptureHelper implements SurfaceHolder.Callback, Handler.Callback {
     }
 
     private void drawLine(Canvas canvas, Paint paint, ResultPoint a, ResultPoint b,
-            float scaleFactor) {
+                          float scaleFactor) {
         if (a != null && b != null) {
             canvas.drawLine(scaleFactor * a.getX(), scaleFactor * a.getY(), scaleFactor * b.getX(),
                     scaleFactor * b.getY(), paint);
@@ -277,7 +288,7 @@ public class CaptureHelper implements SurfaceHolder.Callback, Handler.Callback {
 
     /**
      * 设置打开闪光灯
-     * 
+     *
      * @param isOn
      */
     public void setTorch(boolean isOn) {

@@ -1,6 +1,7 @@
 
 package cn.protector.ui.activity;
 
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -81,10 +82,30 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
 
     /**
      * 显示提示的dialog
-     * 
-     * @param imgId
-     * @param strId
      */
+    public void showErrorTip(int strId) {
+        showTipDialog(R.drawable.ico_error_white, strId);
+    }
+
+    public void showSuccessTip(int strId) {
+        showTipDialog(R.drawable.ico_complete_white, strId);
+    }
+
+    public void showLoadingTip(int strId) {
+        showTipDialog(R.drawable.ico_spinner_white, strId, true);
+    }
+
+    public void showErrorTip(String strId) {
+        showTipDialog(R.drawable.ico_error_white, strId);
+    }
+
+    public void showSuccessTip(String strId) {
+        showTipDialog(R.drawable.ico_complete_white, strId);
+    }
+
+    public void showLoadingTip(String strId) {
+        showTipDialog(R.drawable.ico_spinner_white, strId, true);
+    }
 
     public void showTipDialog(int imgId, int strId) {
         showTipDialog(imgId, strId, false);
@@ -105,6 +126,12 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
             mTipDialog.setWindow(R.style.slide_top_bottom_animation, 0.0f);
             mIvTip = (ImageView) mTipDialog.findViewById(R.id.iv_tip);
             mTvTip = (TextView) mTipDialog.findViewById(R.id.tv_tip);
+            mTipDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    onTipDismiss();
+                }
+            });
         }
         mIvTip.setImageResource(imgId);
         if (!TextUtils.isEmpty(str)) {
@@ -120,6 +147,9 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
             animation.startNow();
         }
         mTipDialog.show();
+    }
+
+    protected void onTipDismiss() {
     }
 
     /**

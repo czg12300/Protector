@@ -60,7 +60,7 @@ public class LoginActivity extends CommonTitleActivity
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
-            showTipDialog(R.drawable.ico_spinner_white, R.string.login_ing, true);
+            showLoadingTip( R.string.login_ing);
             goActivity(AddDeviceActivity.class);
         } else if (v.getId() == R.id.tv_register) {
             goActivity(RegisterActivity.class);

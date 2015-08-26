@@ -16,5 +16,6 @@
     <color name="black_333333">#333333</color>
     <color name="trans">#00000000</color>
     <color name="trans_90000000">#90000000</color>
+    <color name="trans_60000000">#60000000</color>
 
 </resources>

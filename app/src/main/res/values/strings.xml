@@ -26,5 +26,6 @@
     <string name="add_now">直接添加</string>
     <string name="add_device_title">添加设备</string>
     <string name="scan_qa_code_title">扫描二维码</string>
+    <string name="bind_device_ing">绑定中\n请耐心等待...</string>
 
 </resources>
