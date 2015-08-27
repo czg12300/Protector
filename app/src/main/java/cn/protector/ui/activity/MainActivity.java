@@ -8,12 +8,12 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import cn.common.ui.activity.BaseTitleActivity;
 import cn.protector.R;
 import cn.protector.ui.adapter.CommonFragmentPagerAdapter;
 import cn.protector.ui.fragment.SettingFragment;
+
+import java.util.ArrayList;
 
 public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
     private CommonFragmentPagerAdapter mMainPageAdapter;
@@ -21,7 +21,11 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
     private RadioGroup mRgMenu;
     private static final int UI_MESSAGE_INIT = 0x1f;
     private TextView mTvTitle;
-    private static final int[] TITLE_IDS = {R.string.main_location_title, R.string.main_history_title, R.string.main_message_title, R.string.main_health_title, R.string.main_setting_title};
+
+    private static final int[] TITLE_IDS = {
+            R.string.title_main_location, R.string.title_main_history, R.string.title_main_message,
+            R.string.title_main_health, R.string.title_main_setting
+    };
 
     @Override
     protected void setTitle(String title) {

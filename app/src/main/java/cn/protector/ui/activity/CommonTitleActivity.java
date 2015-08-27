@@ -36,6 +36,7 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
                 onBack();
             }
         });
+        setBackgroundColor(getResources().getColor(R.color.background_gray));
         return vTitle;
     }
 

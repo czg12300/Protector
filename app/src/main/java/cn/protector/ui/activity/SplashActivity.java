@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import cn.common.ui.activity.BaseWorkerFragmentActivity;
 import cn.protector.R;
+import cn.protector.ui.activity.usercenter.LoginActivity;
 
 /**
  * 启动页面

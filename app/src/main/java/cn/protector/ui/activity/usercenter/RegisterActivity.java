@@ -1,11 +1,12 @@
 
-package cn.protector.ui.activity;
+package cn.protector.ui.activity.usercenter;
 
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 
 import cn.protector.R;
+import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.widget.ImageEditText;
 
 /**
@@ -24,7 +25,7 @@ public class RegisterActivity extends CommonTitleActivity {
 
     @Override
     protected void initView() {
-        setTitle(R.string.register_title);
+        setTitle(R.string.title_register);
         setContentView(R.layout.activity_register);
         mEvMobile = (ImageEditText) findViewById(R.id.ev_mobile);
         mEvPw = (ImageEditText) findViewById(R.id.ev_pw);

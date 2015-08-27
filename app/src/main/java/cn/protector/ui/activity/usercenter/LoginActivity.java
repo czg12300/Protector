@@ -1,5 +1,5 @@
 
-package cn.protector.ui.activity;
+package cn.protector.ui.activity.usercenter;
 
 import android.graphics.Paint;
 import android.text.Editable;
@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import cn.protector.R;
+import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.widget.ImageEditText;
 
 /**
@@ -60,7 +61,7 @@ public class LoginActivity extends CommonTitleActivity
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
-            showLoadingTip( R.string.login_ing);
+            showLoadingTip(R.string.login_ing);
             goActivity(AddDeviceActivity.class);
         } else if (v.getId() == R.id.tv_register) {
             goActivity(RegisterActivity.class);

@@ -32,6 +32,10 @@ public abstract class BaseTitleActivity extends BaseSwipeBackFragmentActivity {
         initView();
     }
 
+    protected void setBackgroundColor(int color) {
+        mFlContent.setBackgroundColor(color);
+    }
+
     protected abstract View getTitleLayoutView();
 
     protected abstract void initView();

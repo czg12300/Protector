@@ -1,8 +1,20 @@
 <resources>
+    <!--标题 start-->
+    <string name="title_register">新用户注册</string>
+    <string name="title_main_history">历史</string>
+    <string name="title_main_location">定位</string>
+    <string name="title_main_message">消息</string>
+    <string name="title_main_health">健康</string>
+    <string name="title_main_setting">设置</string>
+    <string name="title_add_device">添加设备</string>
+    <string name="title_scan_qa_code">扫描二维码</string>
+    <string name="title_finish_info">完善资料</string>
+    <string name="title_relationship">我与宝贝关系</string>
+    <string name="title_choose_avator">选择头像</string>
+    <!--标题 end-->
     <string name="app_name">守护者</string>
     <string name="register">注册</string>
     <string name="register_btn">注册并登录</string>
-    <string name="register_title">新用户注册</string>
     <string name="forget_pw">忘记密码</string>
     <string name="pw_hint">输入密码</string>
     <string name="mobile_hint">输入手机号码 </string>
@@ -13,19 +25,26 @@
     <string name="login_ing">登录中</string>
     <string name="login_title">欢迎使用守护者</string>
     <string name="main_location">定位</string>
-    <string name="main_location_title">定位</string>
     <string name="main_history">历史</string>
-    <string name="main_history_title">历史</string>
     <string name="main_message">消息</string>
-    <string name="main_message_title">消息</string>
     <string name="main_health">健康</string>
-    <string name="main_health_title">健康</string>
     <string name="main_setting">设置</string>
-    <string name="main_setting_title">设置</string>
     <string name="add_device_hint">扫描产品说明书里面的二维码</string>
     <string name="add_now">直接添加</string>
-    <string name="add_device_title">添加设备</string>
-    <string name="scan_qa_code_title">扫描二维码</string>
-    <string name="bind_device_ing">绑定中\n请耐心等待...</string>
+    <string name="bind_device_ing">绑定中/n请耐心等待...</string>
+    <string name="next_step">下一步</string>
+    <string name="submit">提交</string>
+    <string name="baby_avator">宝贝头像</string>
+    <string name="baby_name">宝贝姓名</string>
+    <string name="baby_birthday">宝贝生日</string>
+    <string name="baby_sex">宝贝性别</string>
+    <string name="baby_nickname">宝贝昵称</string>
+    <string name="shoe_size">鞋子尺码</string>
+    <string name="shoe_size_hint">选择尺码</string>
+    <string name="relationship">关    系</string>
+    <string name="baby">宝宝</string>
+    <string name="relationship_hint">填写关系</string>
+    <string name="baby_name_hint">填写昵称</string>
+    <string name="birthday_hint">选择日期</string>
 
 </resources>

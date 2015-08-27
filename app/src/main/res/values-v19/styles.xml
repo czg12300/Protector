@@ -1,8 +1,10 @@
 <resources>
 
-    <style name="activity_style" parent="base_activity_style"></style>
+    <style name="activity_style" parent="base_activity_style">
+    </style>
 
-    <style name="swipe_activity_style" parent="base_swipe_activity_style"></style>
+    <style name="swipe_activity_style" parent="base_swipe_activity_style">
+    </style>
 
     <style name="app_theme" parent="AppBaseTheme"></style>
 </resources>

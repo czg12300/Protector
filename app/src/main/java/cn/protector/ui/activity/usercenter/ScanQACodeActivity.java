@@ -1,5 +1,8 @@
 
-package cn.protector.ui.activity;
+package cn.protector.ui.activity.usercenter;
+
+import com.google.zxing.ResultPoint;
+import com.helper.CaptureHelper;
 
 import android.graphics.Bitmap;
 import android.view.SurfaceView;
@@ -9,10 +12,8 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
-import com.google.zxing.ResultPoint;
-import com.helper.CaptureHelper;
-
 import cn.protector.R;
+import cn.protector.ui.activity.CommonTitleActivity;
 
 /**
  * 扫描二维码页面
@@ -31,7 +32,7 @@ public class ScanQACodeActivity extends CommonTitleActivity {
     @Override
     protected void initView() {
         setContentView(R.layout.activity_scan_qa_code);
-        setTitle(R.string.scan_qa_code_title);
+        setTitle(R.string.title_scan_qa_code);
         mIvScanLine = (ImageView) findViewById(R.id.iv_scan_line);
         mIvShadowScanFrame = (ImageView) findViewById(R.id.iv_shadow_frame_scan);
         mSvCamera = (SurfaceView) findViewById(R.id.sv_camera);

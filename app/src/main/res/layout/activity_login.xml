@@ -1,7 +1,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
     <LinearLayout
         android:id="@+id/root"
@@ -17,13 +17,13 @@
         <cn.protector.ui.widget.ImageEditText
             android:id="@+id/ev_mobile"
             android:layout_width="match_parent"
-            android:layout_height="40dp" />
+            android:layout_height="40dp"/>
 
         <cn.protector.ui.widget.ImageEditText
             android:id="@+id/ev_pw"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:paddingTop="10dp"
                 android:text="@string/register"
                 android:textColor="@color/gray_757575"
-                android:textSize="16dp" />
+                android:textSize="16dp"/>
 
             <TextView
                 android:id="@+id/tv_forget"
@@ -53,7 +53,7 @@
                 android:paddingTop="10dp"
                 android:text="@string/forget_pw"
                 android:textColor="@color/gray_757575"
-                android:textSize="16dp" />
+                android:textSize="16dp"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -65,7 +65,7 @@
                 style="@style/btn_blue"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/login" />
+                android:text="@string/login"/>
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>
