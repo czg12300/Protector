@@ -1,11 +1,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <SurfaceView
         android:id="@+id/sv_camera"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:paddingTop="30dp"
             android:text="@string/add_device_hint"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_content" />
+            android:textSize="@dimen/text_content"/>
 
         <RelativeLayout
             android:id="@+id/rl_frame"
@@ -42,7 +42,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
-                    android:src="@drawable/img_scanline" />
+                    android:src="@drawable/img_scanline"/>
             </RelativeLayout>
 
             <ImageView
@@ -50,7 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:visibility="gone" />
+                android:src="@color/trans_60000000"
+                android:visibility="gone"/>
         </RelativeLayout>
 
         <View
@@ -59,7 +60,7 @@
             android:layout_height="@dimen/qa_scan_frame"
             android:layout_below="@+id/v_shadow_top"
             android:layout_toLeftOf="@+id/rl_frame"
-            android:background="@color/trans_60000000" />
+            android:background="@color/trans_60000000"/>
 
         <View
             android:id="@+id/v_shadow_right"
@@ -67,13 +68,13 @@
             android:layout_height="@dimen/qa_scan_frame"
             android:layout_below="@+id/v_shadow_top"
             android:layout_toRightOf="@+id/rl_frame"
-            android:background="@color/trans_60000000" />
+            android:background="@color/trans_60000000"/>
 
         <View
             android:id="@+id/v_shadow_bottom"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/rl_frame"
-            android:background="@color/trans_60000000" />
+            android:background="@color/trans_60000000"/>
     </RelativeLayout>
 </FrameLayout>

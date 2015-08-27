@@ -44,7 +44,7 @@ public class RegisterActivity extends CommonTitleActivity {
 
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
-            showTipDialog(R.drawable.ico_spinner_white, R.string.login_ing);
+            showLoadingTip(R.string.login_ing);
         } else if (v.getId() == R.id.tv_register) {
         } else if (v.getId() == R.id.tv_forget) {
         }

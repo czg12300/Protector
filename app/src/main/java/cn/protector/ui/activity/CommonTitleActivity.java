@@ -84,42 +84,46 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
      * 显示提示的dialog
      */
     public void showErrorTip(int strId) {
-        showTipDialog(R.drawable.ico_error_white, strId);
+        showErrorTip(getString(strId));
     }
 
     public void showSuccessTip(int strId) {
-        showTipDialog(R.drawable.ico_complete_white, strId);
+        showSuccessTip(getString(strId));
     }
 
     public void showLoadingTip(int strId) {
-        showTipDialog(R.drawable.ico_spinner_white, strId, true);
+        showLoadingTip(getString(strId));
     }
 
-    public void showErrorTip(String strId) {
-        showTipDialog(R.drawable.ico_error_white, strId);
+    public void showLoadingTip(int strId, boolean canCancel) {
+        showLoadingTip(getString(strId), canCancel);
     }
 
-    public void showSuccessTip(String strId) {
-        showTipDialog(R.drawable.ico_complete_white, strId);
+    public void showErrorTip(String str) {
+        showTipDialog(R.drawable.ico_error_white, str);
     }
 
-    public void showLoadingTip(String strId) {
-        showTipDialog(R.drawable.ico_spinner_white, strId, true);
+    public void showSuccessTip(String str) {
+        showTipDialog(R.drawable.ico_complete_white, str);
     }
 
-    public void showTipDialog(int imgId, int strId) {
-        showTipDialog(imgId, strId, false);
+    public void showLoadingTip(String str) {
+        showTipDialog(R.drawable.ico_spinner_white, str, true);
     }
 
-    public void showTipDialog(int imgId, String str) {
-        showTipDialog(imgId, str, false);
+    public void showLoadingTip(String str, boolean canCancel) {
+        showTipDialog(R.drawable.ico_spinner_white, str, canCancel, true);
     }
 
-    protected void showTipDialog(int imgId, int strId, boolean isRotate) {
-        showTipDialog(imgId, getString(strId), isRotate);
+    protected void showTipDialog(int imgId, String str) {
+        showTipDialog(imgId, str, false, false);
     }
 
     protected void showTipDialog(int imgId, String str, boolean isRotate) {
+        showTipDialog(imgId, str, false, isRotate);
+    }
+
+    protected void showTipDialog(int imgId, String str, boolean canCancel, boolean isRotate) {
         if (mTipDialog == null) {
             mTipDialog = new LoadingDialog(this);
             mTipDialog.setContentView(R.layout.dialog_tip);
@@ -133,6 +137,7 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
                 }
             });
         }
+        mTipDialog.setCanceledOnTouchOutside(canCancel);
         mIvTip.setImageResource(imgId);
         if (!TextUtils.isEmpty(str)) {
             mTvTip.setText(str);

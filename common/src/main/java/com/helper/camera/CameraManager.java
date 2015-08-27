@@ -105,6 +105,10 @@ public final class CameraManager implements Camera.AutoFocusCallback {
         return camera;
     }
 
+    public synchronized boolean isOpened() {
+        return mCamera != null;
+    }
+
     /**
      * Opens the camera driver and initializes the hardware parameters.
      *
@@ -113,7 +117,7 @@ public final class CameraManager implements Camera.AutoFocusCallback {
      * @throws IOException Indicates the camera driver failed to open.
      */
     public synchronized void openDriver(SurfaceHolder holder) throws IOException {
-        if (mCamera != null) {
+        if (isOpened()) {
             return;
         } else {
             mCamera = open(requestedCameraId);
