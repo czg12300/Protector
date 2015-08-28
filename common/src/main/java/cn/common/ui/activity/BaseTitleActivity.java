@@ -3,6 +3,7 @@ package cn.common.ui.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import cn.common.ui.widgt.ChangeThemeUtils;
 
 public abstract class BaseTitleActivity extends BaseSwipeBackFragmentActivity {
     private FrameLayout mFlTitle;
+
+    private static final int MSG_UI_INITDATA = 10000;
 
     private FrameLayout mFlContent;
 
@@ -30,6 +33,8 @@ public abstract class BaseTitleActivity extends BaseSwipeBackFragmentActivity {
         super.setContentView(layout);
         setTitleLayout(getTitleLayoutView());
         initView();
+        initEvent();
+        sendEmptyUiMessage(MSG_UI_INITDATA);
     }
 
     protected void setBackgroundColor(int color) {
@@ -38,7 +43,31 @@ public abstract class BaseTitleActivity extends BaseSwipeBackFragmentActivity {
 
     protected abstract View getTitleLayoutView();
 
+    /**
+     * 初始化view
+     */
     protected abstract void initView();
+
+    /**
+     * 初始化事件
+     */
+    protected void initEvent() {
+    }
+
+    @Override
+    public void handleUiMessage(Message msg) {
+        switch (msg.what) {
+            case MSG_UI_INITDATA:
+                initData();
+                break;
+        }
+    }
+
+    /**
+     * 初始化数据
+     */
+    protected void initData() {
+    }
 
     @Override
     public void setContentView(int layoutResID) {

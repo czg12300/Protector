@@ -1,6 +1,8 @@
 
 package cn.protector.ui.activity.usercenter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Editable;
 import android.text.InputType;
@@ -10,7 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
+
 import cn.protector.R;
+import cn.protector.data.BroadcastActivions;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.widget.ImageEditText;
 
@@ -48,14 +53,18 @@ public class LoginActivity extends CommonTitleActivity
         mEvPw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         mEvMobile.setHint(R.string.mobile_hint);
         mEvPw.setHint(R.string.pw_hint);
+        // 设置点击页面其他地方隐藏软键盘
+        setHideInputView(R.id.root);
+    }
+
+    @Override
+    protected void initEvent() {
         mEvPw.addTextChangedListener(this);
         mEvMobile.addTextChangedListener(this);
         mBtnOk.setEnabled(false);
         mBtnOk.setOnClickListener(this);
         mTvRegister.setOnClickListener(this);
         mTvForgetPw.setOnClickListener(this);
-        // 设置点击页面其他地方隐藏软键盘
-        setHideInputView(R.id.root);
     }
 
     @Override
@@ -66,6 +75,21 @@ public class LoginActivity extends CommonTitleActivity
         } else if (v.getId() == R.id.tv_register) {
             goActivity(RegisterActivity.class);
         } else if (v.getId() == R.id.tv_forget) {
+        }
+    }
+
+    @Override
+    public void setupBroadcastActions(List<String> actions) {
+        super.setupBroadcastActions(actions);
+        actions.add(BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+    }
+
+    @Override
+    public void handleBroadcast(Context context, Intent intent) {
+        super.handleBroadcast(context, intent);
+        String action = intent.getAction();
+        if (TextUtils.equals(action, BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+            finish();
         }
     }
 

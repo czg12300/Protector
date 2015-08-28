@@ -1,0 +1,89 @@
+<LinearLayout
+    android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="afterDescendants"
+    android:orientation="vertical"
+    android:paddingTop="25dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/baby_nickname"
+                android:textColor="@color/text_content"
+                android:textSize="@dimen/text_content"/>
+
+            <EditText
+                android:id="@+id/ev_baby_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:background="@color/trans"
+                android:hint="@string/baby_nickname_hint"
+                android:textColor="@color/text_content"
+                android:textColorHint="@color/gray_999999"
+                android:textSize="@dimen/text_content"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/divider_menu"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/relationship"
+                android:textColor="@color/text_content"
+                android:textSize="@dimen/text_content"/>
+
+            <EditText
+                android:id="@+id/ev_baby_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:background="@color/trans"
+                android:hint="@string/relationship_hint"
+                android:textColor="@color/text_content"
+                android:textColorHint="@color/gray_999999"
+                android:textSize="@dimen/text_content"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_submit"
+        style="@style/btn_blue"
+        android:layout_margin="15dp"
+        android:background="@drawable/btn_selector_blue_r"
+        android:text="@string/submit"
+        android:textColor="@drawable/text_selector_btn_blue_r"/>
+</LinearLayout>

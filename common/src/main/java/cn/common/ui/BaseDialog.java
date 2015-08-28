@@ -1,17 +1,19 @@
 
-package cn.protector.ui.widget;
+package cn.common.ui;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
-public class LoadingDialog extends Dialog {
+/**
+ * 描述：dialog的父类 Created by jakechen on 2015/8/28.
+ */
+public class BaseDialog extends Dialog {
+
     public static final int ANIMATION_ALPHA_IN_OUT = 0;
 
     public static final int ANIMATION_UP_TO_DOWN = 1;
@@ -26,38 +28,14 @@ public class LoadingDialog extends Dialog {
 
     private Window window = null;
 
-    public LoadingDialog(Context context) {
+    public BaseDialog(Context context) {
         super(context);
         window = getWindow(); // 得到对话框
     }
 
-    // private boolean hasSetWindow = false;
-
-    // public void showDialog(int layoutResID) {
-    // hasSetWindow = true;
-    // showDialog(layoutResID, 0, 0);
-    // }
-    //
-    // public void showDialog(int layoutResID, int x, int y) {
-    // setContentView(layoutResID);
-    // if (!hasSetWindow) {
-    // setWindow(x, y);
-    // }
-    // // 设置触摸对话框意外的地方取消对话框
-    // setCanceledOnTouchOutside(true);
-    // show();
-    // }
-
     // 设置窗口显示
     public void setWindow(int animStyle, float showDimAmount) {
         setWindow(DEFAULT_INT, DEFAULT_INT, animStyle, showDimAmount);
-    }
-
-    public void setLoadingText(String text, int tvId) {
-        if (!TextUtils.isEmpty(text)) {
-            TextView tv = (TextView) findViewById(tvId);
-            tv.setText(text);
-        }
     }
 
     public void setWindow(int x, int y) {

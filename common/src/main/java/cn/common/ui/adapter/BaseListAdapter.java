@@ -24,9 +24,17 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
     }
 
     public BaseListAdapter(Context context) {
+        this(context, null);
+    }
+
+    public BaseListAdapter(Context context, List<T> list) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        mDataList = new ArrayList<T>();
+        if (isAvailable(list)) {
+            mDataList = list;
+        } else {
+            mDataList = new ArrayList<T>();
+        }
     }
 
     public void setData(List<T> list) {
@@ -34,6 +42,14 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
             mDataList = list;
             notifyDataSetChanged();
         }
+    }
+
+    protected boolean isAvailable(List<T> list) {
+        return list != null && list.size() > 0;
+    }
+
+    protected boolean isAvailable(T t) {
+        return t != null;
     }
 
     public void addAll(List<T> list) {

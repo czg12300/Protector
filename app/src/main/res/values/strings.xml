@@ -39,12 +39,17 @@
     <string name="baby_birthday">宝贝生日</string>
     <string name="baby_sex">宝贝性别</string>
     <string name="baby_nickname">宝贝昵称</string>
+    <string name="baby_nickname_hint">宝宝</string>
     <string name="shoe_size">鞋子尺码</string>
     <string name="shoe_size_hint">选择尺码</string>
-    <string name="relationship">关    系</string>
-    <string name="baby">宝宝</string>
+    <string name="relationship">关&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;系</string>
     <string name="relationship_hint">填写关系</string>
     <string name="baby_name_hint">填写昵称</string>
     <string name="birthday_hint">选择日期</string>
+    <string name="dialog_title_select_avator">请选择头像来源</string>
+    <string name="dialog_select_form_photo_list">从相册选取</string>
+    <string name="dialog_take_a_shot">拍照</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
 
 </resources>

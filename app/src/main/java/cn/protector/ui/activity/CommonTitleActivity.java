@@ -14,12 +14,12 @@ import android.widget.TextView;
 import cn.common.ui.activity.BaseTitleActivity;
 import cn.common.utils.CommonUtil;
 import cn.protector.R;
-import cn.protector.ui.widget.LoadingDialog;
+import cn.protector.dialog.LoadingDialog;
 
 public abstract class CommonTitleActivity extends BaseTitleActivity {
     protected ImageView mIvBack;
 
-    private TextView mTvTitle;
+    protected TextView mTvTitle;
 
     @Override
     protected View getTitleLayoutView() {
@@ -36,7 +36,7 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
                 onBack();
             }
         });
-        setBackgroundColor(getResources().getColor(R.color.background_gray));
+        setBackgroundColor(getColor(R.color.background_gray));
         return vTitle;
     }
 

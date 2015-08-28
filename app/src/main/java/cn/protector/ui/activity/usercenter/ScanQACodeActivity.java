@@ -1,10 +1,10 @@
 
 package cn.protector.ui.activity.usercenter;
 
-import com.google.zxing.ResultPoint;
-import com.helper.CaptureHelper;
-
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.animation.Animation;
@@ -12,7 +12,13 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
+import com.google.zxing.ResultPoint;
+import com.helper.CaptureHelper;
+
+import java.util.List;
+
 import cn.protector.R;
+import cn.protector.data.BroadcastActivions;
 import cn.protector.ui.activity.CommonTitleActivity;
 
 /**
@@ -38,7 +44,13 @@ public class ScanQACodeActivity extends CommonTitleActivity {
         mSvCamera = (SurfaceView) findViewById(R.id.sv_camera);
         vScanFrame = findViewById(R.id.rl_frame_scan);
         mCaptureHelper = new CaptureHelper(mSvCamera, this);
-        // mCaptureHelper.setBeepRawId(R.raw.beep);
+
+        startScanQa();
+        goActivity(FinishInfoActivity.class);
+    }
+
+    @Override
+    protected void initEvent() {
         mCaptureHelper.setCaptureListener(new CaptureHelper.CaptureListener() {
             @Override
             public void handleCodeResult(String code, Bitmap bitmap) {
@@ -53,7 +65,6 @@ public class ScanQACodeActivity extends CommonTitleActivity {
             public void foundPossibleResultPoint(ResultPoint point) {
             }
         });
-        startScanQa();
     }
 
     private void startScanQa() {
@@ -89,6 +100,21 @@ public class ScanQACodeActivity extends CommonTitleActivity {
     protected void onPause() {
         super.onPause();
         mCaptureHelper.onPause();
+    }
+
+    @Override
+    public void setupBroadcastActions(List<String> actions) {
+        super.setupBroadcastActions(actions);
+        actions.add(BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+    }
+
+    @Override
+    public void handleBroadcast(Context context, Intent intent) {
+        super.handleBroadcast(context, intent);
+        String action = intent.getAction();
+        if (TextUtils.equals(action, BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+            finish();
+        }
     }
 
     @Override

@@ -5,27 +5,38 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.List;
 
 import cn.protector.R;
 import cn.protector.data.BroadcastActivions;
 import cn.protector.ui.activity.CommonTitleActivity;
+import cn.protector.ui.activity.MainActivity;
 
 /**
- * 绑定设备页面
+ * Created by jakechen on 2015/8/27.
  */
-public class AddDeviceActivity extends CommonTitleActivity {
+public class RelationshipActivity extends CommonTitleActivity implements View.OnClickListener {
+    private Button btnSubmit;
 
     @Override
     protected void initView() {
-        setContentView(R.layout.activity_add_device);
-        setTitle(R.string.title_add_device);
+        setContentView(R.layout.activity_relationship);
+        setTitle(R.string.title_relationship);
+        btnSubmit = (Button) findViewById(R.id.btn_submit);
     }
 
+    @Override
+    protected void initEvent() {
+        btnSubmit.setOnClickListener(this);
+    }
+
+    @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_add) {
-            goActivity(ScanQACodeActivity.class);
+        if (v.getId() == R.id.btn_submit) {
+            goActivity(MainActivity.class);
+            sendBroadcast(new Intent(BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN));
         }
     }
 

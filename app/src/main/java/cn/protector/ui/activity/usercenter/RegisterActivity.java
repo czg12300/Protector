@@ -1,13 +1,19 @@
 
 package cn.protector.ui.activity.usercenter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
 import cn.protector.R;
+import cn.protector.data.BroadcastActivions;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.widget.ImageEditText;
+
+import java.util.List;
 
 /**
  * 登录页面
@@ -48,6 +54,21 @@ public class RegisterActivity extends CommonTitleActivity {
             showLoadingTip(R.string.login_ing);
         } else if (v.getId() == R.id.tv_register) {
         } else if (v.getId() == R.id.tv_forget) {
+        }
+    }
+
+    @Override
+    public void setupBroadcastActions(List<String> actions) {
+        super.setupBroadcastActions(actions);
+        actions.add(BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+    }
+
+    @Override
+    public void handleBroadcast(Context context, Intent intent) {
+        super.handleBroadcast(context, intent);
+        String action = intent.getAction();
+        if (TextUtils.equals(action, BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+            finish();
         }
     }
 }

@@ -121,6 +121,46 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
 
     }
 
+    /**
+     * 获取资源文件的颜色值
+     * 
+     * @param id
+     * @return
+     */
+    protected int getColor(int id) {
+        return getResources().getColor(id);
+    }
+
+    /**
+     * 获取资源文件的尺寸
+     * 
+     * @param id
+     * @return
+     */
+    protected float getDimension(int id) {
+        return getResources().getDimension(id);
+    }
+
+    /**
+     * 获取资源文件int数组
+     * 
+     * @param id
+     * @return
+     */
+    protected int[] getIntArray(int id) {
+        return getResources().getIntArray(id);
+    }
+
+    /**
+     * 获取资源文件string数组
+     * 
+     * @param id
+     * @return
+     */
+    protected String[] getStringArray(int id) {
+        return getResources().getStringArray(id);
+    }
+
     @Override
     public void goActivity(Class<?> clazz) {
         goActivity(clazz, null);
