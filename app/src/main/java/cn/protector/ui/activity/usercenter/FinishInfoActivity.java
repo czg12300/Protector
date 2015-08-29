@@ -67,8 +67,8 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
         mBtnNext = (Button) findViewById(R.id.btn_next);
         mEvBabyName = (EditText) findViewById(R.id.ev_baby_name);
         mRivAvator = (RoundImageView) findViewById(R.id.riv_avator);
-        mRivAvator.setBorderColor(getColor(R.color.gray_999999));
-        mRivAvator.setBorderWidth(3, TypedValue.COMPLEX_UNIT_DIP);
+//        mRivAvator.setBorderColor(getColor(R.color.gray_999999));
+//        mRivAvator.setBorderWidth(3, TypedValue.COMPLEX_UNIT_DIP);
     }
 
     @Override

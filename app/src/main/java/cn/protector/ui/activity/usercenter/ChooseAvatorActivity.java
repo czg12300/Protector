@@ -76,15 +76,15 @@ public class ChooseAvatorActivity extends CommonTitleActivity implements View.On
 
     private List<Integer> getAvatorList() {
         List<Integer> list = new ArrayList<Integer>();
-        list.add(R.drawable.ic_launcher);
-        list.add(R.drawable.ic_launcher);
-        list.add(R.drawable.ic_launcher);
-        list.add(R.drawable.ic_launcher);
-        list.add(R.drawable.ic_launcher);
-        list.add(R.drawable.ic_launcher);
-        list.add(R.drawable.ic_launcher);
-        list.add(R.drawable.ic_launcher);
-        list.add(R.drawable.ic_launcher);
+        list.add(R.drawable.img_head_baby);
+        list.add(R.drawable.img_head_boy1);
+        list.add(R.drawable.img_head_boy2);
+        list.add(R.drawable.img_head_girl1);
+        list.add(R.drawable.img_head_girl2);
+        list.add(R.drawable.img_head_mather);
+        list.add(R.drawable.img_head_father);
+        list.add(R.drawable.img_head_grandfa);
+        list.add(R.drawable.img_head_grandma);
         return list;
     }
 
@@ -158,6 +158,7 @@ public class ChooseAvatorActivity extends CommonTitleActivity implements View.On
             ImageView iv = null;
             if (convertView == null) {
                 iv = new ImageView(getContext());
+                iv.setPadding(0, (int) getDimension(R.dimen.out_margin), 0, (int) getDimension(R.dimen.out_margin));
                 convertView = iv;
             } else {
                 iv = (ImageView) convertView;

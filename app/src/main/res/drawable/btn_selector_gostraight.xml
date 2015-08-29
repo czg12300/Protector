@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ico_gostraight_normal" android:state_pressed="false" />
+    <item android:drawable="@drawable/ico_gostraight_click" android:state_pressed="true" />
+</selector>

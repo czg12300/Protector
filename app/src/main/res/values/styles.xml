@@ -1,10 +1,8 @@
 <resources>
 
-    <style name="activity_style" parent="base_activity_style">
-    </style>
+    <style name="activity_style" parent="base_activity_style"></style>
 
-    <style name="swipe_activity_style" parent="base_swipe_activity_style">
-    </style>
+    <style name="swipe_activity_style" parent="base_swipe_activity_style"></style>
 
     <style name="app_theme" parent="AppBaseTheme"></style>
 
@@ -32,10 +30,8 @@
         <item name="android:layout_weight">1</item>
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingTop">7dp</item>
-        <item name="android:drawablePadding">2dp</item>
-        <item name="android:paddingBottom">3dp</item>
+        <item name="android:paddingTop">6dp</item>
         <item name="android:textColor">@drawable/text_selector_main_menu</item>
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">11dp</item>
     </style>
 </resources>

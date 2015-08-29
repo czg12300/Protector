@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager
+    <cn.protector.ui.widget.MapViewPager
         android:id="@+id/vp_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,45 +13,45 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_above="@+id/rg_menu"
-        android:background="@color/gray_cccccc" />
+        android:background="@color/gray_dfdfdd" />
 
     <RadioGroup
         android:id="@+id/rg_menu"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_bottom_menu_height"
         android:layout_alignParentBottom="true"
-        android:background="@color/white_f9f9f9"
-        android:orientation="horizontal" >
+        android:background="@color/white"
+        android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/rb_menu_location"
+        <cn.common.ui.widgt.CustomRadioButton
+            android:id="@+id/rb_menu_locate"
             style="@style/main_menu"
             android:checked="true"
-            android:drawableTop="@drawable/ic_launcher"
-            android:text="@string/main_location" />
+            android:drawableTop="@drawable/rb_selector_locate"
+            android:text="@string/main_locate" />
 
-        <RadioButton
+        <cn.common.ui.widgt.CustomRadioButton
             android:id="@+id/rb_menu_history"
             style="@style/main_menu"
-            android:drawableTop="@drawable/ic_launcher"
+            android:drawableTop="@drawable/rb_selector_history"
             android:text="@string/main_history" />
 
-        <RadioButton
+        <cn.common.ui.widgt.CustomRadioButton
             android:id="@+id/rb_menu_message"
             style="@style/main_menu"
-            android:drawableTop="@drawable/ic_launcher"
+            android:drawableTop="@drawable/rb_selector_message"
             android:text="@string/main_message" />
 
-        <RadioButton
+        <cn.common.ui.widgt.CustomRadioButton
             android:id="@+id/rb_menu_health"
             style="@style/main_menu"
-            android:drawableTop="@drawable/ic_launcher"
+            android:drawableTop="@drawable/rb_selector_health"
             android:text="@string/main_health" />
 
-        <RadioButton
+        <cn.common.ui.widgt.CustomRadioButton
             android:id="@+id/rb_menu_setting"
             style="@style/main_menu"
-            android:drawableTop="@drawable/ic_launcher"
+            android:drawableTop="@drawable/rb_selector_setting"
             android:text="@string/main_setting" />
     </RadioGroup>
 

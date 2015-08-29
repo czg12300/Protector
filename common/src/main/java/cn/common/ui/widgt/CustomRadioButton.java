@@ -35,9 +35,16 @@ public class CustomRadioButton extends RadioButton {
 
     private boolean showRedPoint;
 
-    private int mDownloadingCount = 0;
+    private int messageCount = 0;
+    private int pointColor = Color.RED;
 
-    private int mNeedUpdateCount = 0;
+    public int getMessageCount() {
+        return messageCount;
+    }
+
+    public void setMessageCount(int messageCount) {
+        this.messageCount = messageCount;
+    }
 
     public CustomRadioButton(Context context) {
         this(context, null);
@@ -46,6 +53,9 @@ public class CustomRadioButton extends RadioButton {
     public CustomRadioButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupPaint();
+    }
+
+    public void setMessageBGResource(int id) {
         bitmap = BitmapUtil.decodeResource(R.drawable.img_shadow_bottom);
     }
 
@@ -54,7 +64,7 @@ public class CustomRadioButton extends RadioButton {
         // 设置抗锯齿效果
         paint.setAntiAlias(true);
         // 设置画刷的颜色
-        paint.setColor(Color.RED);
+        paint.setColor(pointColor);
     }
 
     Rect t = new Rect();
@@ -81,8 +91,10 @@ public class CustomRadioButton extends RadioButton {
             height = getHeight();
             width = getWidth();
         }
-        int totalCount = mDownloadingCount + mNeedUpdateCount;
-        if (totalCount > 0) {
+        if (messageCount > 0) {
+            if (bitmap == null) {
+                throw new NullPointerException("message background is null");
+            }
             Drawable[] drawables = getCompoundDrawables();
             Rect rect = new Rect();
             for (int i = 0; i < drawables.length; i++) {
@@ -95,14 +107,12 @@ public class CustomRadioButton extends RadioButton {
             float paddingTop = 5;
             paint.setColor(Color.WHITE);
             canvas.drawBitmap(bitmap, t.right - offset, t.top + paddingTop, paint);
-            String messageConut = String.valueOf(totalCount);
+            String messageConut = String.valueOf(messageCount);
             int heightOffset = Math.abs((bitmap.getHeight() - getFontHeight(paint.getTextSize())));
             int wigthOffset = (bitmap.getWidth() - getStringWidth(paint, messageConut)) / 2;
             canvas.drawText(messageConut, t.right - offset + wigthOffset,
                     t.top + paddingTop + 1 + bitmap.getHeight() - heightOffset - 1, paint);
-        }
-
-        if (showRedPoint) {
+        } else if (showRedPoint) {
             Rect rect = new Rect();
             Drawable[] drawables = getCompoundDrawables();
             for (int i = 0; i < drawables.length; i++) {
@@ -116,7 +126,7 @@ public class CustomRadioButton extends RadioButton {
             // rect.top + GameUtil.dip2px(getContext(), 5), paint);
 
             paint.setAntiAlias(true);
-            paint.setColor(Color.RED);
+            paint.setColor(pointColor);
             paint.setStyle(Paint.Style.FILL);
             canvas.drawCircle(t.right - offset, rect.top + DisplayUtil.dip(10),
                     DisplayUtil.dip(5), paint);
@@ -125,15 +135,6 @@ public class CustomRadioButton extends RadioButton {
 
     }
 
-    public void setDownloadingCount(int count) {
-        mDownloadingCount = count;
-        invalidate();
-    }
-
-    public void setNeedUpdateCount(int count) {
-        mNeedUpdateCount = count;
-        invalidate();
-    }
 
     private int getStringWidth(Paint paint, String str) {
         int iRet = 0;

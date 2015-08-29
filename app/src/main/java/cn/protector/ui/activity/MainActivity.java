@@ -1,7 +1,6 @@
 
 package cn.protector.ui.activity;
 
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -11,19 +10,21 @@ import android.widget.TextView;
 import cn.common.ui.activity.BaseTitleActivity;
 import cn.protector.R;
 import cn.protector.ui.adapter.CommonFragmentPagerAdapter;
+import cn.protector.ui.fragment.LocateFragment;
 import cn.protector.ui.fragment.SettingFragment;
+import cn.protector.ui.widget.MapViewPager;
 
 import java.util.ArrayList;
 
 public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
     private CommonFragmentPagerAdapter mMainPageAdapter;
-    private ViewPager mVpContent;
+    private MapViewPager mVpContent;
     private RadioGroup mRgMenu;
     private static final int UI_MESSAGE_INIT = 0x1f;
     private TextView mTvTitle;
 
     private static final int[] TITLE_IDS = {
-            R.string.title_main_location, R.string.title_main_history, R.string.title_main_message,
+            R.string.title_main_locate, R.string.title_main_history, R.string.title_main_message,
             R.string.title_main_health, R.string.title_main_setting
     };
 
@@ -42,7 +43,7 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
     @Override
     protected void initView() {
         setContentView(R.layout.activity_main);
-        mVpContent = (ViewPager) findViewById(R.id.vp_content);
+        mVpContent = (MapViewPager) findViewById(R.id.vp_content);
         mRgMenu = (RadioGroup) findViewById(R.id.rg_menu);
         mMainPageAdapter = new CommonFragmentPagerAdapter(getSupportFragmentManager());
         mVpContent.setAdapter(mMainPageAdapter);
@@ -50,24 +51,15 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
         mRgMenu.setOnCheckedChangeListener(this);
         mVpContent.setOffscreenPageLimit(4);
         setSwipeBackEnable(false);
-        sendEmptyUiMessage(UI_MESSAGE_INIT);
     }
 
     @Override
-    public void handleUiMessage(Message msg) {
-        switch (msg.what) {
-            case UI_MESSAGE_INIT:
-                initMainData();
-                break;
-
-            default:
-                break;
-        }
+    protected void initEvent() {
     }
 
-    private void initMainData() {
+    protected void initData() {
         ArrayList<Fragment> list = new ArrayList<Fragment>();
-        list.add(SettingFragment.newInstance());
+        list.add(LocateFragment.newInstance());
         list.add(SettingFragment.newInstance());
         list.add(SettingFragment.newInstance());
         list.add(SettingFragment.newInstance());
@@ -80,7 +72,7 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
     public void onCheckedChanged(RadioGroup radioGroup, int checkId) {
         int position = 0;
         switch (checkId) {
-            case R.id.rb_menu_location:
+            case R.id.rb_menu_locate:
                 position = 0;
                 break;
             case R.id.rb_menu_history:
@@ -114,7 +106,7 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
     public void onPageSelected(int position) {
         switch (position) {
             case 0:
-                mRgMenu.check(R.id.rb_menu_location);
+                mRgMenu.check(R.id.rb_menu_locate);
                 break;
             case 1:
                 mRgMenu.check(R.id.rb_menu_history);

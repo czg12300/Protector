@@ -21,6 +21,7 @@ import java.util.List;
 import cn.common.ui.activity.IUi;
 
 public abstract class BaseFragment extends Fragment implements IUi {
+    private static final int MSG_UI_INIT_DATA = 30000;
     protected static final int REQUEST_CODE = 0x125f;
 
     protected static final int RESULT_CODE = 0x126f;
@@ -81,12 +82,58 @@ public abstract class BaseFragment extends Fragment implements IUi {
         }
     }
 
+    /**
+     * 获取资源文件的颜色值
+     *
+     * @param id
+     * @return
+     */
+    protected int getColor(int id) {
+        return getResources().getColor(id);
+    }
+
+    /**
+     * 获取资源文件的尺寸
+     *
+     * @param id
+     * @return
+     */
+    protected float getDimension(int id) {
+        return getResources().getDimension(id);
+    }
+
+    /**
+     * 获取资源文件int数组
+     *
+     * @param id
+     * @return
+     */
+    protected int[] getIntArray(int id) {
+        return getResources().getIntArray(id);
+    }
+
+    /**
+     * 获取资源文件string数组
+     *
+     * @param id
+     * @return
+     */
+    protected String[] getStringArray(int id) {
+        return getResources().getStringArray(id);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (mReceiver != null) {
             getActivity().unregisterReceiver(mReceiver);
         }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        sendEmptyUiMessage(MSG_UI_INIT_DATA);
+        super.onActivityCreated(savedInstanceState);
     }
 
     protected void sendUiMessage(Message msg) {
@@ -125,22 +172,37 @@ public abstract class BaseFragment extends Fragment implements IUi {
 
     @Override
     public void handleUiMessage(Message msg) {
-
+        switch (msg.what) {
+            case MSG_UI_INIT_DATA:
+                initData();
+                break;
+        }
     }
+
+    protected Bundle mSavedInstanceState;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mDecorView = new FrameLayout(getActivity());
+        mSavedInstanceState = savedInstanceState;
         initView();
+        initEvent();
         return mDecorView;
     }
+
 
     protected View findViewById(int id) {
         return mDecorView.findViewById(id);
     }
 
-    public abstract void initView();
+    protected abstract void initView();
+
+    protected void initEvent() {
+    }
+
+    protected void initData() {
+    }
 
     public void setContentView(int layoutId) {
         getLayoutInflater().inflate(layoutId, mDecorView);

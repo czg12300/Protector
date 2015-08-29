@@ -7,6 +7,7 @@
     <color name="blue_48c2f8">#48c2f8</color>
     <color name="blue_008ccb">#008ccb</color>
     <color name="blue_03a9f4">#03a9f4</color>
+    <color name="blue_3003a9f4">#3003a9f4</color>
     <color name="blue_14b7f3">#14b7f3</color>
     <color name="white">#ffffff</color>
     <color name="white_f9f9f9">#f9f9f9</color>
@@ -16,19 +17,22 @@
     <color name="gray_757575">#757575</color>
     <color name="gray_bababa">#bababa</color>
     <color name="gray_999999">#999999</color>
+    <color name="gray_dbd6d6">#dbd6d6</color>
+    <color name="gray_dfdfdf">#dfdfdf</color>
+    <color name="orange_fb6e52">#fb6e52</color>
     <color name="black_363636">#363636</color>
     <color name="black_333333">#333333</color>
     <color name="red_ef0b0b">#ef0b0b</color>
     <color name="trans">#00000000</color>
     <color name="trans_90000000">#90000000</color>
     <color name="trans_60000000">#60000000</color>
-    <color name="divider_list">#dfdfdd</color>
-    <color name="divider_other">#dbd6d6</color>
+    <color name="divider_list">@color/gray_dfdfdd</color>
+    <color name="divider_other">@color/gray_dbd6d6</color>
     <color name="divider_menu">@color/gray_dfdfdf</color>
-    <color name="gray_dfdfdf">#dfdfdf</color>
     <color name="text_hint">@color/gray_999999</color>
     <color name="text_default">@color/gray_757575</color>
     <color name="text_content">@color/black_333333</color>
     <color name="text_mark">@color/red_ef0b0b</color>
+    <color name="remain_point">@color/orange_fb6e52</color>
 
 </resources>

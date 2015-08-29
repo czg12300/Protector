@@ -2,6 +2,7 @@ package cn.common.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 
 /**
  * Created by Administrator on 2015/8/16.
@@ -14,5 +15,9 @@ public final class BitmapUtil {
         } catch (OutOfMemoryError error) {
         }
         return bitmap;
+    }
+
+    public static Bitmap decodeResource(int drawableId, int width, int height) {
+        return ThumbnailUtils.extractThumbnail(decodeResource(drawableId), width, height);
     }
 }

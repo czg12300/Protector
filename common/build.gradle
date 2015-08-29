@@ -1,9 +1,16 @@
 apply plugin: 'com.android.library'
 
 android {
+    signingConfigs {
+        protector {
+            keyAlias 'protector'
+            keyPassword 'root12300'
+            storeFile file('G:/Android/github/Protector/protector.keystore')
+            storePassword 'root12300'
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 22
@@ -20,6 +27,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-//    compile 'com.android.support:appcompat-v7:22.2.1'
+    //    compile 'com.android.support:appcompat-v7:22.2.1'
     compile files('libs/android-support-v4.jar')
 }

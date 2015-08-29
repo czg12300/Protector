@@ -1,9 +1,12 @@
-<GridView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/gv_avator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:cacheColorHint="@color/trans"
     android:fadingEdge="none"
     android:fadingEdgeLength="0dp"
     android:listSelector="@drawable/list_selector_backgroud_gray"
-    android:numColumns="3"/>
+    android:numColumns="3"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="10dp" />

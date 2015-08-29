@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 android {
     signingConfigs {
-        protector {
+        debug {
             keyAlias 'protector'
             keyPassword 'root12300'
-            storeFile file('F:/Android/protector.keystore')
+            storeFile file('G:/Android/github/Protector/protector.keystore')
             storePassword 'root12300'
         }
+
     }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
@@ -22,10 +23,18 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        sourceSets {
+            main {
+                jniLibs.srcDirs = ['libs']
+            }
+        }
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':common')
+    compile files('libs/Android_Location_V1.3.3.jar')
+    compile files('libs/Android_Map_2.5.1.20150827.jar')
+    compile files('libs/MapApiServices.jar')
 }

@@ -76,6 +76,7 @@ public class LoginActivity extends CommonTitleActivity
             goActivity(RegisterActivity.class);
         } else if (v.getId() == R.id.tv_forget) {
         }
+        dismiss();
     }
 
     @Override

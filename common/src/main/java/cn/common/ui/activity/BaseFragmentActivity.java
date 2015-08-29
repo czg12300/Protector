@@ -123,7 +123,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
 
     /**
      * 获取资源文件的颜色值
-     * 
+     *
      * @param id
      * @return
      */
@@ -133,7 +133,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
 
     /**
      * 获取资源文件的尺寸
-     * 
+     *
      * @param id
      * @return
      */
@@ -143,7 +143,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
 
     /**
      * 获取资源文件int数组
-     * 
+     *
      * @param id
      * @return
      */
@@ -153,7 +153,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
 
     /**
      * 获取资源文件string数组
-     * 
+     *
      * @param id
      * @return
      */
