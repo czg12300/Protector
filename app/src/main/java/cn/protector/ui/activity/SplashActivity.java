@@ -18,7 +18,7 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
     /**
      * 延时进入页面时间
      */
-    private static final long DELAYED_TIME = 1 * 1000;
+    private static final long DELAYED_TIME = 1 * 1000-500;
 
     /**
      * 进入引导页

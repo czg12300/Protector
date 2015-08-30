@@ -1,0 +1,109 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/mv_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="95dp"
+        android:orientation="vertical"
+        android:paddingLeft="15dp">
+
+        <ImageButton
+            android:id="@+id/ib_plus"
+            android:layout_width="@dimen/locate_top_btn"
+            android:layout_height="@dimen/locate_top_btn"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/btn_selector_mapcontrol"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_selector_plus" />
+
+        <ImageButton
+            android:id="@+id/ib_minus"
+            android:layout_width="@dimen/locate_top_btn"
+            android:layout_height="@dimen/locate_top_btn"
+            android:layout_gravity="right"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/btn_selector_mapcontrol"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_selector_minus" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="23:59"
+                    android:textColor="@color/gray_757575"
+                    android:textSize="12dp" />
+
+                <SeekBar
+                    android:id="@+id/sb_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:maxHeight="8dp"
+                    android:minHeight="8dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:progress="10"
+                    android:progressDrawable="@drawable/bg_seekbar_history"
+                    android:thumb="@drawable/btn_slide_time" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/tv_time_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="0:00"
+                    android:textColor="@color/gray_999999"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/tv_time_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="23:59"
+                    android:textColor="@color/gray_999999"
+                    android:textSize="12dp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</merge>

@@ -48,7 +48,7 @@
             android:theme="@style/activity_style" />
         <activity
             android:name=".ui.activity.MainActivity"
-            android:theme="@style/activity_style" />
+            android:theme="@style/activity_style_main" />
         <activity
             android:name=".ui.activity.usercenter.RegisterActivity"
             android:theme="@style/swipe_activity_style" />
@@ -63,6 +63,9 @@
             android:theme="@style/swipe_activity_style" />
         <activity
             android:name=".ui.activity.usercenter.RelationshipActivity"
+            android:theme="@style/swipe_activity_style" />
+        <activity
+            android:name=".ui.activity.usercenter.BabyInfoActivity"
             android:theme="@style/swipe_activity_style" />
         <activity
             android:name=".ui.activity.usercenter.ChooseAvatorActivity"

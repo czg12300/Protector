@@ -52,5 +52,14 @@
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="go_there">去这里</string>
+    <string name="modify_pw">修改密码</string>
+    <string name="device_manage">设备管理</string>
+    <string name="family_setting">监护人员</string>
+    <string name="saftey_setting">围栏设置</string>
+    <string name="qrcode_setting">设备二维码</string>
+    <string name="position_setting">位置修订</string>
+    <string name="location_setting">定位模式</string>
+    <string name="shutdown_setting">远程关机</string>
+    <string name="exit_login">退出登录</string>
 
 </resources>

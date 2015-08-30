@@ -3,6 +3,8 @@ package cn.protector.ui.fragment;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
@@ -28,22 +30,26 @@ import cn.protector.utils.ToastUtil;
  *
  * @author jakechen on 2015/8/13.
  */
-public class LocateFragment extends BaseWorkerFragment implements View.OnClickListener,
+public class HistoryFragment extends BaseWorkerFragment implements View.OnClickListener,
         AMapLocationListener {
 
-    public static LocateFragment newInstance() {
-        return new LocateFragment();
+    public static HistoryFragment newInstance() {
+        return new HistoryFragment();
     }
 
     private MapView mMapView;
     private AMap mAMap;
     private LocationSource.OnLocationChangedListener mOnLocationChangedListener;
     private LocationManagerProxy mAMapLocationManager;
+    private TextView mTvTime;
+    private SeekBar mSbTime;
 
     @Override
     public void initView() {
-        setContentView(R.layout.fragment_locate);
+        setContentView(R.layout.fragment_history);
         mMapView = (MapView) findViewById(R.id.mv_map);
+        mTvTime = (TextView) findViewById(R.id.tv_time);
+        mSbTime = (SeekBar) findViewById(R.id.sb_time);
         mMapView.onCreate(mSavedInstanceState);// 此方法必须重写
         if (mAMap == null) {
             mAMap = mMapView.getMap();
@@ -58,9 +64,31 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     protected void initEvent() {
         findViewById(R.id.ib_minus).setOnClickListener(this);
         findViewById(R.id.ib_plus).setOnClickListener(this);
-        findViewById(R.id.ib_maplocate).setOnClickListener(this);
+        mSbTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float moveStep = (float) (((float) mSbTime.getWidth() / (float) 100) * 0.8);
+                mTvTime.layout((int) (progress * moveStep), 20, mSbTime.getWidth(), 80);
+                mTvTime.setText("" + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
+    @Override
+    protected void initData() {
+        mSbTime.setMax(100);
+        mSbTime.setProgress(0);
+    }
 
     @Override
     public void onClick(View v) {
@@ -69,8 +97,6 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             mAMap.moveCamera(CameraUpdateFactory.zoomIn());
         } else if (id == R.id.ib_minus) {
             mAMap.moveCamera(CameraUpdateFactory.zoomOut());
-        } else if (id == R.id.ib_maplocate) {
-            startLocate();
         }
     }
 
@@ -80,19 +106,19 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     private void initLocate() {
         setMyLocationStyle();
         mAMap.setMyLocationRotateAngle(180);
-        mAMap.setLocationSource(new LocationSource() {
-            @Override
-            public void activate(OnLocationChangedListener onLocationChangedListener) {
-                mOnLocationChangedListener = onLocationChangedListener;
-                startLocate();
-            }
-
-            @Override
-            public void deactivate() {
-                stopLocate();
-                mOnLocationChangedListener = null;
-            }
-        });
+//        mAMap.setLocationSource(new LocationSource() {
+//            @Override
+//            public void activate(OnLocationChangedListener onLocationChangedListener) {
+//                mOnLocationChangedListener = onLocationChangedListener;
+//                startLocate();
+//            }
+//
+//            @Override
+//            public void deactivate() {
+//                stopLocate();
+//                mOnLocationChangedListener = null;
+//            }
+//        });
         mAMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         //设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         mAMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);

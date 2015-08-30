@@ -1,11 +1,123 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_gray">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/main_setting" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:id="@+id/ll_baby_info"
+            android:background="@drawable/bg_head"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <cn.common.ui.widgt.RoundImageView
+                android:id="@+id/riv_avator"
+                android:layout_width="@dimen/avator"
+                android:layout_height="@dimen/avator"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/img_head_girl1" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_baby_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="小妮儿"
+                    android:textColor="@color/black_333333"
+                    android:textSize="@dimen/text_title" />
+
+                <TextView
+                    android:id="@+id/tv_baby_steps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:drawableLeft="@drawable/ico_min_steps_blue"
+                    android:drawablePadding="5dp"
+                    android:singleLine="true"
+                    android:text="1252"
+                    android:textColor="@color/blue_03a9f4"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ico_right" />
+        </LinearLayout>
+
+        <cn.common.ui.widgt.InnerGridView
+            android:id="@+id/gv_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@color/white"
+            android:cacheColorHint="@color/trans"
+            android:listSelector="@drawable/list_selector_backgroud_gray"
+            android:numColumns="3"
+            android:padding="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_modify_pw"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableRight="@drawable/ico_right"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/modify_pw"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/text_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/divider_menu" />
+
+            <TextView
+                android:id="@+id/tv_device_manage"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableRight="@drawable/ico_right"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/device_manage"
+                android:textColor="@color/black_333333"
+                android:textSize="@dimen/text_content" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_add"
+            style="@style/btn_blue"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="15dp"
+            android:background="@drawable/btn_selector_red_r"
+            android:onClick="onClick"
+            android:text="@string/exit_login"
+            android:textColor="@drawable/text_selector_btn_red_r" />
+    </LinearLayout>
+</ScrollView>
