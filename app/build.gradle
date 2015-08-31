@@ -4,10 +4,9 @@ android {
         debug {
             keyAlias 'protector'
             keyPassword 'root12300'
-            storeFile file('G:/Android/github/Protector/protector.keystore')
+            storeFile file('F:/git/github/Protector/protector.keystore')
             storePassword 'root12300'
         }
-
     }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"

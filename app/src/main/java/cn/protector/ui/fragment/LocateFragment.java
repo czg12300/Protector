@@ -1,7 +1,9 @@
+
 package cn.protector.ui.fragment;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.amap.api.location.AMapLocation;
@@ -28,16 +30,19 @@ import cn.protector.utils.ToastUtil;
  *
  * @author jakechen on 2015/8/13.
  */
-public class LocateFragment extends BaseWorkerFragment implements View.OnClickListener,
-        AMapLocationListener {
+public class LocateFragment extends BaseWorkerFragment
+        implements View.OnClickListener, AMapLocationListener {
 
     public static LocateFragment newInstance() {
         return new LocateFragment();
     }
 
     private MapView mMapView;
+
     private AMap mAMap;
+
     private LocationSource.OnLocationChangedListener mOnLocationChangedListener;
+
     private LocationManagerProxy mAMapLocationManager;
 
     @Override
@@ -59,8 +64,13 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         findViewById(R.id.ib_minus).setOnClickListener(this);
         findViewById(R.id.ib_plus).setOnClickListener(this);
         findViewById(R.id.ib_maplocate).setOnClickListener(this);
+        findViewById(R.id.ll_bottom).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
     }
-
 
     @Override
     public void onClick(View v) {
@@ -94,7 +104,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             }
         });
         mAMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        //设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
+        // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         mAMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
     }
 
@@ -103,14 +113,14 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
      */
     private void setMyLocationStyle() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory
-                .fromBitmap(BitmapUtil.decodeResource(R.drawable.img_head_girl1, (int) getDimension(R.dimen.locate_baby_avator), (int) getDimension(R.dimen.locate_baby_avator))));// 设置小蓝点的图标
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromBitmap(BitmapUtil.decodeResource(
+                R.drawable.img_head_girl1, (int) getDimension(R.dimen.locate_baby_avator),
+                (int) getDimension(R.dimen.locate_baby_avator))));// 设置小蓝点的图标
         myLocationStyle.strokeColor(getColor(R.color.blue_03a9f4));// 设置圆形的边框颜色
         myLocationStyle.radiusFillColor(getColor(R.color.blue_3003a9f4));// 设置圆形的填充颜色
         myLocationStyle.strokeWidth(2f);// 设置圆形的边框粗细
         mAMap.setMyLocationStyle(myLocationStyle);
     }
-
 
     @Override
     public void onLocationChanged(Location location) {
@@ -147,7 +157,6 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         }
     }
 
-
     /**
      * 开始定位
      */
@@ -155,14 +164,13 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         if (mAMapLocationManager == null) {
             mAMapLocationManager = LocationManagerProxy.getInstance(getActivity());
         }
-            /*
-             * mAMapLocManager.setGpsEnable(false);
-			 * 1.0.2版本新增方法，设置true表示混合定位中包含gps定位，false表示纯网络定位，默认是true Location
-			 * API定位采用GPS和网络混合定位方式
-			 * ，第一个参数是定位provider，第二个参数时间最短是2000毫秒，第三个参数距离间隔单位是米，第四个参数是定位监听者
-			 */
-        mAMapLocationManager.requestLocationData(
-                LocationProviderProxy.AMapNetwork, -1, 10, this);
+        /*
+         * mAMapLocManager.setGpsEnable(false);
+         * 1.0.2版本新增方法，设置true表示混合定位中包含gps定位，false表示纯网络定位，默认是true Location
+         * API定位采用GPS和网络混合定位方式
+         * ，第一个参数是定位provider，第二个参数时间最短是2000毫秒，第三个参数距离间隔单位是米，第四个参数是定位监听者
+         */
+        mAMapLocationManager.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 10, this);
     }
 
     /**
@@ -175,7 +183,6 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             mAMapLocationManager = null;
         }
     }
-
 
     @Override
     public void onDestroyView() {
@@ -194,7 +201,6 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         super.onPause();
         mMapView.onPause();
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
