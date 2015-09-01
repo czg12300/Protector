@@ -10,6 +10,11 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
+/**
+ * 描述：用于tab的radio group，可以在里面的radio button外面包裹任何view group，尤其在使用有提示信息的tab，更为方便
+ * 
+ * @author jakechen
+ */
 public class TabRadioGroup extends LinearLayout {
     // holds the checked id; the selection is empty by default
     private int mCheckedId = -1;

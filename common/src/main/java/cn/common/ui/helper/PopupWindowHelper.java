@@ -19,6 +19,8 @@ public class PopupWindowHelper {
 
     private PopupWindow pw;
 
+    private View popupView;
+
     public PopupWindowHelper(Context context) {
         this(context, 0);
     }
@@ -42,6 +44,7 @@ public class PopupWindowHelper {
         if (popupView == null) {
             return;
         }
+        this.popupView = popupView;
         int width = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         int height = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         popupView.measure(width, height);
@@ -76,6 +79,7 @@ public class PopupWindowHelper {
         if (popupView == null) {
             return;
         }
+        this.popupView = popupView;
         popupView.measure(width, height);
         pw.setHeight(height);
         pw.setWidth(width);
@@ -129,6 +133,10 @@ public class PopupWindowHelper {
      */
     public boolean isShowing() {
         return pw.isShowing();
+    }
+
+    public View findViewById(int id) {
+        return popupView.findViewById(id);
     }
 
     public void setBackground(Drawable drawable) {

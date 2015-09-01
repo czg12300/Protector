@@ -11,4 +11,5 @@ public interface BroadcastActivions {
     String ACTION_FINISH_USER_INFO_AVATOR = "cn.protector.data.BroadcastActivions.action_finish_user_info_avator";
 
     String ACTION_FINISH_ACITIVTY_BEFORE_MAIN = "cn.protector.data.BroadcastActivions.action_finish_acitivty_beforemain";
+
 }

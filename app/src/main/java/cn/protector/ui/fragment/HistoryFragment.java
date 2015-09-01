@@ -3,9 +3,9 @@ package cn.protector.ui.fragment;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,6 +24,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 
 import cn.common.ui.fragment.BaseWorkerFragment;
+import cn.common.ui.helper.PopupWindowHelper;
 import cn.common.utils.BitmapUtil;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
@@ -36,6 +37,8 @@ import cn.protector.utils.ToastUtil;
  */
 public class HistoryFragment extends BaseWorkerFragment
         implements View.OnClickListener, AMapLocationListener {
+
+    private PopupWindowHelper mTimeTipPop;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -57,7 +60,7 @@ public class HistoryFragment extends BaseWorkerFragment
     public void initView() {
         setContentView(R.layout.fragment_history);
         mMapView = (MapView) findViewById(R.id.mv_map);
-        mTvTime = (TextView) findViewById(R.id.tv_time);
+        // mTvTime = (TextView) findViewById(R.id.tv_time);
         mSbTime = (SeekBar) findViewById(R.id.sb_time);
         mMapView.onCreate(mSavedInstanceState);// 此方法必须重写
         if (mAMap == null) {
@@ -79,11 +82,21 @@ public class HistoryFragment extends BaseWorkerFragment
                 return true;
             }
         });
+        mSbTime.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                showTimePop((int) event.getX(), (int) event.getY());
+
+                return false;
+            }
+        });
         mSbTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                changeTimeLocation();
-                mTvTime.setText("10:" + progress);
+                // changeTimeLocation();
+                if (mTvTime != null) {
+                    mTvTime.setText("10:" + progress);
+                }
             }
 
             @Override
@@ -97,14 +110,16 @@ public class HistoryFragment extends BaseWorkerFragment
     }
 
     private void changeTimeLocation() {
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTvTime.getLayoutParams();
+        // LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
+        // mTvTime.getLayoutParams();
         float max = mSbTime.getMax();
         float progress = mSbTime.getProgress();
         float maxW = mSbTime.getWidth() - mSbTime.getPaddingRight() - mSbTime.getPaddingLeft()
                 - DisplayUtil.dip(20);
         float progressW = progress * maxW / max;
-        params.leftMargin = (int) progressW;
-        mTvTime.setLayoutParams(params);
+        // params.leftMargin = (int) progressW;
+        // mTvTime.setLayoutParams(params);
+        showTimePop((int) progressW, mSbTime.getTop());
     }
 
     @Override
@@ -162,8 +177,14 @@ public class HistoryFragment extends BaseWorkerFragment
         mAMap.setMyLocationStyle(myLocationStyle);
     }
 
-    private void showTimePop() {
-
+    private void showTimePop(int x, int y) {
+        if (mTimeTipPop == null) {
+            mTimeTipPop = new PopupWindowHelper(getActivity());
+            mTimeTipPop.setView(getLayoutInflater().inflate(R.layout.pop_time_tip, null),
+                    DisplayUtil.dip(40), DisplayUtil.dip(25));
+            mTvTime = (TextView) mTimeTipPop.findViewById(R.id.tv_time);
+        }
+        mTimeTipPop.showAtLocation(mSbTime, Gravity.TOP, x, y);
     }
 
     @Override

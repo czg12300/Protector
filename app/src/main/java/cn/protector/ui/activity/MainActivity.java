@@ -11,10 +11,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import cn.common.ui.activity.BaseTitleActivity;
+import cn.common.ui.widgt.TabRadioGroup;
 import cn.protector.R;
 import cn.protector.ui.adapter.CommonFragmentPagerAdapter;
 import cn.protector.ui.fragment.HistoryFragment;
@@ -22,18 +24,26 @@ import cn.protector.ui.fragment.LocateFragment;
 import cn.protector.ui.fragment.SettingFragment;
 import cn.protector.ui.widget.MapViewPager;
 
-import java.util.ArrayList;
-
-public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener {
+public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageChangeListener,
+        TabRadioGroup.OnCheckedChangeListener, View.OnClickListener {
     private MapViewPager mVpContent;
-    private RadioGroup mRgMenu;
+
+    private TabRadioGroup mRgMenu;
+
     private RadioButton mRbLocate;
+
     private RadioButton mRbHistory;
+
     private RadioButton mRbMessage;
+
     private RadioButton mRbHealth;
+
     private RadioButton mRbSetting;
+
     private TextView mTvTitle;
+
     private ImageView mIvTitleRight;
+
     private ImageView mIvTitleLeft;
 
     @Override
@@ -66,7 +76,7 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         setContentView(R.layout.activity_main);
         mVpContent = (MapViewPager) findViewById(R.id.vp_content);
-        mRgMenu = (RadioGroup) findViewById(R.id.rg_menu);
+        mRgMenu = (TabRadioGroup) findViewById(R.id.rg_menu);
         mRbLocate = (RadioButton) findViewById(R.id.rb_menu_locate);
         mRbHealth = (RadioButton) findViewById(R.id.rb_menu_health);
         mRbHistory = (RadioButton) findViewById(R.id.rb_menu_history);
@@ -104,32 +114,8 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
     }
 
     @Override
-    public void onCheckedChanged(RadioGroup radioGroup, int checkId) {
-        int position = 0;
-        switch (checkId) {
-            case R.id.rb_menu_locate:
-                position = 0;
-                break;
-            case R.id.rb_menu_history:
-                position = 1;
-                break;
-            case R.id.rb_menu_message:
-                position = 2;
-                break;
-            case R.id.rb_menu_health:
-                position = 3;
-                break;
-            case R.id.rb_menu_setting:
-                position = 4;
-                break;
-        }
-        mVpContent.setCurrentItem(position, false);
-    }
-
-    @Override
     public void onPageScrollStateChanged(int status) {
     }
-
 
     @Override
     public void onPageScrolled(int arg0, float arg1, int arg2) {
@@ -167,5 +153,28 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
         if (id == R.id.iv_back) {
             mVpContent.setCurrentItem(0, false);
         }
+    }
+
+    @Override
+    public void onCheckedChanged(TabRadioGroup group, int checkedId) {
+        int position = 0;
+        switch (checkedId) {
+            case R.id.rb_menu_locate:
+                position = 0;
+                break;
+            case R.id.rb_menu_history:
+                position = 1;
+                break;
+            case R.id.rb_menu_message:
+                position = 2;
+                break;
+            case R.id.rb_menu_health:
+                position = 3;
+                break;
+            case R.id.rb_menu_setting:
+                position = 4;
+                break;
+        }
+        mVpContent.setCurrentItem(position, false);
     }
 }

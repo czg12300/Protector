@@ -1,21 +1,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <cn.protector.ui.widget.MapViewPager
         android:id="@+id/vp_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/v_line" />
+        android:layout_above="@+id/v_line"/>
 
     <View
         android:id="@+id/v_line"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_above="@+id/rg_menu"
-        android:background="@color/gray_dfdfdd" />
+        android:background="@color/gray_dfdfdd"/>
 
-    <RadioGroup
+    <cn.common.ui.widgt.TabRadioGroup
         android:id="@+id/rg_menu"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_bottom_menu_height"
@@ -23,36 +23,59 @@
         android:background="@color/white"
         android:orientation="horizontal">
 
-        <cn.common.ui.widgt.CustomRadioButton
+        <RadioButton
             android:id="@+id/rb_menu_locate"
             style="@style/main_menu"
             android:checked="true"
             android:drawableTop="@drawable/rb_selector_locate"
-            android:text="@string/main_locate" />
+            android:text="@string/main_locate"/>
 
-        <cn.common.ui.widgt.CustomRadioButton
+        <RadioButton
             android:id="@+id/rb_menu_history"
             style="@style/main_menu"
             android:drawableTop="@drawable/rb_selector_history"
-            android:text="@string/main_history" />
+            android:text="@string/main_history"/>
 
-        <cn.common.ui.widgt.CustomRadioButton
-            android:id="@+id/rb_menu_message"
-            style="@style/main_menu"
-            android:drawableTop="@drawable/rb_selector_message"
-            android:text="@string/main_message" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-        <cn.common.ui.widgt.CustomRadioButton
+            <RadioButton
+                android:id="@+id/rb_menu_message"
+                style="@style/main_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableTop="@drawable/rb_selector_message"
+                android:text="@string/main_message"/>
+
+            <TextView
+                android:id="@+id/tv_message_num"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_alignLeft="@+id/rb_menu_message"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/ico_reminder_dot"
+                android:gravity="center"
+                android:paddingBottom="3dp"
+                android:text="1"
+                android:textColor="@color/white"
+                android:textSize="12dp"/>
+        </RelativeLayout>
+
+        <RadioButton
             android:id="@+id/rb_menu_health"
             style="@style/main_menu"
             android:drawableTop="@drawable/rb_selector_health"
-            android:text="@string/main_health" />
+            android:text="@string/main_health"/>
 
-        <cn.common.ui.widgt.CustomRadioButton
+        <RadioButton
             android:id="@+id/rb_menu_setting"
             style="@style/main_menu"
             android:drawableTop="@drawable/rb_selector_setting"
-            android:text="@string/main_setting" />
-    </RadioGroup>
+            android:text="@string/main_setting"/>
+    </cn.common.ui.widgt.TabRadioGroup>
 
 </RelativeLayout>
