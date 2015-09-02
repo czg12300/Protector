@@ -19,8 +19,10 @@ import cn.common.ui.activity.BaseTitleActivity;
 import cn.common.ui.widgt.TabRadioGroup;
 import cn.protector.R;
 import cn.protector.ui.adapter.CommonFragmentPagerAdapter;
+import cn.protector.ui.fragment.HealthFragment;
 import cn.protector.ui.fragment.HistoryFragment;
 import cn.protector.ui.fragment.LocateFragment;
+import cn.protector.ui.fragment.MessageFragment;
 import cn.protector.ui.fragment.SettingFragment;
 import cn.protector.ui.widget.MapViewPager;
 
@@ -46,6 +48,8 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
 
     private ImageView mIvTitleLeft;
 
+    private View mVTitle;
+
     @Override
     protected void setTitle(String title) {
         mTvTitle.setText(title);
@@ -53,11 +57,23 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
 
     @Override
     protected View getTitleLayoutView() {
-        View vTitle = getLayoutInflater().inflate(R.layout.title_main, null);
-        mTvTitle = (TextView) vTitle.findViewById(R.id.tv_title);
-        mIvTitleRight = (ImageView) vTitle.findViewById(R.id.iv_right);
-        mIvTitleLeft = (ImageView) vTitle.findViewById(R.id.iv_back);
-        return vTitle;
+        mVTitle = getLayoutInflater().inflate(R.layout.title_main, null);
+        mTvTitle = (TextView) mVTitle.findViewById(R.id.tv_title);
+        mIvTitleRight = (ImageView) mVTitle.findViewById(R.id.iv_right);
+        mIvTitleLeft = (ImageView) mVTitle.findViewById(R.id.iv_back);
+        return mVTitle;
+    }
+
+    public void hideTitle() {
+        if (mVTitle != null) {
+            mVTitle.setVisibility(View.GONE);
+        }
+    }
+
+    public void showTitle() {
+        if (mVTitle != null && mVTitle.getVisibility() != View.VISIBLE) {
+            mVTitle.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -94,7 +110,8 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
     }
 
     protected void initData() {
-        mVpContent.setAdapter(new CommonFragmentPagerAdapter(getSupportFragmentManager(), getFragments()));
+        mVpContent.setAdapter(
+                new CommonFragmentPagerAdapter(getSupportFragmentManager(), getFragments()));
         setTitle("小妮儿");
     }
 
@@ -107,8 +124,8 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
         ArrayList<Fragment> list = new ArrayList<Fragment>();
         list.add(LocateFragment.newInstance());
         list.add(HistoryFragment.newInstance());
-        list.add(SettingFragment.newInstance());
-        list.add(SettingFragment.newInstance());
+        list.add(MessageFragment.newInstance());
+        list.add(HealthFragment.newInstance());
         list.add(SettingFragment.newInstance());
         return list;
     }
@@ -124,6 +141,7 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
+        showTitle();
         switch (mVpContent.getCurrentItem()) {
             case 0:
                 mRbLocate.setChecked(true);
@@ -137,6 +155,7 @@ public class MainActivity extends BaseTitleActivity implements ViewPager.OnPageC
                 mRbMessage.setChecked(true);
                 break;
             case 3:
+                hideTitle();
                 mRbHealth.setChecked(true);
                 break;
             case 4:
