@@ -23,6 +23,20 @@ public final class InitSharedPreferences {
      */
     private static final String KEY_IS_FIRST_IN = "isFirstIn";
     private static final String key_has = "isFirstIn";
+    private static final String KEY_IS_NEW_VOICE = "key_is_new_voice";
+
+    public static boolean isNewVoice(int id) {
+        String save = getSharedPreferences().getString(KEY_IS_NEW_VOICE, "");
+        if (save.contains("#" + id + "#")) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void setNewVoice(int id) {
+        String save = getSharedPreferences().getString(KEY_IS_NEW_VOICE, "") + "#" + id + "#";
+        getSharedPreferences().edit().putString(KEY_IS_NEW_VOICE, save).commit();
+    }
 
     public static void setIsFirstIn(boolean isFirstIn) {
         getSharedPreferences().edit().putBoolean(KEY_IS_FIRST_IN, isFirstIn).commit();

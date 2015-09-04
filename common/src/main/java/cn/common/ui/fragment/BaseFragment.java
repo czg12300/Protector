@@ -59,6 +59,13 @@ public abstract class BaseFragment extends Fragment implements IUi {
         return getActivity().getLayoutInflater();
     }
 
+    public View inflate(int layout, ViewGroup group) {
+        return getLayoutInflater().inflate(layout, group);
+    }
+
+    public View inflate(int layout) {
+        return getLayoutInflater().inflate(layout, null);
+    }
 
     private FrameLayout mDecorView;
 
