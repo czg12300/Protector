@@ -5,13 +5,14 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.widget.PopupWindow;
 
 /**
  * 创建popupwindow
- * 
+ *
  * @author jake
  */
 public class PopupWindowHelper {
@@ -29,17 +30,21 @@ public class PopupWindowHelper {
         this(context, null, style);
     }
 
-    public PopupWindowHelper(Context context, View popupView, int stype) {
+    public PopupWindowHelper(Context context, View popupView, int style) {
         this.mContext = context;
-        pw = new PopupWindow(context, null, stype);
+        pw = new PopupWindow(context, null, style);
         setView(popupView);
     }
 
     /**
      * 设置view
-     * 
-     * @param popupView
+     *
+     * @param layoutId
      */
+    public void setView(int layoutId) {
+        setView(LayoutInflater.from(mContext).inflate(layoutId, null));
+    }
+
     public void setView(View popupView) {
         if (popupView == null) {
             return;
@@ -63,7 +68,7 @@ public class PopupWindowHelper {
 
     /**
      * 设置view
-     * 
+     *
      * @param popupView
      */
     public void setView(View popupView, int width, int height) {
@@ -72,7 +77,7 @@ public class PopupWindowHelper {
 
     /**
      * 设置view
-     * 
+     *
      * @param popupView
      */
     public void setView(View popupView, int width, int height, Drawable drawable) {
@@ -88,9 +93,19 @@ public class PopupWindowHelper {
         setOutsideTouchable(true);
     }
 
+    public void setMeasuredDimension(int width, int height) {
+        pw.setWidth(width);
+        pw.setHeight(height);
+    }
+
+    public void setHeight(int height) {
+        popupView.measure(pw.getWidth(), height);
+        pw.setHeight(height);
+    }
+
     /**
      * 设置是否点击外部消失
-     * 
+     *
      * @param bool
      */
     public void setOutsideTouchable(boolean bool) {
@@ -128,7 +143,7 @@ public class PopupWindowHelper {
 
     /**
      * 是否显示
-     * 
+     *
      * @return
      */
     public boolean isShowing() {

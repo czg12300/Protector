@@ -3,6 +3,8 @@ package cn.common.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
@@ -81,4 +83,11 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
         return position;
     }
 
+    protected View inflate(int layoutId, ViewGroup viewGroup) {
+        return getLayoutInflater().inflate(layoutId, viewGroup);
+    }
+
+    protected View inflate(int layoutId) {
+        return inflate(layoutId, null);
+    }
 }

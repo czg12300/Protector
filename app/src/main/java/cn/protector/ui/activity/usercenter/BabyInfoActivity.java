@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,12 +25,13 @@ import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.widgt.RoundImageView;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
-import cn.protector.data.BroadcastActivions;
+import cn.protector.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
 
 /**
  * 描述:宝贝信息页面
- *@author  Created by jakechen on 2015/8/27.
+ *
+ * @author Created by jakechen on 2015/8/27.
  */
 public class BabyInfoActivity extends CommonTitleActivity implements View.OnClickListener {
 
@@ -201,14 +201,14 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
     @Override
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
-        actions.add(BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+        actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
     }
 
     @Override
     public void handleBroadcast(Context context, Intent intent) {
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
-        if (TextUtils.equals(action, BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
             finish();
         }
     }

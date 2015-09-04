@@ -1,6 +1,7 @@
 
 package cn.common.ui.fragment;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -62,9 +63,8 @@ public abstract class BaseFragment extends Fragment implements IUi {
     private FrameLayout mDecorView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mUiHandler = new UiHandler(this);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
         mActions = new ArrayList<String>();
         setupBroadcastActions(mActions);
         if (mActions != null && mActions.size() > 0) {
@@ -81,6 +81,22 @@ public abstract class BaseFragment extends Fragment implements IUi {
             getActivity().registerReceiver(mReceiver, filter);
         }
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (mReceiver != null) {
+            getActivity().unregisterReceiver(mReceiver);
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mUiHandler = new UiHandler(this);
+
+    }
+
 
     /**
      * 获取资源文件的颜色值
@@ -122,13 +138,6 @@ public abstract class BaseFragment extends Fragment implements IUi {
         return getResources().getStringArray(id);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mReceiver != null) {
-            getActivity().unregisterReceiver(mReceiver);
-        }
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -245,5 +254,13 @@ public abstract class BaseFragment extends Fragment implements IUi {
             it.putExtras(bundle);
         }
         startActivityForResult(it, requestCode);
+    }
+
+    public void sendBroadcast(String action) {
+        getActivity().sendBroadcast(new Intent(action));
+    }
+
+    public void sendBroadcast(Intent it) {
+        getActivity().sendBroadcast(it);
     }
 }

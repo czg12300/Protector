@@ -9,7 +9,7 @@ import android.view.View;
 import java.util.List;
 
 import cn.protector.R;
-import cn.protector.data.BroadcastActivions;
+import cn.protector.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
 
 /**
@@ -32,14 +32,14 @@ public class AddDeviceActivity extends CommonTitleActivity {
     @Override
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
-        actions.add(BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+        actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
     }
 
     @Override
     public void handleBroadcast(Context context, Intent intent) {
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
-        if (TextUtils.equals(action, BroadcastActivions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
             finish();
         }
     }

@@ -2,19 +2,24 @@
 package cn.protector.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
+import cn.protector.data.BroadcastActions;
 import cn.protector.ui.activity.usercenter.BabyInfoActivity;
+import cn.protector.ui.helper.MainTitleHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,31 +29,46 @@ import java.util.List;
  */
 public class MessageFragment extends BaseWorkerFragment
         implements View.OnClickListener, AdapterView.OnItemClickListener {
+    private MainTitleHelper mTitleHelper;
+
     public static MessageFragment newInstance() {
         return new MessageFragment();
     }
 
-    private GridView mGvSetting;
+    private ListView mLvMessage;
 
-    private View mVBabyInfo;
 
     @Override
     public void initView() {
-        setContentView(R.layout.fragment_setting);
-        mGvSetting = (GridView) findViewById(R.id.gv_setting);
-        mVBabyInfo = findViewById(R.id.ll_baby_info);
-
-    }
-
-    @Override
-    protected void initEvent() {
-        mGvSetting.setOnItemClickListener(this);
-        mVBabyInfo.setOnClickListener(this);
+        setContentView(R.layout.fragment_message);
+        mLvMessage = (ListView) findViewById(R.id.lv_message);
+        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title), MainTitleHelper.STYLE_HEALTH);
     }
 
     @Override
     protected void initData() {
-        mGvSetting.setAdapter(new SettingAdapter(getActivity(), getListSetting()));
+        mLvMessage.setAdapter(new SettingAdapter(getActivity(), getListSetting()));
+    }
+
+    @Override
+    public void setupBroadcastActions(List<String> actions) {
+        super.setupBroadcastActions(actions);
+        actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
+        actions.add(BroadcastActions.ACTION_GET_ALL_DEVICES);
+    }
+
+    @Override
+    public void handleBroadcast(Context context, Intent intent) {
+        super.handleBroadcast(context, intent);
+        String action = intent.getAction();
+        if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
+            //TODO 切换设备
+            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
+            mTitleHelper.setTitle(info.name);
+        } else if (TextUtils.equals(action, BroadcastActions.ACTION_GET_ALL_DEVICES)) {
+            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
+            mTitleHelper.setDevice(infos);
+        }
     }
 
     /**

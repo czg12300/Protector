@@ -11,6 +11,7 @@
     <string name="title_finish_info">完善资料</string>
     <string name="title_relationship">我与宝贝关系</string>
     <string name="title_choose_avator">选择头像</string>
+    <string name="title_check_all_device">查看所有设备</string>
     <!--标题 end-->
     <string name="app_name">守护者</string>
     <string name="register">注册</string>
