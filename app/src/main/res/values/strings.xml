@@ -62,5 +62,12 @@
     <string name="location_setting">定位模式</string>
     <string name="shutdown_setting">远程关机</string>
     <string name="exit_login">退出登录</string>
+    <string name="huhang">护航</string>
+    <string name="sport_every_day">每天运动</string>
+    <string name="day">天</string>
+    <string name="step">步</string>
+    <string name="force_top">脚掌受力</string>
+    <string name="force_bottom">脚跟受力</string>
+    <string name="hot_sport">热门活动</string>
 
 </resources>

@@ -3,16 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/title_main"/>
 
-    <ListView
+    <cn.protector.ui.widget.pulltorefresh.HealthListView
         android:id="@+id/lv_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/title_height"
         android:cacheColorHint="@color/trans"
         android:divider="@color/divider_list"
         android:dividerHeight="1px"
         android:listSelector="@drawable/list_selector_backgroud_gray"/>
 
+    <include layout="@layout/title_main"/>
 </FrameLayout>

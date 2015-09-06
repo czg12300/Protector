@@ -1,0 +1,283 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_health_topwrap"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_update_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="30dp"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/ico_min_refresh_white"
+            android:text="11:01更新"
+            android:textColor="@color/white"
+            android:textSize="9dp"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+
+            <TextView
+                android:id="@+id/tv_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/ll_day_num"
+                android:text="@string/huhang"
+                android:textColor="@color/white"
+                android:textSize="11dp"/>
+
+            <LinearLayout
+                android:id="@+id/ll_day_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_day"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_day_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="60"
+                    android:textColor="@color/white"
+                    android:textSize="36dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/huhang"
+                    android:textColor="@color/white"
+                    android:textSize="11dp"/>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/v_slash"
+                android:layout_width="34dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/ll_day_num"
+                android:background="@drawable/bg_slash_white"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/v_slash">
+
+                <TextView
+                    android:id="@+id/tv_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/ll_step"
+                    android:text="@string/step"
+                    android:textColor="@color/white"
+                    android:textSize="11dp"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_step"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_step_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="600"
+                        android:textColor="@color/white"
+                        android:textSize="36dp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sport_every_day"
+                        android:textColor="@color/white"
+                        android:textSize="11dp"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_total_steps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/ico_min_steps_white"
+            android:drawablePadding="5dp"
+            android:singleLine="true"
+            android:text="@string/sport_every_day"
+            android:textColor="@color/white"
+            android:textSize="11dp"/>
+
+        <TextView
+            android:id="@+id/tv_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ico_min_sun_white"
+            android:drawablePadding="5dp"
+            android:singleLine="true"
+            android:text="@string/sport_every_day"
+            android:textColor="@color/white"
+            android:textSize="11dp"/>
+
+        <TextView
+            android:id="@+id/tv_eval_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ico_min_eval_white"
+            android:drawablePadding="5dp"
+            android:singleLine="true"
+            android:text="@string/sport_every_day"
+            android:textColor="@color/white"
+            android:textSize="11dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/tv_foot_top_force"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="@color/black_333333"
+                android:textSize="24dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_foot_top_force"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/tv_foot_top_force"
+                android:text="G"
+                android:textColor="@color/gray_999999"
+                android:textSize="11dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_foot_top_force"
+                android:text="@string/force_top"
+                android:textColor="@color/gray_999999"
+                android:textSize="11dp"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bg_foot"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/tv_foot_bottom_force"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="@color/black_333333"
+                android:textSize="24dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_foot_bottom_force"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/tv_foot_bottom_force"
+                android:text="G"
+                android:textColor="@color/gray_999999"
+                android:textSize="11dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_foot_bottom_force"
+                android:text="@string/force_bottom"
+                android:textColor="@color/gray_999999"
+                android:textSize="11dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_foot_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/ico_min_steps_grey"
+        android:drawablePadding="5dp"
+        android:singleLine="true"
+        android:text="@string/sport_every_day"
+        android:textColor="@color/black_333333"
+        android:textSize="11dp"/>
+
+    <TextView
+        android:id="@+id/tv_force_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/ico_min_eval_grey"
+        android:drawablePadding="5dp"
+        android:singleLine="true"
+        android:text="@string/sport_every_day"
+        android:textColor="@color/black_333333"
+        android:textSize="11dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:singleLine="true"
+        android:text="@string/hot_sport"
+        android:textColor="@color/gray_999999"
+        android:textSize="@dimen/text_content"/>
+
+</LinearLayout>
