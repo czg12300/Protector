@@ -64,10 +64,18 @@
     <string name="exit_login">退出登录</string>
     <string name="huhang">护航</string>
     <string name="sport_every_day">每天运动</string>
+    <string name="hot_sport">热门活动</string>
     <string name="day">天</string>
+    <string name="today">今天</string>
     <string name="step">步</string>
     <string name="force_top">脚掌受力</string>
     <string name="force_bottom">脚跟受力</string>
-    <string name="hot_sport">热门活动</string>
+    <string name="sunday">日</string>
+    <string name="monday">一</string>
+    <string name="tuesday">二</string>
+    <string name="wednesday">三</string>
+    <string name="thursday">四</string>
+    <string name="friday">五</string>
+    <string name="saturday">六</string>
 
 </resources>

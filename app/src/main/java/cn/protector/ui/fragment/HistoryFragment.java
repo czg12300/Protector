@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -26,7 +27,6 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.common.ui.fragment.BaseWorkerFragment;
@@ -45,8 +45,12 @@ import cn.protector.utils.ToastUtil;
  */
 public class HistoryFragment extends BaseWorkerFragment
         implements View.OnClickListener, AMapLocationListener {
+    private static final int MSG_UI_START = 0;
+
+    private static final int MSG_UI_HIDE_TIME_TIP_POP = MSG_UI_START + 1;
 
     private PopupWindowHelper mTimeTipPop;
+
     private MainTitleHelper mTitleHelper;
 
     public static HistoryFragment newInstance() {
@@ -75,7 +79,8 @@ public class HistoryFragment extends BaseWorkerFragment
         if (mAMap == null) {
             mAMap = mMapView.getMap();
         }
-        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title), MainTitleHelper.STYLE_HEALTH);
+        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
+                MainTitleHelper.STYLE_HISTORY);
         UiSettings uiSettings = mAMap.getUiSettings();
         uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
         uiSettings.setZoomControlsEnabled(false);
@@ -95,18 +100,25 @@ public class HistoryFragment extends BaseWorkerFragment
         mSbTime.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                showTimePop((int) event.getX(), (int) event.getY());
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        showTimePop();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        sendEmptyUiMessageDelayed(MSG_UI_HIDE_TIME_TIP_POP, 300);
+                        break;
 
+                }
                 return false;
             }
         });
         mSbTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // changeTimeLocation();
                 if (mTvTime != null) {
                     mTvTime.setText("10:" + progress);
                 }
+                showTimePop();
             }
 
             @Override
@@ -117,19 +129,6 @@ public class HistoryFragment extends BaseWorkerFragment
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-    }
-
-    private void changeTimeLocation() {
-        // LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
-        // mTvTime.getLayoutParams();
-        float max = mSbTime.getMax();
-        float progress = mSbTime.getProgress();
-        float maxW = mSbTime.getWidth() - mSbTime.getPaddingRight() - mSbTime.getPaddingLeft()
-                - DisplayUtil.dip(20);
-        float progressW = progress * maxW / max;
-        // params.leftMargin = (int) progressW;
-        // mTvTime.setLayoutParams(params);
-        showTimePop((int) progressW, mSbTime.getTop());
     }
 
     @Override
@@ -146,15 +145,27 @@ public class HistoryFragment extends BaseWorkerFragment
     }
 
     @Override
+    public void handleUiMessage(Message msg) {
+        super.handleUiMessage(msg);
+        switch (msg.what) {
+            case MSG_UI_HIDE_TIME_TIP_POP:
+                hideTimePop();
+                break;
+        }
+    }
+
+    @Override
     public void handleBroadcast(Context context, Intent intent) {
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
         if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
-            //TODO 切换设备
-            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
+            // TODO 切换设备
+            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent
+                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
             mTitleHelper.setTitle(info.name);
         } else if (TextUtils.equals(action, BroadcastActions.ACTION_GET_ALL_DEVICES)) {
-            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
+            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent
+                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
             mTitleHelper.setDevice(infos);
         }
     }
@@ -208,14 +219,43 @@ public class HistoryFragment extends BaseWorkerFragment
         mAMap.setMyLocationStyle(myLocationStyle);
     }
 
-    private void showTimePop(int x, int y) {
+    /**
+     * 隐藏跟随滚动的提示语
+     */
+    private void hideTimePop() {
+        if (mTimeTipPop != null) {
+            mTimeTipPop.dismiss();
+        }
+    }
+
+    /**
+     * 显示跟随滚动的提示语
+     */
+    private void showTimePop() {
         if (mTimeTipPop == null) {
             mTimeTipPop = new PopupWindowHelper(getActivity());
             mTimeTipPop.setView(getLayoutInflater().inflate(R.layout.pop_time_tip, null),
                     DisplayUtil.dip(40), DisplayUtil.dip(25));
             mTvTime = (TextView) mTimeTipPop.findViewById(R.id.tv_time);
         }
-        mTimeTipPop.showAtLocation(mSbTime, Gravity.TOP, x, y);
+        mTimeTipPop.showAtLocation(mSbTime, Gravity.NO_GRAVITY, 0, 0);
+        updateTimePopLocation();
+    }
+
+    /**
+     * 更新跟随滚动的提示语的位置
+     */
+    private void updateTimePopLocation() {
+        int popViewWidth = mTimeTipPop.getView().getMeasuredWidth();
+        int popViewHeight = mTimeTipPop.getView().getMeasuredHeight();
+        int sbWidth = mSbTime.getWidth();
+        int sbHeight = mSbTime.getHeight();
+
+        int xOffset = (int) (mSbTime.getProgress() * (sbWidth - mSbTime.getPaddingLeft()
+                - mSbTime.getPaddingRight() - DisplayUtil.dip(16)) / (float) mSbTime.getMax())
+                - popViewWidth / 2 + sbHeight / 2;
+        int yOffset = -(mSbTime.getHeight() + popViewHeight + DisplayUtil.dip(5));
+        mTimeTipPop.update(mSbTime, xOffset, yOffset, -1, -1);
     }
 
     @Override

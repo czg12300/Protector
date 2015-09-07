@@ -1,3 +1,4 @@
+
 package cn.protector.ui.helper;
 
 import android.content.Context;
@@ -31,13 +32,21 @@ import cn.protector.data.BroadcastActions;
 public class MainTitleHelper implements View.OnClickListener {
 
     private View mVTitle;
+
     public static final String KEY_DEVICE_INFO = "key_device_info";
+
     public static final String KEY_DEVICE_LIST = "key_device_list";
+
     public static final int STYLE_LOCATE = 0;
+
     public static final int STYLE_HISTORY = 1;
+
     public static final int STYLE_MESSAGE = 3;
+
     public static final int STYLE_HEALTH = 4;
+
     public static final int STYLE_SETTING = 5;
+
     private int mStyle = STYLE_LOCATE;
 
     private TextView mTvTitle;
@@ -45,6 +54,7 @@ public class MainTitleHelper implements View.OnClickListener {
     private ImageView mIvTitleRight;
 
     private ImageView mIvTitleLeft;
+
     private DeviceAdapter mDeviceAdapter;
 
     private Context getContext() {
@@ -126,18 +136,24 @@ public class MainTitleHelper implements View.OnClickListener {
 
     private PopupWindowHelper mCalendarPop;
 
+    private CalendarHelper mCalendarHelper;
+
     /**
      * 显示日历控件
      */
     private void showCalendarPop() {
         if (mCalendarPop == null) {
             mCalendarPop = new PopupWindowHelper(getContext());
-            mCalendarPop.setView(R.layout.dialog_tip);
+            mCalendarHelper = new CalendarHelper(getContext());
+            mCalendarPop.setView(mCalendarHelper.getView(), mVTitle.getWidth(), 0);
         }
+        mCalendarHelper.setDataList(2015, 9);
+        mCalendarPop.setHeight(DisplayUtil.dip(313) + 2);
         mCalendarPop.showAsDropDown(mVTitle);
     }
 
     private PopupWindowHelper mDevicePop;
+
     private ListView mLvDevice;
 
     /**
@@ -218,13 +234,16 @@ public class MainTitleHelper implements View.OnClickListener {
 
         final class ViewHolder {
             TextView tvName;
+
             ImageView ivAvator;
         }
     }
 
     public static class DeviceInfo implements Serializable {
         public String avator;
+
         public String name;
+
         public int id;
 
         public DeviceInfo(int id, String avator, String name) {

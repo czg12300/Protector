@@ -127,6 +127,10 @@ public class PopupWindowHelper {
         pw.setFocusable(true);
     }
 
+    public void update(View anchor, int xoff, int yoff, int width, int height) {
+        pw.update(anchor, xoff, yoff, width, height);
+    }
+
     /**
      * 隐藏
      */
@@ -156,5 +160,9 @@ public class PopupWindowHelper {
 
     public void setBackground(Drawable drawable) {
         pw.setBackgroundDrawable(drawable);
+    }
+
+    public View getView() {
+        return popupView;
     }
 }

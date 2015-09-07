@@ -9,20 +9,19 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.common.ui.activity.BaseTitleActivity;
 import cn.common.ui.activity.BaseWorkerFragmentActivity;
 import cn.common.ui.widgt.TabRadioGroup;
+import cn.protector.ProtectorApplication;
 import cn.protector.R;
 import cn.protector.data.BroadcastActions;
 import cn.protector.ui.adapter.CommonFragmentPagerAdapter;
@@ -33,11 +32,14 @@ import cn.protector.ui.fragment.MessageFragment;
 import cn.protector.ui.fragment.SettingFragment;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.ui.widget.MapViewPager;
+import cn.protector.utils.ToastUtil;
 
-public class MainActivity extends BaseWorkerFragmentActivity implements ViewPager.OnPageChangeListener,
-        TabRadioGroup.OnCheckedChangeListener {
+public class MainActivity extends BaseWorkerFragmentActivity
+        implements ViewPager.OnPageChangeListener, TabRadioGroup.OnCheckedChangeListener {
     private static final int MSG_UI_INIT_DATA = 0;
+
     private static final int MSG_UI_GET_ALL_DEVICES = 1;
+
     private MapViewPager mVpContent;
 
     private TabRadioGroup mRgMenu;
@@ -52,6 +54,21 @@ public class MainActivity extends BaseWorkerFragmentActivity implements ViewPage
 
     private RadioButton mRbSetting;
 
+    private long lastClickTime;
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            long now = System.currentTimeMillis();
+            if (now - lastClickTime > 2000) {
+                ToastUtil.show("再按一次退出");
+                lastClickTime = now;
+            } else {
+                ProtectorApplication.getInstance().exitApp();
+            }
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,7 +182,6 @@ public class MainActivity extends BaseWorkerFragmentActivity implements ViewPage
             }
         }
     }
-
 
     @Override
     public void onCheckedChanged(TabRadioGroup group, int checkedId) {

@@ -44,9 +44,8 @@ public class ScanQACodeActivity extends CommonTitleActivity {
         mSvCamera = (SurfaceView) findViewById(R.id.sv_camera);
         vScanFrame = findViewById(R.id.rl_frame_scan);
         mCaptureHelper = new CaptureHelper(mSvCamera, this);
-
         startScanQa();
-        goActivity(FinishInfoActivity.class);
+        // goActivity(FinishInfoActivity.class);
     }
 
     @Override

@@ -25,6 +25,10 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
         return mInflater;
     }
 
+    public int getColor(int id) {
+        return getContext().getResources().getColor(id);
+    }
+
     public BaseListAdapter(Context context) {
         this(context, null);
     }

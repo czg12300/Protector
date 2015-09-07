@@ -219,11 +219,12 @@ public class HealthListView extends ListView implements AbsListView.OnScrollList
                 if (lastAlpha < alpha) {
                     mVTitle.getBackground().setAlpha(alpha);
                     lastAlpha = alpha;
-                } else if (pHeight == height) {
+                } else if (pHeight == height && lastAlpha > 0) {
                     mVTitle.getBackground().setAlpha(255);
+                    lastAlpha = 255;
                 }
             } else if (scrollDirection == DIRECTION_DOWN) {
-                if (pHeight < height) {
+                if (pHeight < height || pHeight == height && lastAlpha < 255) {
                     mVTitle.getBackground().setAlpha(alpha);
                     lastAlpha = alpha;
                 }

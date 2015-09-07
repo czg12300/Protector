@@ -1,14 +1,6 @@
 
 package cn.protector.ui.fragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.MotionEvent;
-import android.view.View;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
@@ -23,8 +15,13 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.view.View;
 
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.utils.BitmapUtil;
@@ -32,6 +29,8 @@ import cn.protector.R;
 import cn.protector.data.BroadcastActions;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.utils.ToastUtil;
+
+import java.util.List;
 
 /**
  * 描述：定位页面
@@ -63,7 +62,8 @@ public class LocateFragment extends BaseWorkerFragment
         if (mAMap == null) {
             mAMap = mMapView.getMap();
         }
-        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title), MainTitleHelper.STYLE_HEALTH);
+        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
+                MainTitleHelper.STYLE_LOCATE);
         UiSettings uiSettings = mAMap.getUiSettings();
         uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
         uiSettings.setZoomControlsEnabled(false);
