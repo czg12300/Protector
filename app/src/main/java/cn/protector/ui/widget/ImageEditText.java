@@ -60,6 +60,22 @@ public class ImageEditText extends LinearLayout {
         mEvCenter.setHint(resId);
     }
 
+    public void setText(int id) {
+        mEvCenter.setText(id);
+    }
+
+    public void setText(CharSequence cs) {
+        mEvCenter.setText(cs);
+    }
+
+    public void setSelection(int start) {
+        mEvCenter.setSelection(start);
+    }
+
+    public void setSelection(int start, int stop) {
+        mEvCenter.setSelection(start, stop);
+    }
+
     public void setHint(CharSequence cs) {
         mEvCenter.setHint(cs);
     }

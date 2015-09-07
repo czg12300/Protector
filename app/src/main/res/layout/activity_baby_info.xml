@@ -2,14 +2,15 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     android:descendantFocusability="afterDescendants"
-    android:orientation="vertical"
-    android:paddingTop="25dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/ll_avator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:background="@color/white"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -25,28 +26,32 @@
             android:gravity="left"
             android:text="@string/baby_avator"
             android:textColor="@color/text_content"
-            android:textSize="@dimen/text_content" />
+            android:textSize="14dp" />
 
         <cn.common.ui.widgt.RoundImageView
             android:id="@+id/riv_avator"
             android:layout_width="@dimen/avator"
             android:layout_height="@dimen/avator"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="20dp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ico_right" />
+
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/divider_menu" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/ll_baby_name"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center_vertical"
@@ -59,18 +64,26 @@
                 android:layout_height="wrap_content"
                 android:text="@string/baby_name"
                 android:textColor="@color/text_content"
-                android:textSize="@dimen/text_content" />
+                android:textSize="14dp" />
 
-            <EditText
-                android:id="@+id/ev_baby_name"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_baby_name"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
+                android:layout_weight="1"
                 android:background="@color/trans"
-                android:hint="@string/baby_name_hint"
-                android:textColor="@color/text_content"
-                android:textColorHint="@color/gray_999999"
+                android:gravity="right"
+                android:text="@string/baby_name_hint"
+                android:textColor="@color/gray_999999"
                 android:textSize="@dimen/text_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ico_right" />
+
         </LinearLayout>
 
         <View
@@ -81,7 +94,7 @@
             android:background="@color/divider_menu" />
 
         <LinearLayout
-            android:id="@+id/ll_birthday"
+            android:id="@+id/ll_baby_birthday"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center_vertical"
@@ -94,18 +107,71 @@
                 android:layout_height="wrap_content"
                 android:text="@string/baby_birthday"
                 android:textColor="@color/text_content"
-                android:textSize="@dimen/text_content" />
+                android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/tv_birthday"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_baby_birthday"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
+                android:layout_weight="1"
                 android:background="@color/trans"
-                android:hint="@string/birthday_hint"
-                android:textColor="@color/text_content"
-                android:textColorHint="@color/gray_999999"
+                android:gravity="right"
+                android:text="@string/birthday_hint"
+                android:textColor="@color/gray_999999"
                 android:textSize="@dimen/text_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ico_right"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/divider_menu" />
+
+        <LinearLayout
+            android:id="@+id/ll_baby_sex"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/baby_sex"
+                android:textColor="@color/text_content"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tv_baby_sex"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:background="@color/trans"
+                android:gravity="right"
+                android:text="@string/sex_unknown"
+                android:textColor="@color/gray_999999"
+                android:textSize="@dimen/text_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ico_right"
+                android:visibility="invisible" />
+
         </LinearLayout>
 
         <View
@@ -129,18 +195,27 @@
                 android:layout_height="wrap_content"
                 android:text="@string/shoe_size"
                 android:textColor="@color/text_content"
-                android:textSize="@dimen/text_content" />
+                android:textSize="14dp" />
 
             <TextView
                 android:id="@+id/tv_shoe_size"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
+                android:layout_weight="1"
                 android:background="@color/trans"
-                android:hint="@string/shoe_size_hint"
-                android:textColor="@color/text_content"
-                android:textColorHint="@color/gray_999999"
+                android:gravity="right"
+                android:text="@string/shoe_size_hint"
+                android:textColor="@color/gray_999999"
                 android:textSize="@dimen/text_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ico_right"
+                android:visibility="invisible" />
+
         </LinearLayout>
 
 

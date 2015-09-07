@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="150dp"
     android:layout_height="115dp"
     android:background="@drawable/bg_dialog_tip"
@@ -13,8 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ico_complete_white"
-        />
+        android:src="@drawable/ico_complete_white" />
 
     <TextView
         android:id="@+id/tv_tip"
@@ -23,8 +21,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:background="@color/trans"
-        android:singleLine="true"
+        android:gravity="center"
         android:text="ghjghgg"
         android:textColor="@color/white"
-        android:textSize="14dp"/>
+        android:textSize="14dp" />
 </LinearLayout>

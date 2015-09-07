@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +27,8 @@ import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 import cn.protector.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
+import cn.protector.ui.widget.ImageEditText;
+import cn.protector.utils.ToastUtil;
 
 /**
  * 描述:宝贝信息页面
@@ -37,93 +39,143 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
 
     private RoundImageView mRivAvator;
 
-    private EditText mEvBabyName;
 
     private TextView mTvBabyBirthday;
 
     private TextView mTvShoeSize;
-
-    private View mVAvator;
-
-    private View mVShoeSize;
-
-    private View mVBirthday;
+    private TextView mTvBabySex;
+    private TextView mTvBabyName;
 
     private BaseDialog mBirthdayDialog;
+    private BaseDialog mNameDialog;
+    private BaseDialog mSexDialog;
 
     private BaseDialog mShoeSizeDialog;
 
     private DatePicker mDatePicker;
+    private ImageEditText mEvBabyNickName;
+    private Button mBtnSexMale;
+    private Button mBtnSexFemale;
 
     @Override
     protected void initView() {
         setContentView(R.layout.activity_baby_info);
-        setTitle(R.string.title_finish_info);
-        mVAvator = findViewById(R.id.ll_avator);
-        mVShoeSize = findViewById(R.id.ll_shoe_size);
-        mVBirthday = findViewById(R.id.ll_birthday);
-        mTvShoeSize = (TextView) findViewById(R.id.tv_shoe_size);
-        mTvBabyBirthday = (TextView) findViewById(R.id.tv_birthday);
-        mEvBabyName = (EditText) findViewById(R.id.ev_baby_name);
+        setTitle(R.string.title_baby_info);
         mRivAvator = (RoundImageView) findViewById(R.id.riv_avator);
+        mTvBabyName = (TextView) findViewById(R.id.tv_baby_name);
+        mTvBabyBirthday = (TextView) findViewById(R.id.tv_baby_birthday);
+        mTvBabySex = (TextView) findViewById(R.id.tv_baby_sex);
+        mTvShoeSize = (TextView) findViewById(R.id.tv_shoe_size);
 //        mRivAvator.setBorderColor(getColor(R.color.gray_999999));
 //        mRivAvator.setBorderWidth(3, TypedValue.COMPLEX_UNIT_DIP);
     }
 
     @Override
     protected void initEvent() {
-        mVAvator.setOnClickListener(this);
-        mVShoeSize.setOnClickListener(this);
-        mVBirthday.setOnClickListener(this);
+        findViewById(R.id.ll_avator).setOnClickListener(this);
+        findViewById(R.id.ll_baby_name).setOnClickListener(this);
+        findViewById(R.id.ll_baby_birthday).setOnClickListener(this);
+        findViewById(R.id.ll_baby_sex).setOnClickListener(this);
+        findViewById(R.id.ll_shoe_size).setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
-        mRivAvator.setImageResource(R.mipmap.ic_launcher);
+        mRivAvator.setImageResource(R.drawable.img_head_boy1);
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.ll_birthday) {
+        if (id == R.id.ll_baby_name) {
+            showNameDialog();
+        } else if (id == R.id.ll_baby_birthday) {
             showBirthdayDialog();
+        } else if (id == R.id.ll_baby_sex) {
+            showSexDialog();
         } else if (id == R.id.ll_shoe_size) {
             showShoeSizeDialog();
-        } else if (id == R.id.btn_next) {
-            goActivity(RelationshipActivity.class);
         } else if (id == R.id.ll_avator) {
             goActivityForResult(ChooseAvatorActivity.class);
-        } else if (id == R.id.btn_ok) {
-            if (mDatePicker != null) {
-                String birthday = String.format("%d年%02d月%02d日", mDatePicker.getYear(),
-                        mDatePicker.getMonth() + 1, mDatePicker.getDayOfMonth());
-                mTvBabyBirthday.setText(birthday);
-            }
-            if (mBirthdayDialog != null && mBirthdayDialog.isShowing()) {
-                mBirthdayDialog.dismiss();
-            }
         }
     }
 
+    /**
+     * 显示选择宝贝生日的弹窗
+     */
     private void showBirthdayDialog() {
         if (mBirthdayDialog == null) {
             mBirthdayDialog = new BaseDialog(this);
-            mBirthdayDialog.setWindow(R.style.alpha_animation, 0.6f);
+            mBirthdayDialog.setWindow(R.style.alpha_animation, 0.3f);
             mBirthdayDialog.setContentView(R.layout.dialog_select_birthday);
             mDatePicker = (DatePicker) mBirthdayDialog.findViewById(R.id.date_picker);
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(System.currentTimeMillis());
             mDatePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH), null);
-            mBirthdayDialog.findViewById(R.id.btn_ok).setOnClickListener(this);
+            mBirthdayDialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mDatePicker != null) {
+                        String birthday = String.format("%d年%02d月%02d日", mDatePicker.getYear(),
+                                mDatePicker.getMonth() + 1, mDatePicker.getDayOfMonth());
+                        mTvBabyBirthday.setText(birthday);
+                    }
+                    if (mBirthdayDialog != null && mBirthdayDialog.isShowing()) {
+                        mBirthdayDialog.dismiss();
+                    }
+                }
+            });
         }
         mBirthdayDialog.show();
     }
 
+    /**
+     * 显示编辑宝贝昵称的弹窗
+     */
+    private void showNameDialog() {
+        if (mNameDialog == null) {
+            mNameDialog = new BaseDialog(this);
+            mNameDialog.setWindow(R.style.alpha_animation, 0.3f);
+            mNameDialog.setContentView(R.layout.dialog_edit_baby_nikename);
+            mEvBabyNickName = (ImageEditText) mNameDialog.findViewById(R.id.ev_baby_nickname);
+            mNameDialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (TextUtils.isEmpty(mEvBabyNickName.getText())) {
+                        ToastUtil.show(R.string.baby_nickname_edit_hint);
+                    } else {
+                        mTvBabyName.setText(mEvBabyNickName.getText());
+                        if (mNameDialog != null) {
+                            mNameDialog.dismiss();
+                        }
+                    }
+                }
+            });
+            mNameDialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mNameDialog != null) {
+                        mNameDialog.dismiss();
+                    }
+                }
+            });
+        }
+        if (!TextUtils.isEmpty(mTvBabyName.getText())) {
+            mEvBabyNickName.setText(mTvBabyName.getText());
+            mEvBabyNickName.setSelection(mEvBabyNickName.getText().length());
+        }
+        mEvBabyNickName.requestFocus();
+        mNameDialog.show();
+    }
+
+    /**
+     * 显示选择鞋子尺码的弹窗
+     */
     private void showShoeSizeDialog() {
         if (mShoeSizeDialog == null) {
             mShoeSizeDialog = new BaseDialog(this);
-            mShoeSizeDialog.setWindow(R.style.alpha_animation, 0.6f);
+            mShoeSizeDialog.setWindow(R.style.alpha_animation, 0.3f);
             mShoeSizeDialog.setContentView(R.layout.dialog_select_shoe_size);
             ListView lv = (ListView) mShoeSizeDialog.findViewById(R.id.lv_shoe_size);
             lv.setAdapter(new ShoeSizeAdapter(this, getShoeSizeList()));
@@ -138,6 +190,49 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
             });
         }
         mShoeSizeDialog.show();
+    }
+
+    /**
+     * 显示选择性别的弹窗
+     */
+    private void showSexDialog() {
+        if (mSexDialog == null) {
+            mSexDialog = new BaseDialog(this);
+            mSexDialog.setWindow(R.style.alpha_animation, 0.3f);
+            mSexDialog.setContentView(R.layout.dialog_select_sex);
+            mBtnSexMale = (Button) mSexDialog.findViewById(R.id.btn_male);
+            mBtnSexFemale = (Button) mSexDialog.findViewById(R.id.btn_female);
+            mBtnSexMale.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mTvBabySex.setText(R.string.male);
+                    if (mSexDialog != null) {
+                        mSexDialog.dismiss();
+                    }
+                }
+            });
+
+            mBtnSexFemale.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mTvBabySex.setText(R.string.female);
+                    if (mSexDialog != null) {
+                        mSexDialog.dismiss();
+                    }
+                }
+            });
+        }
+        if (TextUtils.equals(mTvBabySex.getText().toString(), getString(R.string.male))) {
+            mBtnSexMale.setSelected(true);
+            mBtnSexFemale.setSelected(false);
+        } else if (TextUtils.equals(mTvBabySex.getText().toString(), getString(R.string.female))) {
+            mBtnSexMale.setSelected(false);
+            mBtnSexFemale.setSelected(true);
+        } else {
+            mBtnSexMale.setSelected(false);
+            mBtnSexFemale.setSelected(false);
+        }
+        mSexDialog.show();
     }
 
     private List<String> getShoeSizeList() {

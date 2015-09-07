@@ -75,6 +75,13 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onDestroy() {
+        dismissTipDialog();
+        super.onDestroy();
+
+    }
+
     private LoadingDialog mTipDialog;
 
     private ImageView mIvTip;
@@ -161,7 +168,7 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
     /**
      * 隐藏提示窗口
      */
-    protected void dismiss() {
+    protected void dismissTipDialog() {
         if (mTipDialog != null && mTipDialog.isShowing()) {
             mTipDialog.dismiss();
         }

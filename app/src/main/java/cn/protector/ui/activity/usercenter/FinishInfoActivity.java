@@ -81,7 +81,7 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
 
     @Override
     protected void initData() {
-        mRivAvator.setImageResource(R.mipmap.ic_launcher);
+        mRivAvator.setImageResource(R.drawable.img_head_boy1);
     }
 
     @Override

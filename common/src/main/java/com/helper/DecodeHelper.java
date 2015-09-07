@@ -44,7 +44,7 @@ import java.util.Set;
 
 /**
  * This thread does all the heavy lifting of decoding the images.
- * 
+ *
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public class DecodeHelper implements Handler.Callback {
@@ -86,8 +86,9 @@ public class DecodeHelper implements Handler.Callback {
         mMultiFormatReader.setHints(getHints(callback, decodeMode));
     }
 
+
     private Map<DecodeHintType, Object> getHints(ResultPointCallback resultPointCallback,
-            int decodeMode) {
+                                                 int decodeMode) {
         Map<DecodeHintType, Object> hints = new EnumMap<DecodeHintType, Object>(
                 DecodeHintType.class);
         Collection<BarcodeFormat> decodeFormats = new ArrayList<BarcodeFormat>();
@@ -136,9 +137,9 @@ public class DecodeHelper implements Handler.Callback {
      * Decode the data within the viewfinder rectangle, and time how long it
      * took. For efficiency, reuse the same reader objects from one decode to
      * the next.
-     * 
-     * @param data The YUV preview frame.
-     * @param width The width of the preview frame.
+     *
+     * @param data   The YUV preview frame.
+     * @param width  The width of the preview frame.
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
@@ -204,9 +205,9 @@ public class DecodeHelper implements Handler.Callback {
     /**
      * A factory method to build the appropriate LuminanceSource object based on
      * the format of the preview buffers, as described by Camera.Parameters.
-     * 
-     * @param data A preview frame.
-     * @param width The width of the image.
+     *
+     * @param data   A preview frame.
+     * @param width  The width of the image.
      * @param height The height of the image.
      * @return A PlanarYUVLuminanceSource instance.
      */

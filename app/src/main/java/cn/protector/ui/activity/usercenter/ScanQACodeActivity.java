@@ -4,6 +4,7 @@ package cn.protector.ui.activity.usercenter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.SurfaceView;
 import android.view.View;
@@ -22,9 +23,13 @@ import cn.protector.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
 
 /**
- * 扫描二维码页面
+ * 描述： 扫描二维码页面
+ *
+ * @author jakechen
  */
 public class ScanQACodeActivity extends CommonTitleActivity {
+    private static final int MSG_UI_START = 0;
+    private static final int MSG_UI_BIND_SUCCESS = MSG_UI_START + 1;
     private ImageView mIvScanLine;
 
     private ImageView mIvShadowScanFrame;
@@ -44,8 +49,6 @@ public class ScanQACodeActivity extends CommonTitleActivity {
         mSvCamera = (SurfaceView) findViewById(R.id.sv_camera);
         vScanFrame = findViewById(R.id.rl_frame_scan);
         mCaptureHelper = new CaptureHelper(mSvCamera, this);
-        startScanQa();
-        // goActivity(FinishInfoActivity.class);
     }
 
     @Override
@@ -58,12 +61,24 @@ public class ScanQACodeActivity extends CommonTitleActivity {
                 mIvShadowScanFrame.setVisibility(View.VISIBLE);
                 // mIvShadowScanFrame.setImageBitmap(bitmap);
                 showLoadingTip(R.string.bind_device_ing, false);
+                sendEmptyUiMessageDelayed(MSG_UI_BIND_SUCCESS, 1000);
             }
 
             @Override
             public void foundPossibleResultPoint(ResultPoint point) {
             }
         });
+    }
+
+    @Override
+    public void handleUiMessage(Message msg) {
+        super.handleUiMessage(msg);
+        switch (msg.what) {
+            case MSG_UI_BIND_SUCCESS:
+                goActivity(FinishInfoActivity.class);
+                finish();
+                break;
+        }
     }
 
     private void startScanQa() {
@@ -93,6 +108,7 @@ public class ScanQACodeActivity extends CommonTitleActivity {
     protected void onResume() {
         super.onResume();
         mCaptureHelper.onResume();
+        startScanQa();
     }
 
     @Override
