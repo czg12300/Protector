@@ -1,0 +1,19 @@
+<LinearLayout
+    android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/lv_care_staff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:cacheColorHint="@color/trans"
+        android:divider="@color/divider_list"
+        android:dividerHeight="1px"
+        android:listSelector="@drawable/list_selector_white_gray"/>
+
+</LinearLayout>

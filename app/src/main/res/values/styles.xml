@@ -1,6 +1,7 @@
 <resources>
 
     <style name="activity_style" parent="base_activity_style"></style>
+
     <style name="activity_style_main" parent="activity_style">
         <item name="android:windowIsTranslucent">true</item>
     </style>
@@ -34,6 +35,8 @@
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
         <item name="android:textColor">@drawable/text_selector_main_menu</item>
         <item name="android:textSize">11dp</item>
     </style>

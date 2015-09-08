@@ -39,7 +39,7 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIvSplash = new ImageView(this);
-        mIvSplash.setImageResource(R.drawable.splash);
+        mIvSplash.setImageResource(R.drawable.loading_page_ishoe);
         mIvSplash.setScaleType(ImageView.ScaleType.FIT_XY);
         setContentView(mIvSplash);
         sendEmptyUiMessageDelayed(MSG_LOGIN, DELAYED_TIME);

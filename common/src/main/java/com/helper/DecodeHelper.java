@@ -16,6 +16,14 @@
 
 package com.helper;
 
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.hardware.Camera.Size;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
@@ -25,14 +33,6 @@ import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.ResultPointCallback;
 import com.google.zxing.common.HybridBinarizer;
-
-import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.hardware.Camera.Size;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Message;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -215,6 +215,12 @@ public class DecodeHelper implements Handler.Callback {
         Rect rect = mCaptureHelper.getScanFrameRect();
         if (rect == null) {
             return null;
+        }
+        if (rect.width() > width) {
+            rect.set(rect.left, rect.top, rect.left + width, rect.bottom);
+        }
+        if (rect.height() > height) {
+            rect.set(rect.left, rect.top, rect.right, rect.top + height);
         }
         // Go ahead and assume it's YUV rather than die.
         return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top, rect.width(),

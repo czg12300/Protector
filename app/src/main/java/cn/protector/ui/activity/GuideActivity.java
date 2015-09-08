@@ -40,7 +40,7 @@ public class GuideActivity extends BaseWorkerFragmentActivity implements Handler
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIvSplash = new ImageView(this);
-        mIvSplash.setImageResource(R.drawable.splash);
+        mIvSplash.setImageResource(R.drawable.loading_page_ishoe);
         setContentView(mIvSplash);
 
     }

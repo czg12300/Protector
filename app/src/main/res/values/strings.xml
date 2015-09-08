@@ -13,6 +13,7 @@
     <string name="title_choose_avator">选择头像</string>
     <string name="title_check_all_device">查看所有设备</string>
     <string name="title_baby_info">宝贝信息</string>
+    <string name="title_care_staff">监护人员</string>
     <!--标题 end-->
     <string name="app_name">守护者</string>
     <string name="register">注册</string>
@@ -81,6 +82,7 @@
     <string name="saturday">六</string>
     <string name="male">男</string>
     <string name="female">女</string>
+    <string name="manager">管理员</string>
     <string name="sex_unknown">未知</string>
     <string name="dialog_title_select_sex">请选择性别</string>
 

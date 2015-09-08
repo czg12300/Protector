@@ -1,0 +1,41 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <cn.common.ui.widgt.RoundImageView
+            android:id="@+id/riv_avator"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/img_head_girl1"/>
+
+
+        <TextView
+            android:id="@+id/tv_relationship"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="小妮儿"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/text_content"/>
+
+        <TextView
+            android:id="@+id/tv_manager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:singleLine="true"
+            android:text="@string/manager"
+            android:textColor="@color/red_ef0b0b"
+            android:textSize="12dp"/>
+    </LinearLayout>
+</FrameLayout>
