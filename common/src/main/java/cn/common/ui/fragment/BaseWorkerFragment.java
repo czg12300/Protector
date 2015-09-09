@@ -49,6 +49,7 @@ public abstract class BaseWorkerFragment extends BaseFragment {
         }
     }
 
+
     public void handleBackgroundMessage(Message msg) {
     }
 

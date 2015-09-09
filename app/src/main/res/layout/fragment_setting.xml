@@ -7,11 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <include layout="@layout/title_main" />
+
         <LinearLayout
+            android:id="@+id/ll_baby_info"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:id="@+id/ll_baby_info"
             android:background="@drawable/bg_head"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -82,6 +84,7 @@
                 android:id="@+id/tv_modify_pw"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@drawable/list_selector_white_gray"
                 android:drawableRight="@drawable/ico_right"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="10dp"
@@ -101,6 +104,7 @@
                 android:id="@+id/tv_device_manage"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@drawable/list_selector_white_gray"
                 android:drawableRight="@drawable/ico_right"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="10dp"

@@ -56,6 +56,17 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
     private DatePicker mDatePicker;
 
     @Override
+    protected void hideDialog() {
+        super.hideDialog();
+        if (mBirthdayDialog != null) {
+            mBirthdayDialog.dismiss();
+        }
+        if (mShoeSizeDialog != null) {
+            mShoeSizeDialog.dismiss();
+        }
+    }
+
+    @Override
     protected void initView() {
         setContentView(R.layout.activity_finish_info);
         setTitle(R.string.title_finish_info);
@@ -133,7 +144,7 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     mTvShoeSize.setText((String) parent.getAdapter().getItem(position));
-                    if (mShoeSizeDialog != null && mShoeSizeDialog.isShowing()) {
+                    if (mShoeSizeDialog != null) {
                         mShoeSizeDialog.dismiss();
                     }
                 }

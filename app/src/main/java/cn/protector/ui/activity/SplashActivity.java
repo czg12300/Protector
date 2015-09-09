@@ -42,7 +42,7 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
         mIvSplash.setImageResource(R.drawable.loading_page_ishoe);
         mIvSplash.setScaleType(ImageView.ScaleType.FIT_XY);
         setContentView(mIvSplash);
-        sendEmptyUiMessageDelayed(MSG_LOGIN, DELAYED_TIME);
+        sendEmptyUiMessageDelayed(MSG_MAIN, DELAYED_TIME);
     }
 
     @Override

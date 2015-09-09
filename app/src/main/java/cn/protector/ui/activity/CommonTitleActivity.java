@@ -75,12 +75,6 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    protected void onDestroy() {
-        dismissTipDialog();
-        super.onDestroy();
-
-    }
 
     private LoadingDialog mTipDialog;
 
@@ -165,14 +159,14 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
     protected void onTipDismiss() {
     }
 
-    /**
-     * 隐藏提示窗口
-     */
-    protected void dismissTipDialog() {
-        if (mTipDialog != null && mTipDialog.isShowing()) {
+    @Override
+    protected void hideDialog() {
+        super.hideDialog();
+        if (mTipDialog != null) {
             mTipDialog.dismiss();
         }
     }
+
 
     /**
      * 返回按键或退出按钮的回调接口

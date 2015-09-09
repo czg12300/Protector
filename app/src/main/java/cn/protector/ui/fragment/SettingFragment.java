@@ -14,19 +14,28 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 import cn.protector.data.BroadcastActions;
+import cn.protector.ui.activity.setting.CareStaffActivity;
+import cn.protector.ui.activity.setting.FenceSetActivity;
+import cn.protector.ui.activity.setting.LocateModeActivity;
+import cn.protector.ui.activity.setting.ModifyPwActivity;
+import cn.protector.ui.activity.setting.QACodeActivity;
 import cn.protector.ui.activity.usercenter.BabyInfoActivity;
 import cn.protector.ui.helper.MainTitleHelper;
 
 /**
- * Created by Administrator on 2015/8/13.
+ * 描述：设置页面
+ *
+ * @author jakechen on 2015/8/13.
  */
 public class SettingFragment extends BaseWorkerFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
     private MainTitleHelper mTitleHelper;
+    private BaseDialog mShutdownDialog;
 
     public static SettingFragment newInstance() {
         return new SettingFragment();
@@ -34,6 +43,13 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
 
     private GridView mGvSetting;
     private View mVBabyInfo;
+
+    @Override
+    protected void hideDialog() {
+        if (mShutdownDialog != null) {
+            mShutdownDialog.dismiss();
+        }
+    }
 
     @Override
     public void initView() {
@@ -47,6 +63,8 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
     protected void initEvent() {
         mGvSetting.setOnItemClickListener(this);
         mVBabyInfo.setOnClickListener(this);
+        findViewById(R.id.tv_modify_pw).setOnClickListener(this);
+        findViewById(R.id.tv_device_manage).setOnClickListener(this);
     }
 
     @Override
@@ -96,12 +114,63 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
         int id = v.getId();
         if (id == R.id.ll_baby_info) {
             goActivity(BabyInfoActivity.class);
+        } else if (id == R.id.tv_modify_pw) {
+            goActivity(ModifyPwActivity.class);
+        } else if (id == R.id.tv_device_manage) {
+            //TODO
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //TODO
+        switch (position) {
+            case 0:
+                goActivity(CareStaffActivity.class);
+                break;
+            case 1:
+                goActivity(FenceSetActivity.class);
+                break;
+            case 2:
+                goActivity(QACodeActivity.class);
+                break;
+            case 4:
+                goActivity(LocateModeActivity.class);
+                break;
+            case 5:
+                showShutdownDialog();
+                break;
+        }
+    }
+
+
+    /**
+     * 显示远程关机的弹窗
+     */
+    private void showShutdownDialog() {
+        if (mShutdownDialog == null) {
+            mShutdownDialog = new BaseDialog(getActivity());
+            mShutdownDialog.setWindow(R.style.alpha_animation, 0.3f);
+            mShutdownDialog.setContentView(R.layout.dialog_shutdown);
+            mShutdownDialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO 远程关机
+                    if (mShutdownDialog != null) {
+                        mShutdownDialog.dismiss();
+                    }
+                }
+            });
+            mShutdownDialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mShutdownDialog != null) {
+                        mShutdownDialog.dismiss();
+                    }
+                }
+            });
+        }
+        mShutdownDialog.show();
     }
 
     /**

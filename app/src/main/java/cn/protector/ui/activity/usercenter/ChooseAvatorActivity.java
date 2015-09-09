@@ -35,6 +35,14 @@ public class ChooseAvatorActivity extends CommonTitleActivity implements View.On
     private SelectPhotoHelper mSelectPhotoHelper;
 
     @Override
+    protected void hideDialog() {
+        super.hideDialog();
+        if (mSelectDialog != null) {
+            mSelectDialog.dismiss();
+        }
+    }
+
+    @Override
     protected View getTitleLayoutView() {
         View vTitle = getLayoutInflater().inflate(R.layout.title_choose_avator, null);
         mIvBack = (ImageView) vTitle.findViewById(R.id.iv_back);

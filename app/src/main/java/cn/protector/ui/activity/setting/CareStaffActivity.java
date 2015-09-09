@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.common.ui.adapter.BaseListAdapter;
@@ -20,7 +21,7 @@ import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
 
 /**
  * 描述：监护人员页面
- * 
+ *
  * @author jakechen
  */
 public class CareStaffActivity extends CommonTitleActivity {
@@ -35,6 +36,23 @@ public class CareStaffActivity extends CommonTitleActivity {
         mLvCareStaff = (ListView) findViewById(R.id.lv_care_staff);
         mCareStaffAdapter = new CareStaffAdapter(this);
         mLvCareStaff.setAdapter(mCareStaffAdapter);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mCareStaffAdapter.setData(getList());
+    }
+
+    private List<CareStaff> getList() {
+        List<CareStaff> list = new ArrayList<CareStaff>();
+        list.add(new CareStaff("爸爸", true));
+        list.add(new CareStaff("妈妈", false));
+        list.add(new CareStaff("哥哥", false));
+        list.add(new CareStaff("姐姐", false));
+        list.add(new CareStaff("爷爷", false));
+        list.add(new CareStaff("奶奶", false));
+        return list;
     }
 
     public void onClick(View v) {
@@ -83,6 +101,7 @@ public class CareStaffActivity extends CommonTitleActivity {
                 holder.rivAvator = (RoundImageView) convertView.findViewById(R.id.riv_avator);
                 holder.tvRelationship = (TextView) convertView.findViewById(R.id.tv_relationship);
                 holder.tvManager = (TextView) convertView.findViewById(R.id.tv_manager);
+                convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }

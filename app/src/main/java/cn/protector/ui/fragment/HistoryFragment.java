@@ -134,7 +134,7 @@ public class HistoryFragment extends BaseWorkerFragment
     @Override
     protected void initData() {
         mSbTime.setMax(100);
-        mSbTime.setProgress(0);
+//        mSbTime.setProgress(0);
     }
 
     @Override

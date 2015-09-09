@@ -70,6 +70,24 @@
         <activity
             android:name=".ui.activity.usercenter.ChooseAvatorActivity"
             android:theme="@style/swipe_activity_style" />
+        <activity
+            android:name=".ui.activity.setting.CareStaffActivity"
+            android:theme="@style/swipe_activity_style" />
+        <activity
+            android:name=".ui.activity.setting.LocateModeActivity"
+            android:theme="@style/swipe_activity_style" />
+        <activity
+            android:name=".ui.activity.setting.QACodeActivity"
+            android:theme="@style/swipe_activity_style" />
+        <activity
+            android:name=".ui.activity.setting.FenceSetActivity"
+            android:theme="@style/swipe_activity_style" />
+        <activity
+            android:name=".ui.activity.setting.ModifyPwActivity"
+            android:theme="@style/swipe_activity_style" />
+        <activity
+            android:name=".ui.activity.AddFenceActivity"
+            android:theme="@style/swipe_activity_style" />
     </application>
 
 </manifest>

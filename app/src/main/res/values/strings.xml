@@ -8,12 +8,15 @@
     <string name="title_main_setting">设置</string>
     <string name="title_add_device">添加设备</string>
     <string name="title_scan_qa_code">扫描二维码</string>
+    <string name="title_qa_code">二维码</string>
     <string name="title_finish_info">完善资料</string>
     <string name="title_relationship">我与宝贝关系</string>
     <string name="title_choose_avator">选择头像</string>
     <string name="title_check_all_device">查看所有设备</string>
     <string name="title_baby_info">宝贝信息</string>
     <string name="title_care_staff">监护人员</string>
+    <string name="title_locate_mode">定位模式</string>
+    <string name="title_modify_pw">修改密码</string>
     <!--标题 end-->
     <string name="app_name">守护者</string>
     <string name="register">注册</string>
@@ -53,6 +56,8 @@
     <string name="dialog_title_select_avator">请选择头像来源</string>
     <string name="dialog_select_form_photo_list">从相册选取</string>
     <string name="dialog_take_a_shot">拍照</string>
+    <string name="dialog_title_shutdown">远程关机</string>
+    <string name="dialog_title_fence_operating">操作</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="go_there">去这里</string>
@@ -85,5 +90,14 @@
     <string name="manager">管理员</string>
     <string name="sex_unknown">未知</string>
     <string name="dialog_title_select_sex">请选择性别</string>
+    <string name="mode_normal">正常模式</string>
+    <string name="mode_save_power">省电模式</string>
+    <string name="mode_normal_hint">每5分钟上传监听数据</string>
+    <string name="mode_save_power_hint">关闭实时监听功能</string>
+    <string name="qa_code_tip">打开守护者扫描二维码即可绑定设备</string>
+    <string name="fence_range_string">方圆#米</string>
+    <string name="edit_info">编辑信息</string>
+    <string name="delete">删除</string>
+    <string name="has_bind_mobile">已绑定手机</string>
 
 </resources>

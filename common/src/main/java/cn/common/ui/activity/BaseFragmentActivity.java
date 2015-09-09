@@ -44,7 +44,9 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
             if (mActivityReference.get() != null) {
                 mActivityReference.get().handleUiMessage(msg);
             }
-        };
+        }
+
+        ;
     }
 
     private ArrayList<String> mActions;
@@ -76,10 +78,17 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        hideDialog();
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
         BaseApplication.getInstance().removeActivity(this.getClass().getSimpleName());
+    }
+
+    /**
+     * 隐藏dialog，防止在activity结束后，dialog没有隐藏导致crash
+     */
+    protected void hideDialog() {
     }
 
     protected void sendUiMessage(Message msg) {

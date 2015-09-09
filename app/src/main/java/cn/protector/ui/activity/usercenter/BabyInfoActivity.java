@@ -23,6 +23,7 @@ import java.util.List;
 import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.widgt.RoundImageView;
+import cn.common.utils.CommonUtil;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 import cn.protector.data.BroadcastActions;
@@ -56,6 +57,23 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
     private ImageEditText mEvBabyNickName;
     private Button mBtnSexMale;
     private Button mBtnSexFemale;
+
+    @Override
+    protected void hideDialog() {
+        super.hideDialog();
+        if (mBirthdayDialog != null) {
+            mBirthdayDialog.dismiss();
+        }
+        if (mNameDialog != null) {
+            mNameDialog.dismiss();
+        }
+        if (mSexDialog != null) {
+            mSexDialog.dismiss();
+        }
+        if (mShoeSizeDialog != null) {
+            mShoeSizeDialog.dismiss();
+        }
+    }
 
     @Override
     protected void initView() {
@@ -121,7 +139,7 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
                                 mDatePicker.getMonth() + 1, mDatePicker.getDayOfMonth());
                         mTvBabyBirthday.setText(birthday);
                     }
-                    if (mBirthdayDialog != null && mBirthdayDialog.isShowing()) {
+                    if (mBirthdayDialog != null) {
                         mBirthdayDialog.dismiss();
                     }
                 }
@@ -165,7 +183,7 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
             mEvBabyNickName.setText(mTvBabyName.getText());
             mEvBabyNickName.setSelection(mEvBabyNickName.getText().length());
         }
-        mEvBabyNickName.requestFocus();
+        CommonUtil.showSoftInput(this);
         mNameDialog.show();
     }
 
