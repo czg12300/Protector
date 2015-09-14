@@ -74,6 +74,7 @@ public class MainTitleHelper implements View.OnClickListener {
         init();
         mDeviceAdapter = new DeviceAdapter(getContext());
         ChangeThemeUtils.adjustStatusBar(mVTitle, getContext());
+        mVTitle.setBackgroundColor(getColor(R.color.title_background));
         mTvTitle.setOnClickListener(this);
         mIvTitleLeft.setOnClickListener(this);
         mIvTitleRight.setOnClickListener(this);
