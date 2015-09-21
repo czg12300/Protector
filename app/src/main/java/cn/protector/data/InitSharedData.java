@@ -9,21 +9,39 @@ import cn.protector.ProtectorApplication;
  * 存放初始化的值
  * Created by Administrator on 2015/8/15.
  */
-public final class InitSharedPreferences {
+public final class InitSharedData {
 
-    private InitSharedPreferences() {
+    private InitSharedData() {
     }
 
     /**
      * 文件名
      */
     private static final String FILE_NAME = "init";
-    /**
-     * 判断是否第一次进入
-     */
-    private static final String KEY_IS_FIRST_IN = "isFirstIn";
-    private static final String key_has = "isFirstIn";
     private static final String KEY_IS_NEW_VOICE = "key_is_new_voice";
+    private static final String KEY_USER_ID = "keyUserId";
+    private static final String KEY_MOBILE = "keyMobile";
+
+    public static void setMobile(String mobile) {
+        getSharedPreferences().edit().putString(KEY_MOBILE, mobile).commit();
+    }
+
+    public static String getMobile() {
+        return getSharedPreferences().getString(KEY_MOBILE, null);
+    }
+
+    public static void setUserId(long id) {
+        getSharedPreferences().edit().putLong(KEY_USER_ID, id).commit();
+    }
+
+    public static long getUserId() {
+        return getSharedPreferences().getLong(KEY_USER_ID, -1);
+    }
+
+    public static boolean isLogin() {
+        boolean isNotLogin = getUserId() < 0;
+        return !isNotLogin;
+    }
 
     public static boolean isNewVoice(int id) {
         String save = getSharedPreferences().getString(KEY_IS_NEW_VOICE, "");
@@ -38,13 +56,6 @@ public final class InitSharedPreferences {
         getSharedPreferences().edit().putString(KEY_IS_NEW_VOICE, save).commit();
     }
 
-    public static void setIsFirstIn(boolean isFirstIn) {
-        getSharedPreferences().edit().putBoolean(KEY_IS_FIRST_IN, isFirstIn).commit();
-    }
-
-    public static boolean isFirstIn() {
-        return getSharedPreferences().getBoolean(KEY_IS_FIRST_IN, true);
-    }
 
     /**
      * 获取sharePreference的编辑器

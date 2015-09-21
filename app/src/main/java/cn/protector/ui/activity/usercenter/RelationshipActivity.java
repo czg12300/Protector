@@ -9,8 +9,10 @@ import android.widget.Button;
 
 import java.util.List;
 
+import cn.protector.ProtectorApplication;
 import cn.protector.R;
 import cn.protector.data.BroadcastActions;
+import cn.protector.data.InitSharedData;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.MainActivity;
 
@@ -37,7 +39,10 @@ public class RelationshipActivity extends CommonTitleActivity implements View.On
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_submit) {
-            goActivity(MainActivity.class);
+            ProtectorApplication app = (ProtectorApplication) ProtectorApplication.getInstance();
+            if (!app.isShowMain()) {
+                goActivity(MainActivity.class);
+            }
             sendBroadcast(new Intent(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN));
         }
     }

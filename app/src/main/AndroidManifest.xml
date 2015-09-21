@@ -83,7 +83,13 @@
             android:name=".ui.activity.setting.FenceSetActivity"
             android:theme="@style/swipe_activity_style" />
         <activity
+            android:name=".ui.activity.setting.DeviceManageActivity"
+            android:theme="@style/swipe_activity_style" />
+        <activity
             android:name=".ui.activity.setting.ModifyPwActivity"
+            android:theme="@style/swipe_activity_style" />
+        <activity
+            android:name=".ui.activity.setting.LocationRegulateActivity"
             android:theme="@style/swipe_activity_style" />
         <activity
             android:name=".ui.activity.AddFenceActivity"

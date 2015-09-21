@@ -50,6 +50,10 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
         }
     }
 
+    public void remove(T t) {
+        mDataList.remove(t);
+    }
+
     protected boolean isAvailable(List<T> list) {
         return list != null && list.size() > 0;
     }

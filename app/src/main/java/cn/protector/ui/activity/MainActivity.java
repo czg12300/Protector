@@ -57,31 +57,25 @@ public class MainActivity extends BaseWorkerFragmentActivity
     private long lastClickTime;
 
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            long now = System.currentTimeMillis();
-            if (now - lastClickTime > 2000) {
-                ToastUtil.show("再按一次退出");
-                lastClickTime = now;
-            } else {
-                ProtectorApplication.getInstance().exitApp();
-            }
+    public void onBackPressed() {
+        long now = System.currentTimeMillis();
+        if (now - lastClickTime > 2000) {
+            ToastUtil.show("再按一次退出");
+            lastClickTime = now;
+        } else {
+            ProtectorApplication.getInstance().exitApp();
         }
-        return true;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FrameLayout root = (FrameLayout) getWindow().findViewById(android.R.id.content);
-        SurfaceView surfaceView = new SurfaceView(this);
-        surfaceView.setVisibility(View.GONE);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(0, 0);
-        root.addView(surfaceView, params);
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
         super.onCreate(savedInstanceState);
+        ProtectorApplication app = (ProtectorApplication) ProtectorApplication.getInstance();
+        app.setShowMain(true);
         initView();
         initEvent();
         sendEmptyUiMessage(MSG_UI_INIT_DATA);
+
     }
 
     private void initView() {

@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import cn.common.ui.activity.BaseWorkerFragmentActivity;
 import cn.protector.R;
+import cn.protector.data.InitSharedData;
 import cn.protector.ui.activity.usercenter.LoginActivity;
 
 /**
@@ -42,7 +43,12 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
         mIvSplash.setImageResource(R.drawable.loading_page_ishoe);
         mIvSplash.setScaleType(ImageView.ScaleType.FIT_XY);
         setContentView(mIvSplash);
-        sendEmptyUiMessageDelayed(MSG_MAIN, DELAYED_TIME);
+        InitSharedData.setUserId(121);
+        if (InitSharedData.isLogin()) {
+            sendEmptyUiMessageDelayed(MSG_MAIN, DELAYED_TIME);
+        } else {
+            sendEmptyUiMessageDelayed(MSG_LOGIN, DELAYED_TIME);
+        }
     }
 
     @Override

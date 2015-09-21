@@ -25,10 +25,12 @@ public abstract class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mInstance = this;
+        mInstance = getChildInstance();
         mActivityMap = new HashMap<String, WeakReference<Activity>>();
         onConfig();
     }
+
+    protected abstract BaseApplication getChildInstance();
 
     protected abstract void onConfig();
 

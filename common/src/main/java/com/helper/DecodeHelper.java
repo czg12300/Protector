@@ -216,6 +216,12 @@ public class DecodeHelper implements Handler.Callback {
         if (rect == null) {
             return null;
         }
+        if (rect.width() > width) {
+            rect.set(rect.left, rect.top, rect.left + width, rect.bottom);
+        }
+        if (rect.height() > height) {
+            rect.set(rect.left, rect.top, rect.right, rect.top + height);
+        }
         // Go ahead and assume it's YUV rather than die.
         return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top, rect.width(),
                 rect.height(), false);

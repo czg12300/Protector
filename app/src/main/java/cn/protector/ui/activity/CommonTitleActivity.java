@@ -159,9 +159,7 @@ public abstract class CommonTitleActivity extends BaseTitleActivity {
     protected void onTipDismiss() {
     }
 
-    @Override
     protected void hideDialog() {
-        super.hideDialog();
         if (mTipDialog != null) {
             mTipDialog.dismiss();
         }

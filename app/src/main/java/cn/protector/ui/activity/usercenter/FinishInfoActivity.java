@@ -30,7 +30,9 @@ import cn.protector.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
 
 /**
- * Created by jakechen on 2015/8/27.
+ * 完善信息页面
+ *
+ * @auther Created by jakechen on 2015/8/27.
  */
 public class FinishInfoActivity extends CommonTitleActivity implements View.OnClickListener {
     private Button mBtnNext;

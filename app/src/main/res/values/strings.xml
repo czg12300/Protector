@@ -17,6 +17,9 @@
     <string name="title_care_staff">监护人员</string>
     <string name="title_locate_mode">定位模式</string>
     <string name="title_modify_pw">修改密码</string>
+    <string name="title_device_manage">设备管理</string>
+    <string name="title_fence_set">围栏设置</string>
+    <string name="title_locate_regulate">位置修订</string>
     <!--标题 end-->
     <string name="app_name">守护者</string>
     <string name="register">注册</string>
@@ -59,6 +62,7 @@
     <string name="dialog_title_shutdown">远程关机</string>
     <string name="dialog_title_fence_operating">操作</string>
     <string name="ok">确定</string>
+    <string name="save">保存</string>
     <string name="cancel">取消</string>
     <string name="go_there">去这里</string>
     <string name="modify_pw">修改密码</string>
@@ -99,5 +103,6 @@
     <string name="edit_info">编辑信息</string>
     <string name="delete">删除</string>
     <string name="has_bind_mobile">已绑定手机</string>
+    <string name="locate_regulate">定位校正</string>
 
 </resources>

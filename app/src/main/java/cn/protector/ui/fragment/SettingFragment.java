@@ -21,8 +21,10 @@ import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 import cn.protector.data.BroadcastActions;
 import cn.protector.ui.activity.setting.CareStaffActivity;
+import cn.protector.ui.activity.setting.DeviceManageActivity;
 import cn.protector.ui.activity.setting.FenceSetActivity;
 import cn.protector.ui.activity.setting.LocateModeActivity;
+import cn.protector.ui.activity.setting.LocationRegulateActivity;
 import cn.protector.ui.activity.setting.ModifyPwActivity;
 import cn.protector.ui.activity.setting.QACodeActivity;
 import cn.protector.ui.activity.usercenter.BabyInfoActivity;
@@ -44,7 +46,6 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
     private GridView mGvSetting;
     private View mVBabyInfo;
 
-    @Override
     protected void hideDialog() {
         if (mShutdownDialog != null) {
             mShutdownDialog.dismiss();
@@ -117,7 +118,7 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
         } else if (id == R.id.tv_modify_pw) {
             goActivity(ModifyPwActivity.class);
         } else if (id == R.id.tv_device_manage) {
-            //TODO
+            goActivity(DeviceManageActivity.class);
         }
     }
 
@@ -133,6 +134,8 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
                 break;
             case 2:
                 goActivity(QACodeActivity.class);
+            case 3:
+                goActivity(LocationRegulateActivity.class);
                 break;
             case 4:
                 goActivity(LocateModeActivity.class);

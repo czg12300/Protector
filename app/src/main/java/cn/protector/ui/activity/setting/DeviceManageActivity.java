@@ -1,4 +1,3 @@
-
 package cn.protector.ui.activity.setting;
 
 import android.content.Context;
@@ -16,26 +15,49 @@ import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.widgt.RoundImageView;
 import cn.protector.R;
 import cn.protector.data.BroadcastActions;
+import cn.protector.ui.activity.AddFenceActivity;
 import cn.protector.ui.activity.CommonTitleActivity;
+import cn.protector.ui.activity.usercenter.AddDeviceActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
 
 /**
- * 描述：监护人员页面
+ * 描述：设备管理
  *
- * @author jakechen
+ * @author jake
+ * @since 2015/9/21 22:07
  */
-public class CareStaffActivity extends CommonTitleActivity {
-    private ListView mLvCareStaff;
+public class DeviceManageActivity extends CommonTitleActivity {
 
+
+    private ListView mLvContent;
     private CareStaffAdapter mCareStaffAdapter;
 
     @Override
+    protected View getTitleLayoutView() {
+        View vTitle = getLayoutInflater().inflate(R.layout.title_choose_avator, null);
+        vTitle.findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mTvTitle = (TextView) vTitle.findViewById(R.id.tv_title);
+        vTitle.findViewById(R.id.ib_add).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goActivity(AddDeviceActivity.class);
+            }
+        });
+        return vTitle;
+    }
+
+    @Override
     protected void initView() {
-        setContentView(R.layout.activity_care_staff);
-        setTitle(R.string.title_care_staff);
-        mLvCareStaff = (ListView) findViewById(R.id.lv_care_staff);
+        setContentView(R.layout.activity_device_manage);
+        setTitle(R.string.title_device_manage);
+        mLvContent = (ListView) findViewById(R.id.lv_content);
         mCareStaffAdapter = new CareStaffAdapter(this);
-        mLvCareStaff.setAdapter(mCareStaffAdapter);
+        mLvContent.setAdapter(mCareStaffAdapter);
     }
 
     @Override
@@ -58,6 +80,21 @@ public class CareStaffActivity extends CommonTitleActivity {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_add) {
             goActivity(ScanQACodeActivity.class);
+        }
+    }
+
+    @Override
+    public void setupBroadcastActions(List<String> actions) {
+        super.setupBroadcastActions(actions);
+//        actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+    }
+
+    @Override
+    public void handleBroadcast(Context context, Intent intent) {
+        super.handleBroadcast(context, intent);
+        String action = intent.getAction();
+        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+            finish();
         }
     }
 
