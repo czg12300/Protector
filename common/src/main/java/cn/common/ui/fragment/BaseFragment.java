@@ -90,19 +90,6 @@ public abstract class BaseFragment extends Fragment implements IUi {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        hideDialog();
-    }
-
-    /**
-     * 隐藏dialog，防止在activity结束后，dialog没有隐藏导致crash
-     */
-    protected void hideDialog() {
-
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         if (mReceiver != null) {
@@ -282,5 +269,9 @@ public abstract class BaseFragment extends Fragment implements IUi {
 
     public void sendBroadcast(Intent it) {
         getActivity().sendBroadcast(it);
+    }
+
+    public boolean canShowDialog() {
+        return getActivity() != null || !getActivity().isFinishing();
     }
 }

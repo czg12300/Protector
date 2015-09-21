@@ -3,11 +3,15 @@ package cn.common.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import cn.common.ui.activity.BaseApplication;
 
 /**
  * Created by jakechen on 2015/8/11.
@@ -40,4 +44,17 @@ public class CommonUtil {
         }, 500);
     }
 
+    /**
+     * 获取版本号
+     *
+     * @return
+     */
+    public static int getAppVersion() {
+        try {
+            return BaseApplication.getInstance().getPackageManager().getPackageInfo(BaseApplication.getInstance().getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
 }

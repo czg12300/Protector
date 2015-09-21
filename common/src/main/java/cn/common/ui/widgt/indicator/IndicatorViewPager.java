@@ -8,11 +8,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.widget.LinearLayout;
 
 /**
  * has under line tab's view pager
- * 
+ *
  * @author jake
  */
 public class IndicatorViewPager extends LinearLayout implements OnPageChangeListener {
@@ -20,7 +21,7 @@ public class IndicatorViewPager extends LinearLayout implements OnPageChangeList
 
     private ViewPagerCompat mViewPager;
 
-    private boolean mIsSwitchAnnmation;
+    private boolean mIsSwitchAnmation;
 
     public IndicatorViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -51,7 +52,7 @@ public class IndicatorViewPager extends LinearLayout implements OnPageChangeList
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         mIndicator.onScrolled((mViewPager.getWidth() + mViewPager.getPageMargin()) * position
                 + positionOffsetPixels);
-        if (mIsSwitchAnnmation && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (mIsSwitchAnmation && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             switchAnmation(position, positionOffset);
         }
     }
@@ -77,7 +78,7 @@ public class IndicatorViewPager extends LinearLayout implements OnPageChangeList
     }
 
     public void isSwitchAnnmation(boolean b) {
-        mIsSwitchAnnmation = b;
+        mIsSwitchAnmation = b;
     }
 
     /**
@@ -132,7 +133,7 @@ public class IndicatorViewPager extends LinearLayout implements OnPageChangeList
     }
 
     public void setPagerParent(ViewPager parent) {
-        mViewPager.setParentViewPager(parent);
+//        mViewPager.setParentViewPager(parent);
     }
 
     public void setTabSelectColor(int color) {
@@ -144,7 +145,15 @@ public class IndicatorViewPager extends LinearLayout implements OnPageChangeList
     }
 
     public void setTabLineHeight(float px) {
-        mIndicator.setUndlerLineHeight(px);
+        mIndicator.setUnderLineHeight(px);
+    }
+
+    public void setTabLineNormalHeight(float px) {
+        mIndicator.setUnderLineNormalHeight(px);
+    }
+
+    public void setAverage(boolean isAvaerage) {
+        mIndicator.setAverage(isAvaerage);
     }
 
     public void setIndicator(IIndicator indicator) {
@@ -168,5 +177,34 @@ public class IndicatorViewPager extends LinearLayout implements OnPageChangeList
         mViewPager.setAdapter(indicator.getAdapter());
         mIndicator.init(0, indicator.getLabelList(), mViewPager);
 
+    }
+
+    /**
+     * 设置换成页面
+     *
+     * @param page
+     */
+    public void setOffscreenPageLimit(int page) {
+        mViewPager.setOffscreenPageLimit(page);
+    }
+
+    public class ViewPagerCompat extends ViewPager {
+
+        public ViewPagerCompat(Context context) {
+            super(context);
+        }
+
+        public ViewPagerCompat(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+
+        @Override
+        public boolean dispatchTouchEvent(MotionEvent ev) {
+            if (!isLeftMost() && !isRightMost()) {
+                requestDisallowInterceptTouchEvent(false);
+            }
+            return super.dispatchTouchEvent(ev);
+        }
     }
 }
