@@ -2,28 +2,22 @@
 package cn.protector.ui.activity.setting;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
 import cn.protector.logic.entity.FenceInfo;
-import cn.protector.ui.activity.AddFenceActivity;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 描述：设置围栏页面

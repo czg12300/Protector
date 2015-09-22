@@ -1,0 +1,119 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/mv_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/ll_slide_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:descendantFocusability="blocksDescendants"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <SeekBar
+            android:id="@+id/sb_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:maxHeight="8dp"
+            android:minHeight="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:progress="10"
+            android:progressDrawable="@drawable/bg_seekbar_history"
+            android:thumb="@drawable/btn_slide_time"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:id="@+id/tv_time_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="0:00"
+                android:textColor="@color/gray_999999"
+                android:textSize="12dp"/>
+
+            <TextView
+                android:id="@+id/tv_time_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="23:59"
+                android:textColor="@color/gray_999999"
+                android:textSize="12dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/locate_regulate"
+                android:textColor="@color/black_333333"
+                android:textSize="14dp"/>
+
+            <TextView
+                android:id="@+id/tv_save_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/add_device_hint"
+                android:textColor="@color/gray_999999"
+                android:textSize="11dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:singleLine="true"
+            android:text="@string/add_device_hint"
+            android:textColor="@color/gray_999999"
+            android:textSize="11dp"/>
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/btn_blue"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/btn_selector_blue_r"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/save"
+            android:textColor="@drawable/text_selector_btn_blue_r"
+            android:textSize="11dp"/>
+    </LinearLayout>
+</FrameLayout>

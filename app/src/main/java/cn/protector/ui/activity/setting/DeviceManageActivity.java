@@ -8,17 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.widgt.RoundImageView;
 import cn.protector.R;
 import cn.protector.data.BroadcastActions;
-import cn.protector.ui.activity.AddFenceActivity;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.AddDeviceActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 描述：设备管理

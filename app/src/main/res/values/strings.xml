@@ -20,6 +20,8 @@
     <string name="title_device_manage">设备管理</string>
     <string name="title_fence_set">围栏设置</string>
     <string name="title_locate_regulate">位置修订</string>
+    <string name="title_add_fence"> 新增</string>
+    <string name="title_search_area"> 搜索区域</string>
     <!--标题 end-->
     <string name="app_name">守护者</string>
     <string name="register">注册</string>
@@ -104,5 +106,7 @@
     <string name="delete">删除</string>
     <string name="has_bind_mobile">已绑定手机</string>
     <string name="locate_regulate">定位校正</string>
+    <string name="searching">正在搜索...</string>
+    <string name="searching_hint">输入关键词正在搜索地区...</string>
 
 </resources>

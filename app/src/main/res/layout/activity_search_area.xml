@@ -1,0 +1,46 @@
+<LinearLayout
+    android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp">
+
+        <cn.protector.ui.widget.ImageEditText
+            android:id="@+id/ev_key"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_searching"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="@string/searching"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/text_content"/>
+
+    <ListView
+        android:id="@+id/lv_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/white"
+        android:cacheColorHint="@color/trans"
+        android:divider="@color/divider_list"
+        android:dividerHeight="1px"
+        android:listSelector="@drawable/list_selector_white_gray"/>
+
+</LinearLayout>

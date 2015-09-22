@@ -1,6 +1,15 @@
 
 package cn.protector.ui.activity.setting;
 
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
@@ -15,28 +24,20 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 
-import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.TextView;
+import java.util.List;
 
 import cn.common.utils.BitmapUtil;
 import cn.protector.R;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.utils.ToastUtil;
 
-import java.util.List;
-
 /**
- * 描述：位置修订页面
+ * 描述:新增围栏页面
  *
- * @author jake
- * @since 2015/9/21 23:15
+ * @author jakechen
+ * @since 2015/9/22 11:40
  */
-public class LocationRegulateActivity extends CommonTitleActivity
+public class AddFenceActivity extends CommonTitleActivity
         implements View.OnClickListener, AMapLocationListener {
 
     private MapView mMapView;
@@ -49,9 +50,33 @@ public class LocationRegulateActivity extends CommonTitleActivity
 
     private View mVBottom;
 
+    private View mVTop;
+
     private LocationSource.OnLocationChangedListener mOnLocationChangedListener;
 
     private LocationManagerProxy mAMapLocationManager;
+
+    @Override
+    protected View getTitleLayoutView() {
+        View vTitle = inflate(R.layout.title_add_fence);
+        mIvBack = (ImageView) vTitle.findViewById(R.id.iv_back);
+        mTvTitle = (TextView) vTitle.findViewById(R.id.tv_title);
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                onBack();
+            }
+        });
+        vTitle.findViewById(R.id.iv_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goActivity(SearchAreaActivity.class);
+            }
+        });
+
+        return vTitle;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,21 +94,32 @@ public class LocationRegulateActivity extends CommonTitleActivity
 
     @Override
     public void initView() {
-        setContentView(R.layout.activity_locate_regulate);
-        setTitle(R.string.title_locate_regulate);
+        setContentView(R.layout.activity_add_fence);
+        setTitle(R.string.title_add_fence);
         mMapView = (MapView) findViewById(R.id.mv_map);
         mTvAddress = (TextView) findViewById(R.id.tv_address);
         mVBottom = findViewById(R.id.ll_bottom);
+        mVTop = findViewById(R.id.ll_slide_time);
+        mVBottom.setVisibility(View.VISIBLE);
+        mMapView.requestDisallowInterceptTouchEvent(true);
+    }
+
+    @Override
+    protected void initEvent() {
+        super.initEvent();
         findViewById(R.id.btn_save).setOnClickListener(this);
-        findViewById(R.id.iv_locate).setOnClickListener(this);
         mVBottom.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return true;
             }
         });
-        mVBottom.setVisibility(View.GONE);
-        mMapView.requestDisallowInterceptTouchEvent(true);
+        mVTop.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
     }
 
     @Override
@@ -99,9 +135,7 @@ public class LocationRegulateActivity extends CommonTitleActivity
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.iv_locate) {
-            startLocate();
-        } else if (id == R.id.btn_save) {
+        if (id == R.id.btn_save) {
             // TODO
             finish();
         }
@@ -172,7 +206,6 @@ public class LocationRegulateActivity extends CommonTitleActivity
     public void onLocationChanged(AMapLocation aLocation) {
         if (mOnLocationChangedListener != null && aLocation != null) {
             mVBottom.setVisibility(View.VISIBLE);
-            getSupportFragmentManager()
             mTvAddress
                     .setText(aLocation.getCity() + aLocation.getAddress() + aLocation.getPoiName());
             ToastUtil.show(aLocation.getCity() + aLocation.getAddress() + aLocation.getPoiName());
