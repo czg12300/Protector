@@ -115,12 +115,11 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btn_add"
+            android:id="@+id/btn_exit"
             style="@style/btn_blue"
             android:layout_alignParentBottom="true"
             android:layout_margin="15dp"
             android:background="@drawable/btn_selector_red_r"
-            android:onClick="onClick"
             android:text="@string/exit_login"
             android:textColor="@drawable/text_selector_btn_red_r" />
     </LinearLayout>

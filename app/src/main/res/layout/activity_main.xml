@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray">
 
-    <cn.protector.ui.widget.MapViewPager
+    <cn.protector.ui.widget.MainTabViewPager
         android:id="@+id/vp_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

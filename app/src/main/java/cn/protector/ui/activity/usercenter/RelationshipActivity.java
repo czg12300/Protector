@@ -41,6 +41,7 @@ public class RelationshipActivity extends CommonTitleActivity implements View.On
         if (v.getId() == R.id.btn_submit) {
             ProtectorApplication app = (ProtectorApplication) ProtectorApplication.getInstance();
             if (!app.isShowMain()) {
+                InitSharedData.setUserId(21);
                 goActivity(MainActivity.class);
             }
             sendBroadcast(new Intent(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN));

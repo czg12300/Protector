@@ -3,16 +3,11 @@ package cn.protector.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.SurfaceView;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.RadioButton;
 
 import java.io.Serializable;
@@ -31,7 +26,7 @@ import cn.protector.ui.fragment.LocateFragment;
 import cn.protector.ui.fragment.MessageFragment;
 import cn.protector.ui.fragment.SettingFragment;
 import cn.protector.ui.helper.MainTitleHelper;
-import cn.protector.ui.widget.MapViewPager;
+import cn.protector.ui.widget.MainTabViewPager;
 import cn.protector.utils.ToastUtil;
 
 public class MainActivity extends BaseWorkerFragmentActivity
@@ -40,7 +35,7 @@ public class MainActivity extends BaseWorkerFragmentActivity
 
     private static final int MSG_UI_GET_ALL_DEVICES = 1;
 
-    private MapViewPager mVpContent;
+    private MainTabViewPager mVpContent;
 
     private TabRadioGroup mRgMenu;
 
@@ -80,7 +75,7 @@ public class MainActivity extends BaseWorkerFragmentActivity
 
     private void initView() {
         setContentView(R.layout.activity_main);
-        mVpContent = (MapViewPager) findViewById(R.id.vp_content);
+        mVpContent = (MainTabViewPager) findViewById(R.id.vp_content);
         mRgMenu = (TabRadioGroup) findViewById(R.id.rg_menu);
         mRbLocate = (RadioButton) findViewById(R.id.rb_menu_locate);
         mRbHealth = (RadioButton) findViewById(R.id.rb_menu_health);
@@ -144,17 +139,22 @@ public class MainActivity extends BaseWorkerFragmentActivity
         switch (mVpContent.getCurrentItem()) {
             case 0:
                 mRbLocate.setChecked(true);
+                mVpContent.setCanScroll(false);
                 break;
             case 1:
+                mVpContent.setCanScroll(false);
                 mRbHistory.setChecked(true);
                 break;
             case 2:
+                mVpContent.setCanScroll(true);
                 mRbMessage.setChecked(true);
                 break;
             case 3:
+                mVpContent.setCanScroll(true);
                 mRbHealth.setChecked(true);
                 break;
             case 4:
+                mVpContent.setCanScroll(true);
                 mRbSetting.setChecked(true);
                 break;
         }

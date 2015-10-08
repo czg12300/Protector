@@ -1,3 +1,4 @@
+
 package cn.protector.ui.fragment;
 
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 import cn.protector.data.BroadcastActions;
+import cn.protector.data.InitSharedData;
 import cn.protector.ui.activity.setting.CareStaffActivity;
 import cn.protector.ui.activity.setting.DeviceManageActivity;
 import cn.protector.ui.activity.setting.FenceSetActivity;
@@ -28,6 +31,7 @@ import cn.protector.ui.activity.setting.LocationRegulateActivity;
 import cn.protector.ui.activity.setting.ModifyPwActivity;
 import cn.protector.ui.activity.setting.QACodeActivity;
 import cn.protector.ui.activity.usercenter.BabyInfoActivity;
+import cn.protector.ui.activity.usercenter.LoginActivity;
 import cn.protector.ui.helper.MainTitleHelper;
 
 /**
@@ -35,8 +39,10 @@ import cn.protector.ui.helper.MainTitleHelper;
  *
  * @author jakechen on 2015/8/13.
  */
-public class SettingFragment extends BaseWorkerFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class SettingFragment extends BaseWorkerFragment
+        implements View.OnClickListener, AdapterView.OnItemClickListener {
     private MainTitleHelper mTitleHelper;
+
     private BaseDialog mShutdownDialog;
 
     public static SettingFragment newInstance() {
@@ -44,7 +50,10 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
     }
 
     private GridView mGvSetting;
+
     private View mVBabyInfo;
+
+    private Button mBtnExit;
 
     protected void hideDialog() {
         if (mShutdownDialog != null) {
@@ -57,13 +66,16 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
         setContentView(R.layout.fragment_setting);
         mGvSetting = (GridView) findViewById(R.id.gv_setting);
         mVBabyInfo = findViewById(R.id.ll_baby_info);
-        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title), MainTitleHelper.STYLE_SETTING);
+        mBtnExit = (Button) findViewById(R.id.btn_exit);
+        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
+                MainTitleHelper.STYLE_SETTING);
     }
 
     @Override
     protected void initEvent() {
         mGvSetting.setOnItemClickListener(this);
         mVBabyInfo.setOnClickListener(this);
+        mBtnExit.setOnClickListener(this);
         findViewById(R.id.tv_modify_pw).setOnClickListener(this);
         findViewById(R.id.tv_device_manage).setOnClickListener(this);
     }
@@ -83,9 +95,12 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
         list.add(new ItemInfo(R.drawable.ico_family_setting, getString(R.string.family_setting)));
         list.add(new ItemInfo(R.drawable.ico_saftey_setting, getString(R.string.saftey_setting)));
         list.add(new ItemInfo(R.drawable.ico_qrcode_setting, getString(R.string.qrcode_setting)));
-        list.add(new ItemInfo(R.drawable.ico_position_setting, getString(R.string.position_setting)));
-        list.add(new ItemInfo(R.drawable.ico_location_setting, getString(R.string.location_setting)));
-        list.add(new ItemInfo(R.drawable.ico_shutdown_setting, getString(R.string.shutdown_setting)));
+        list.add(new ItemInfo(R.drawable.ico_position_setting,
+                getString(R.string.position_setting)));
+        list.add(new ItemInfo(R.drawable.ico_location_setting,
+                getString(R.string.location_setting)));
+        list.add(new ItemInfo(R.drawable.ico_shutdown_setting,
+                getString(R.string.shutdown_setting)));
         return list;
     }
 
@@ -101,11 +116,13 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
         if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
-            //TODO 切换设备
-            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
+            // TODO 切换设备
+            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent
+                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
             mTitleHelper.setTitle(info.name);
         } else if (TextUtils.equals(action, BroadcastActions.ACTION_GET_ALL_DEVICES)) {
-            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
+            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent
+                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
             mTitleHelper.setDevice(infos);
         }
     }
@@ -119,12 +136,16 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
             goActivity(ModifyPwActivity.class);
         } else if (id == R.id.tv_device_manage) {
             goActivity(DeviceManageActivity.class);
+        } else if (id == R.id.btn_exit) {
+            InitSharedData.setUserId(-1);
+            getActivity().finish();
+            goActivity(LoginActivity.class);
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO
+        // TODO
         switch (position) {
             case 0:
                 goActivity(CareStaffActivity.class);
@@ -146,7 +167,6 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
         }
     }
 
-
     /**
      * 显示远程关机的弹窗
      */
@@ -155,23 +175,25 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
             mShutdownDialog = new BaseDialog(getActivity());
             mShutdownDialog.setWindow(R.style.alpha_animation, 0.3f);
             mShutdownDialog.setContentView(R.layout.dialog_shutdown);
-            mShutdownDialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO 远程关机
-                    if (mShutdownDialog != null) {
-                        mShutdownDialog.dismiss();
-                    }
-                }
-            });
-            mShutdownDialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mShutdownDialog != null) {
-                        mShutdownDialog.dismiss();
-                    }
-                }
-            });
+            mShutdownDialog.findViewById(R.id.btn_ok)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // TODO 远程关机
+                            if (mShutdownDialog != null) {
+                                mShutdownDialog.dismiss();
+                            }
+                        }
+                    });
+            mShutdownDialog.findViewById(R.id.btn_cancel)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mShutdownDialog != null) {
+                                mShutdownDialog.dismiss();
+                            }
+                        }
+                    });
         }
         mShutdownDialog.show();
     }
@@ -181,6 +203,7 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
      */
     class ItemInfo {
         int imgId;
+
         String name;
 
         public ItemInfo(int imgId, String name) {
