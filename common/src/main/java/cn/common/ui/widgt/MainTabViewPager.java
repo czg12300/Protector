@@ -1,5 +1,5 @@
 
-package cn.protector.ui.widget;
+package cn.common.ui.widgt;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
@@ -7,8 +7,14 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * 用于内层嵌套viewPager的框架使用，可以控制是左滑、右滑和不可滑动
+ * 
+ * @author jakechen
+ * @since 2015/10/20 10:37
+ */
 public class MainTabViewPager extends ViewPager {
-    private boolean canScroll = false;
+    private boolean canScroll = true;
 
     private boolean canScrollLeft = true;
 
@@ -19,6 +25,10 @@ public class MainTabViewPager extends ViewPager {
     }
 
     public void setCanScrollLeft(boolean canScrollLeft) {
+        if (canScrollLeft) {
+            canScroll = true;
+            canScrollRight = false;
+        }
         this.canScrollLeft = canScrollLeft;
     }
 
@@ -27,6 +37,10 @@ public class MainTabViewPager extends ViewPager {
     }
 
     public void setCanScrollRight(boolean canScrollRight) {
+        if (canScrollRight) {
+            canScroll = true;
+            canScrollLeft = false;
+        }
         this.canScrollRight = canScrollRight;
     }
 
@@ -35,6 +49,13 @@ public class MainTabViewPager extends ViewPager {
     }
 
     public void setCanScroll(boolean canScroll) {
+        if (canScroll) {
+            canScrollLeft = true;
+            canScrollRight = true;
+        } else {
+            canScrollLeft = false;
+            canScrollRight = false;
+        }
         this.canScroll = canScroll;
     }
 
@@ -83,10 +104,13 @@ public class MainTabViewPager extends ViewPager {
 
     private float xDistance, yDistance, xLast, yLast;
 
+    private float xCurDistance;
+
     private boolean canInvideScroll(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 xDistance = yDistance = 0f;
+                xCurDistance = 0f;
                 xLast = ev.getX();
                 yLast = ev.getY();
                 break;
@@ -97,7 +121,8 @@ public class MainTabViewPager extends ViewPager {
                 yDistance += Math.abs(curY - yLast);
                 yLast = curY;
                 if (xDistance > yDistance) {
-                    if (curX - xLast > 0) {
+                    xCurDistance = xCurDistance + (curX - xLast);
+                    if (xCurDistance > 0) {
                         xLast = curX;
                         if (canScrollLeft) {
                             return true;
@@ -113,6 +138,7 @@ public class MainTabViewPager extends ViewPager {
                         }
                     }
                 }
+                break;
         }
         return true;
     }

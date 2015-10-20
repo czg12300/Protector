@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.common.ui.activity.BaseWorkerFragmentActivity;
+import cn.common.ui.widgt.MainTabViewPager;
 import cn.common.ui.widgt.TabRadioGroup;
 import cn.protector.ProtectorApplication;
 import cn.protector.R;
@@ -26,7 +27,6 @@ import cn.protector.ui.fragment.LocateFragment;
 import cn.protector.ui.fragment.MessageFragment;
 import cn.protector.ui.fragment.SettingFragment;
 import cn.protector.ui.helper.MainTitleHelper;
-import cn.protector.ui.widget.MainTabViewPager;
 import cn.protector.utils.ToastUtil;
 
 public class MainActivity extends BaseWorkerFragmentActivity
