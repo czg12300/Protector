@@ -50,7 +50,7 @@ public class AppException extends Exception {
     private AppException(int type, int code, Exception ex) {
         this.mType = type;
         this.mCode = code;
-        if (BaseAppConFig.isDebug()) {
+        if (IAppConFig.isDebug()) {
             saveErrorLog(ex);
         }
     }

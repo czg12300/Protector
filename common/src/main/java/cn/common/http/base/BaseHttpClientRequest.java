@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Set;
 
 import cn.common.AppException;
-import cn.common.BaseAppConFig;
 import cn.common.utils.UrlEncodeUtil;
 
 /**
@@ -55,6 +54,16 @@ public abstract class BaseHttpClientRequest<T> {
     private Class<?> mClazz;
 
     private boolean isGet = false;
+
+    private boolean isDebug = false;
+
+    public boolean isDebug() {
+        return isDebug;
+    }
+
+    public void setIsDebug(boolean isDebug) {
+        this.isDebug = isDebug;
+    }
 
     public boolean isGet() {
         return isGet;
@@ -181,7 +190,7 @@ public abstract class BaseHttpClientRequest<T> {
     private HttpUriRequest createHttpUriRequest() throws AppException {
         String prevUrl = getUrl();
         String params = getGetRequestParams();
-        if (BaseAppConFig.isDebug()) {
+        if (isDebug()) {
             Log.d(TAG, prevUrl + params);
         }
         HttpUriRequest uriReq = null;
