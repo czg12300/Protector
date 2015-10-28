@@ -1,6 +1,8 @@
 
 package cn.protector;
 
+import cn.common.AppException;
+
 /**
  * 描述:所有的配置信息
  *
@@ -27,5 +29,9 @@ public class AppConfig {
      * 服务器地址
      */
     public static final String SERVER = isDebug ? TEST_SERVER : RELEASE_SERVER;
+
+    static {
+        AppException.setDebug(isDebug);
+    }
 
 }

@@ -47,10 +47,16 @@ public class AppException extends Exception {
 
     private int mCode;
 
+    private static boolean mIsDebug = false;
+
+    public static void setDebug(boolean isDebug) {
+        mIsDebug = isDebug;
+    }
+
     private AppException(int type, int code, Exception ex) {
         this.mType = type;
         this.mCode = code;
-        if (IAppConFig.isDebug()) {
+        if (mIsDebug) {
             saveErrorLog(ex);
         }
     }
