@@ -3,11 +3,17 @@ package cn.protector.ui.activity;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
+import cn.common.AppException;
 import cn.common.ui.activity.BaseWorkerFragmentActivity;
+import cn.protector.AppConfig;
 import cn.protector.R;
-import cn.protector.data.InitSharedData;
+import cn.protector.logic.data.InitSharedData;
+import cn.protector.logic.helper.HeartBeatHelper;
+import cn.protector.logic.http.HttpRequest;
+import cn.protector.logic.http.Response.LoginResponse;
 import cn.protector.ui.activity.usercenter.LoginActivity;
 
 /**
@@ -31,10 +37,16 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
      */
     private static final int MSG_MAIN = 1;
 
+    private static final int MSG_BACK_AUTO_LOGIN = 0;
+
+    private static final int MSG_UI_AUTO_LOGIN = 2;
+
     /**
      * 进入登录页面
      */
     private static final int MSG_LOGIN = 2;
+
+    private long lastTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +55,9 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
         mIvSplash.setImageResource(R.drawable.loading_page_ishoe);
         mIvSplash.setScaleType(ImageView.ScaleType.FIT_XY);
         setContentView(mIvSplash);
-        if (InitSharedData.isLogin()) {
-            sendEmptyUiMessageDelayed(MSG_MAIN, DELAYED_TIME);
+        if (InitSharedData.hasLogin()) {
+            lastTime = System.currentTimeMillis();
+            sendEmptyBackgroundMessage(MSG_BACK_AUTO_LOGIN);
         } else {
             sendEmptyUiMessageDelayed(MSG_LOGIN, DELAYED_TIME);
         }
@@ -64,5 +77,33 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
                 break;
         }
         finish();
+    }
+
+    @Override
+    public void handleBackgroundMessage(Message msg) {
+        super.handleBackgroundMessage(msg);
+        switch (msg.what) {
+            case MSG_BACK_AUTO_LOGIN:
+                HttpRequest<LoginResponse> request = new HttpRequest<>(AppConfig.LOGIN,
+                        LoginResponse.class);
+                try {
+                    LoginResponse response = request.request();
+                    if (response != null && !TextUtils.isEmpty(response.getCode())) {
+                        // 开始心跳包发送
+                        HeartBeatHelper.getInstance().start();
+                        InitSharedData.setUserId(response.getUserId());
+                        InitSharedData.setUserCode(response.getCode());
+                        if ((System.currentTimeMillis() - lastTime) >= DELAYED_TIME) {
+                            sendEmptyUiMessage(MSG_MAIN);
+                        } else {
+                            sendEmptyUiMessageDelayed(MSG_MAIN,
+                                    DELAYED_TIME - (System.currentTimeMillis() - lastTime));
+                        }
+                    }
+                } catch (AppException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
     }
 }

@@ -4,6 +4,7 @@ package cn.protector.logic.http;
 import java.util.Hashtable;
 
 import cn.common.http.base.BaseHttpClientRequest;
+import cn.protector.AppConfig;
 
 /**
  * 描述:http请求
@@ -14,6 +15,8 @@ import cn.common.http.base.BaseHttpClientRequest;
 public class HttpRequest<T> extends BaseHttpClientRequest<T> {
     public HttpRequest(String svc, Class<?> clazz) {
         super(svc, clazz);
+        setIsDebug(AppConfig.isDebug);
+        setIsGet(true);
     }
 
     @Override
@@ -22,7 +25,7 @@ public class HttpRequest<T> extends BaseHttpClientRequest<T> {
 
     @Override
     protected String getServerUrl() {
-        return null;
+        return AppConfig.SERVER;
     }
 
     @Override

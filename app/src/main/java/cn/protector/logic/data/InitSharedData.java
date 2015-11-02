@@ -1,13 +1,14 @@
-package cn.protector.data;
+
+package cn.protector.logic.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import cn.protector.ProtectorApplication;
 
 /**
- * 存放初始化的值
- * Created by Administrator on 2015/8/15.
+ * 存放初始化的值 Created by Administrator on 2015/8/15.
  */
 public final class InitSharedData {
 
@@ -18,9 +19,32 @@ public final class InitSharedData {
      * 文件名
      */
     private static final String FILE_NAME = "init";
+
     private static final String KEY_IS_NEW_VOICE = "key_is_new_voice";
+
     private static final String KEY_USER_ID = "keyUserId";
+
+    private static final String KEY_USER_CODE = "keyCode";
+
     private static final String KEY_MOBILE = "keyMobile";
+
+    private static final String KEY_PASSWORD = "keyPassWord";
+
+    public static void setUserCode(String code) {
+        getSharedPreferences().edit().putString(KEY_USER_CODE, code).commit();
+    }
+
+    public static String getUserCode() {
+        return getSharedPreferences().getString(KEY_USER_CODE, null);
+    }
+
+    public static void setPassword(String pw) {
+        getSharedPreferences().edit().putString(KEY_PASSWORD, pw).commit();
+    }
+
+    public static String getPassword() {
+        return getSharedPreferences().getString(KEY_PASSWORD, null);
+    }
 
     public static void setMobile(String mobile) {
         getSharedPreferences().edit().putString(KEY_MOBILE, mobile).commit();
@@ -30,17 +54,16 @@ public final class InitSharedData {
         return getSharedPreferences().getString(KEY_MOBILE, null);
     }
 
-    public static void setUserId(long id) {
-        getSharedPreferences().edit().putLong(KEY_USER_ID, id).commit();
+    public static void setUserId(String id) {
+        getSharedPreferences().edit().putString(KEY_USER_ID, id).commit();
     }
 
-    public static long getUserId() {
-        return getSharedPreferences().getLong(KEY_USER_ID, -1);
+    public static String getUserId() {
+        return getSharedPreferences().getString(KEY_USER_ID, null);
     }
 
-    public static boolean isLogin() {
-        boolean isNotLogin = getUserId() < 0;
-        return !isNotLogin;
+    public static boolean hasLogin() {
+        return !TextUtils.isEmpty(getMobile()) && !TextUtils.isEmpty(getPassword());
     }
 
     public static boolean isNewVoice(int id) {
@@ -56,13 +79,13 @@ public final class InitSharedData {
         getSharedPreferences().edit().putString(KEY_IS_NEW_VOICE, save).commit();
     }
 
-
     /**
      * 获取sharePreference的编辑器
      *
      * @return
      */
     private static SharedPreferences getSharedPreferences() {
-        return ProtectorApplication.getInstance().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        return ProtectorApplication.getInstance().getSharedPreferences(FILE_NAME,
+                Context.MODE_PRIVATE);
     }
 }

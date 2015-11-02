@@ -13,12 +13,12 @@ public class AppConfig {
     /**
      * 当前运行版本是否为测试包
      */
-    public static final boolean isDebug = false;
+    public static final boolean isDebug = true;
 
     /**
      * 测试服务器地址
      */
-    public static final String TEST_SERVER = "";
+    public static final String TEST_SERVER = "http://ishoes.e-heneng.com:8005/";
 
     /**
      * 正式服务器地址
@@ -34,4 +34,5 @@ public class AppConfig {
         AppException.setDebug(isDebug);
     }
 
+    public static final String LOGIN = "AppHandler.ashx?Method=SystemLogin";
 }

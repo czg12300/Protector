@@ -2,6 +2,7 @@
 package cn.protector;
 
 import cn.common.ui.activity.BaseApplication;
+import cn.protector.logic.helper.HeartBeatHelper;
 
 /**
  * 描述：程序入口
@@ -26,6 +27,7 @@ public class ProtectorApplication extends BaseApplication {
 
     @Override
     protected void onConfig() {
+        HeartBeatHelper.getInstance().init(getApplicationContext());
     }
 
     @Override

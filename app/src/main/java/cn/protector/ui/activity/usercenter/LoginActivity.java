@@ -1,9 +1,9 @@
-
 package cn.protector.ui.activity.usercenter;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Message;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -14,99 +14,166 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import cn.common.AppException;
+import cn.protector.AppConfig;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
+import cn.protector.logic.data.InitSharedData;
+import cn.protector.logic.helper.HeartBeatHelper;
+import cn.protector.logic.http.HttpRequest;
+import cn.protector.logic.http.Response.LoginResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
+import cn.protector.ui.activity.MainActivity;
+import cn.protector.ui.helper.TipDialogHelper;
 import cn.protector.ui.widget.ImageEditText;
+import cn.protector.utils.ToastUtil;
 
 /**
  * 登录页面
  */
-public class LoginActivity extends CommonTitleActivity
-        implements TextWatcher, View.OnClickListener {
-    private ImageEditText mEvMobile;
+public class LoginActivity extends CommonTitleActivity implements TextWatcher, View.OnClickListener {
+  private static final int MSG_BACK_LOGIN = 0;
+  private static final int MSG_UI_LOGIN = 0;
+  private static final int MSG_UI_GO_ADD_DEVICE = 1;
+  private static final int MSG_UI_GO_MAIN = 2;
+  private ImageEditText mEvMobile;
 
-    private ImageEditText mEvPw;
+  private ImageEditText mEvPw;
 
-    private Button mBtnOk;
+  private Button mBtnOk;
 
-    private TextView mTvRegister;
+  private TextView mTvRegister;
 
-    private TextView mTvForgetPw;
+  private TextView mTvForgetPw;
 
-    @Override
-    protected void initView() {
-        setTitle(R.string.login_title);
-        mIvBack.setVisibility(View.GONE);
-        setSwipeBackEnable(false);
-        setContentView(R.layout.activity_login);
-        mEvMobile = (ImageEditText) findViewById(R.id.ev_mobile);
-        mEvPw = (ImageEditText) findViewById(R.id.ev_pw);
-        mBtnOk = (Button) findViewById(R.id.btn_ok);
-        mTvRegister = (TextView) findViewById(R.id.tv_register);
-        mTvForgetPw = (TextView) findViewById(R.id.tv_forget);
-        mTvRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);// 下划线
-        mTvForgetPw.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);// 下划线
-        mEvMobile.setLeftDrawable(R.drawable.img_selector_account_left_select);
-        mEvPw.setLeftDrawable(R.drawable.img_selector_pw_left_select);
-        mEvMobile.setInputType(InputType.TYPE_CLASS_PHONE);
-        mEvPw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        mEvMobile.setHint(R.string.mobile_hint);
-        mEvPw.setHint(R.string.pw_hint);
-        // 设置点击页面其他地方隐藏软键盘
-        setHideInputView(R.id.root);
+  private TipDialogHelper mTipDialogHelper;
+
+  @Override
+  protected void initView() {
+    setTitle(R.string.login_title);
+    mIvBack.setVisibility(View.GONE);
+    setSwipeBackEnable(false);
+    setContentView(R.layout.activity_login);
+    mEvMobile = (ImageEditText) findViewById(R.id.ev_mobile);
+    mEvPw = (ImageEditText) findViewById(R.id.ev_pw);
+    mBtnOk = (Button) findViewById(R.id.btn_ok);
+    mTvRegister = (TextView) findViewById(R.id.tv_register);
+    mTvForgetPw = (TextView) findViewById(R.id.tv_forget);
+    mTvRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);// 下划线
+    mTvForgetPw.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);// 下划线
+    mEvMobile.setLeftDrawable(R.drawable.img_selector_account_left_select);
+    mEvPw.setLeftDrawable(R.drawable.img_selector_pw_left_select);
+    mEvMobile.setInputType(InputType.TYPE_CLASS_PHONE);
+    mEvPw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+    mEvMobile.setHint(R.string.mobile_hint);
+    mEvPw.setHint(R.string.pw_hint);
+    // 设置点击页面其他地方隐藏软键盘
+    setHideInputView(R.id.root);
+    mTipDialogHelper = new TipDialogHelper(this);
+  }
+
+  @Override
+  protected void initEvent() {
+    mEvPw.addTextChangedListener(this);
+    mEvMobile.addTextChangedListener(this);
+    mBtnOk.setEnabled(false);
+    mBtnOk.setOnClickListener(this);
+    mTvRegister.setOnClickListener(this);
+    mTvForgetPw.setOnClickListener(this);
+  }
+
+  @Override
+  public void onClick(View v) {
+    if (v.getId() == R.id.btn_ok) {
+      mBtnOk.setEnabled(false);
+      mTipDialogHelper.showLoadingTip(R.string.login_ing);
+      sendEmptyBackgroundMessage(MSG_BACK_LOGIN);
+    } else if (v.getId() == R.id.tv_register) {
+      goActivity(RegisterActivity.class);
+    } else if (v.getId() == R.id.tv_forget) {
     }
+  }
 
-    @Override
-    protected void initEvent() {
-        mEvPw.addTextChangedListener(this);
-        mEvMobile.addTextChangedListener(this);
-        mBtnOk.setEnabled(false);
-        mBtnOk.setOnClickListener(this);
-        mTvRegister.setOnClickListener(this);
-        mTvForgetPw.setOnClickListener(this);
+  @Override
+  public void setupBroadcastActions(List<String> actions) {
+    super.setupBroadcastActions(actions);
+    actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+  }
+
+  @Override
+  public void handleBroadcast(Context context, Intent intent) {
+    super.handleBroadcast(context, intent);
+    String action = intent.getAction();
+    if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+      finish();
     }
+  }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btn_ok) {
-            showLoadingTip(R.string.login_ing);
-            goActivity(AddDeviceActivity.class);
-        } else if (v.getId() == R.id.tv_register) {
-            goActivity(RegisterActivity.class);
-        } else if (v.getId() == R.id.tv_forget) {
+  @Override
+  public void handleUiMessage(Message msg) {
+    super.handleUiMessage(msg);
+    switch (msg.what) {
+      case MSG_UI_LOGIN:
+        if (msg.obj != null) {
+          LoginResponse response = (LoginResponse) msg.obj;
+          mTipDialogHelper.hideDialog();
+          ToastUtil.show(response.getInfo());
+          if (response.getResult() == LoginResponse.SUCCESS) {
+            if (InitSharedData.hasLogin()) {
+              sendEmptyUiMessageDelayed(MSG_UI_GO_MAIN, 1000);
+            } else {
+              sendEmptyUiMessageDelayed(MSG_UI_GO_ADD_DEVICE, 1000);
+            }
+            InitSharedData.setPassword(mEvPw.getText().toString());
+            InitSharedData.setUserCode(response.getCode());
+            InitSharedData.setUserId(response.getUserId());
+            InitSharedData.setMobile(mEvMobile.getText().toString());
+            //开始心跳包发送
+            HeartBeatHelper.getInstance().start();
+          }
         }
+        break;
+      case MSG_UI_GO_MAIN:
+        goActivity(MainActivity.class);
+        break;
+      case MSG_UI_GO_ADD_DEVICE:
+        goActivity(AddDeviceActivity.class);
+        break;
     }
+  }
 
-    @Override
-    public void setupBroadcastActions(List<String> actions) {
-        super.setupBroadcastActions(actions);
-        actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
-    }
-
-    @Override
-    public void handleBroadcast(Context context, Intent intent) {
-        super.handleBroadcast(context, intent);
-        String action = intent.getAction();
-        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
-            finish();
+  @Override
+  public void handleBackgroundMessage(Message msg) {
+    super.handleBackgroundMessage(msg);
+    switch (msg.what) {
+      case MSG_BACK_LOGIN:
+        HttpRequest<LoginResponse> request = new HttpRequest<>(AppConfig.LOGIN, LoginResponse.class);
+        Message uiMsg = obtainUiMessage();
+        uiMsg.what = MSG_UI_LOGIN;
+        try {
+          uiMsg.obj = request.request();
+        } catch (AppException e) {
+          e.printStackTrace();
         }
+        uiMsg.sendToTarget();
+        break;
     }
+  }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
+  @Override
+  public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+  }
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (TextUtils.isEmpty(mEvPw.getText()) || TextUtils.isEmpty(mEvMobile.getText())) {
-            mBtnOk.setEnabled(false);
-        } else {
-            mBtnOk.setEnabled(true);
-        }
+  @Override
+  public void onTextChanged(CharSequence s, int start, int before, int count) {
+    if (TextUtils.isEmpty(mEvPw.getText()) || TextUtils.isEmpty(mEvMobile.getText())) {
+      mBtnOk.setEnabled(false);
+    } else {
+      mBtnOk.setEnabled(true);
     }
+  }
 
-    @Override
-    public void afterTextChanged(Editable s) {
-    }
+  @Override
+  public void afterTextChanged(Editable s) {
+  }
 }
