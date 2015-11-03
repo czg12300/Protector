@@ -19,7 +19,7 @@ import cn.common.ui.widgt.MainTabViewPager;
 import cn.common.ui.widgt.TabRadioGroup;
 import cn.protector.ProtectorApplication;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.adapter.CommonFragmentPagerAdapter;
 import cn.protector.ui.fragment.HealthFragment;
 import cn.protector.ui.fragment.HistoryFragment;

@@ -1,12 +1,10 @@
 
 package cn.protector.logic.http.Response;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.text.TextUtils;
 
-import cn.common.http.base.BaseResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 描述:登录返回数据
@@ -14,7 +12,7 @@ import cn.common.http.base.BaseResponse;
  * @author jakechen
  * @since 2015/10/29 15:37
  */
-public class LoginResponse extends BaseResponse {
+public class LoginResponse extends Response {
     // {
     //
     // "Result":"1",
@@ -26,33 +24,10 @@ public class LoginResponse extends BaseResponse {
     // UserID:"用户ID"
     //
     // }
-    public static final int SUCCESS = 1;
-
-    public static final int FAIL = 0;
-
-    private int result;
-
-    private String info;
 
     private String code;
 
     private String userId;
-
-    public int getResult() {
-        return result;
-    }
-
-    public void setResult(int result) {
-        this.result = result;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
 
     public String getCode() {
         return code;

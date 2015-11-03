@@ -1,3 +1,4 @@
+
 package cn.protector.ui.activity.setting;
 
 import android.content.Context;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.widgt.RoundImageView;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.AddDeviceActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
@@ -27,8 +28,8 @@ import java.util.List;
  */
 public class DeviceManageActivity extends CommonTitleActivity {
 
-
     private ListView mLvContent;
+
     private CareStaffAdapter mCareStaffAdapter;
 
     @Override
@@ -85,7 +86,7 @@ public class DeviceManageActivity extends CommonTitleActivity {
     @Override
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
-//        actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+        // actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
     }
 
     @Override

@@ -1,6 +1,14 @@
 
 package cn.protector.ui.fragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.view.View;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
@@ -15,22 +23,14 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 
-import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.MotionEvent;
-import android.view.View;
+import java.util.List;
 
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.utils.BitmapUtil;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.utils.ToastUtil;
-
-import java.util.List;
 
 /**
  * 描述：定位页面
@@ -83,7 +83,6 @@ public class LocateFragment extends BaseWorkerFragment
         });
     }
 
-
     @Override
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
@@ -96,11 +95,13 @@ public class LocateFragment extends BaseWorkerFragment
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
         if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
-            //TODO 切换设备
-            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
+            // TODO 切换设备
+            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent
+                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
             mTitleHelper.setTitle(info.name);
         } else if (TextUtils.equals(action, BroadcastActions.ACTION_GET_ALL_DEVICES)) {
-            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
+            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent
+                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
             mTitleHelper.setDevice(infos);
         }
     }

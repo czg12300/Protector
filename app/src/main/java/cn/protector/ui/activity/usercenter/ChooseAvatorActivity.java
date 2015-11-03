@@ -13,14 +13,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.helper.SelectPhotoHelper;
 import cn.protector.R;
 import cn.protector.ui.activity.CommonTitleActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 描述：选择头像页面 Created by jakechen on 2015/8/27.
@@ -34,9 +34,7 @@ public class ChooseAvatorActivity extends CommonTitleActivity implements View.On
 
     private SelectPhotoHelper mSelectPhotoHelper;
 
-    @Override
     protected void hideDialog() {
-        super.hideDialog();
         if (mSelectDialog != null) {
             mSelectDialog.dismiss();
         }
@@ -166,7 +164,8 @@ public class ChooseAvatorActivity extends CommonTitleActivity implements View.On
             ImageView iv = null;
             if (convertView == null) {
                 iv = new ImageView(getContext());
-                iv.setPadding(0, (int) getDimension(R.dimen.out_margin), 0, (int) getDimension(R.dimen.out_margin));
+                iv.setPadding(0, (int) getDimension(R.dimen.out_margin), 0,
+                        (int) getDimension(R.dimen.out_margin));
                 convertView = iv;
             } else {
                 iv = (ImageView) convertView;

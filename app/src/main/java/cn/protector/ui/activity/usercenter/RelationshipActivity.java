@@ -11,8 +11,8 @@ import java.util.List;
 
 import cn.protector.ProtectorApplication;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
-import cn.protector.data.InitSharedData;
+import cn.protector.logic.data.BroadcastActions;
+import cn.protector.logic.data.InitSharedData;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.MainActivity;
 
@@ -41,7 +41,7 @@ public class RelationshipActivity extends CommonTitleActivity implements View.On
         if (v.getId() == R.id.btn_submit) {
             ProtectorApplication app = (ProtectorApplication) ProtectorApplication.getInstance();
             if (!app.isShowMain()) {
-                InitSharedData.setUserId(21);
+                InitSharedData.setUserId("");
                 goActivity(MainActivity.class);
             }
             sendBroadcast(new Intent(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN));

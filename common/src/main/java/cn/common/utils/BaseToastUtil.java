@@ -1,10 +1,7 @@
 
 package cn.common.utils;
 
-import android.content.res.Resources;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.widget.Toast;
 
 import cn.common.ui.activity.BaseApplication;
@@ -16,6 +13,7 @@ import cn.common.ui.activity.BaseApplication;
  */
 public class BaseToastUtil {
     protected static Toast mToast;
+
     protected static String mMsg;
 
     public static void show(int stringId) {
@@ -31,5 +29,9 @@ public class BaseToastUtil {
             mMsg = msg;
         }
         mToast.show();
+    }
+
+    public static void showError() {
+        show("网络异常");
     }
 }

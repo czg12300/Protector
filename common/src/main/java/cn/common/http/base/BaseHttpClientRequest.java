@@ -22,6 +22,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -187,7 +188,8 @@ public abstract class BaseHttpClientRequest<T> {
     }
 
     // 创建一个HttpUriRequest对象
-    private HttpUriRequest createHttpUriRequest() throws AppException {
+    private HttpUriRequest createHttpUriRequest()
+            throws AppException, UnsupportedEncodingException {
         String prevUrl = getUrl();
         String params = getGetRequestParams();
         if (isDebug()) {
@@ -195,7 +197,7 @@ public abstract class BaseHttpClientRequest<T> {
         }
         HttpUriRequest uriReq = null;
         if (isGet) {
-            uriReq = new HttpGet(prevUrl + params);
+            uriReq = new HttpGet(getUrlWithQueryString(prevUrl, params));
         } else {
             uriReq = new HttpPost(prevUrl);
             ((HttpPost) uriReq).setEntity(getPostRequestEntity());
@@ -222,6 +224,20 @@ public abstract class BaseHttpClientRequest<T> {
         return uriReq;
     }
 
+    /**
+     * 拼接成http请求
+     */
+    public String getUrlWithQueryString(String url, String params) {
+        if (null != url) {
+            if (url.endsWith("&")) {
+                url += params;
+            } else {
+                url += "?" + params;
+            }
+        }
+        return url;
+    }
+
     protected abstract Hashtable<String, String> getRequestHeaders();
 
     protected HttpEntity getPostRequestEntity() {
@@ -239,13 +255,14 @@ public abstract class BaseHttpClientRequest<T> {
         return entity;
     }
 
-    private String getGetRequestParams() {
+    private String getGetRequestParams() throws UnsupportedEncodingException {
         if (mParams != null && mParams.size() >= 0) {
             StringBuilder builder = new StringBuilder();
             builder.append("&");
             final Set<String> keys = mParams.keySet();
             for (String key : keys) {
-                builder.append(key).append("=").append(mParams.get(key)).append("&");
+                builder.append(key).append("=").append(URLEncoder.encode(mParams.get(key), "UTF-8"))
+                        .append("&");
             }
             builder.deleteCharAt(builder.length() - 1);
             return builder.toString();

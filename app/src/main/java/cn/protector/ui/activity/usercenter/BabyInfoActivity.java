@@ -16,20 +16,20 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.widgt.RoundImageView;
 import cn.common.utils.CommonUtil;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.widget.ImageEditText;
 import cn.protector.utils.ToastUtil;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * 描述:宝贝信息页面
@@ -40,27 +40,31 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
 
     private RoundImageView mRivAvator;
 
-
     private TextView mTvBabyBirthday;
 
     private TextView mTvShoeSize;
+
     private TextView mTvBabySex;
+
     private TextView mTvBabyName;
 
     private BaseDialog mBirthdayDialog;
+
     private BaseDialog mNameDialog;
+
     private BaseDialog mSexDialog;
 
     private BaseDialog mShoeSizeDialog;
 
     private DatePicker mDatePicker;
+
     private ImageEditText mEvBabyNickName;
+
     private Button mBtnSexMale;
+
     private Button mBtnSexFemale;
 
-    @Override
     protected void hideDialog() {
-        super.hideDialog();
         if (mBirthdayDialog != null) {
             mBirthdayDialog.dismiss();
         }
@@ -84,8 +88,8 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
         mTvBabyBirthday = (TextView) findViewById(R.id.tv_baby_birthday);
         mTvBabySex = (TextView) findViewById(R.id.tv_baby_sex);
         mTvShoeSize = (TextView) findViewById(R.id.tv_shoe_size);
-//        mRivAvator.setBorderColor(getColor(R.color.gray_999999));
-//        mRivAvator.setBorderWidth(3, TypedValue.COMPLEX_UNIT_DIP);
+        // mRivAvator.setBorderColor(getColor(R.color.gray_999999));
+        // mRivAvator.setBorderWidth(3, TypedValue.COMPLEX_UNIT_DIP);
     }
 
     @Override
@@ -131,19 +135,21 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
             cal.setTimeInMillis(System.currentTimeMillis());
             mDatePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH), null);
-            mBirthdayDialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mDatePicker != null) {
-                        String birthday = String.format("%d年%02d月%02d日", mDatePicker.getYear(),
-                                mDatePicker.getMonth() + 1, mDatePicker.getDayOfMonth());
-                        mTvBabyBirthday.setText(birthday);
-                    }
-                    if (mBirthdayDialog != null) {
-                        mBirthdayDialog.dismiss();
-                    }
-                }
-            });
+            mBirthdayDialog.findViewById(R.id.btn_ok)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mDatePicker != null) {
+                                String birthday = String.format("%d年%02d月%02d日",
+                                        mDatePicker.getYear(), mDatePicker.getMonth() + 1,
+                                        mDatePicker.getDayOfMonth());
+                                mTvBabyBirthday.setText(birthday);
+                            }
+                            if (mBirthdayDialog != null) {
+                                mBirthdayDialog.dismiss();
+                            }
+                        }
+                    });
         }
         mBirthdayDialog.show();
     }
@@ -170,14 +176,15 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
                     }
                 }
             });
-            mNameDialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mNameDialog != null) {
-                        mNameDialog.dismiss();
-                    }
-                }
-            });
+            mNameDialog.findViewById(R.id.btn_cancel)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mNameDialog != null) {
+                                mNameDialog.dismiss();
+                            }
+                        }
+                    });
         }
         if (!TextUtils.isEmpty(mTvBabyName.getText())) {
             mEvBabyNickName.setText(mTvBabyName.getText());

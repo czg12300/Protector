@@ -14,15 +14,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.Serializable;
-import java.util.List;
-
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.helper.PopupWindowHelper;
 import cn.common.ui.widgt.ChangeThemeUtils;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 描述：用于主页的title逻辑

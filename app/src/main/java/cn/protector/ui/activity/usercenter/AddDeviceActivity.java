@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 
-import java.util.List;
-
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
+
+import java.util.List;
 
 /**
  * 绑定设备页面

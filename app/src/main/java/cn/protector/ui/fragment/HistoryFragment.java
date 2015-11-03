@@ -1,18 +1,6 @@
 
 package cn.protector.ui.fragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.os.Bundle;
-import android.os.Message;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.SeekBar;
-import android.widget.TextView;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
@@ -27,16 +15,28 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 
-import java.util.List;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.ui.helper.PopupWindowHelper;
 import cn.common.utils.BitmapUtil;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.utils.ToastUtil;
+
+import java.util.List;
 
 /**
  * 描述：定位页面
@@ -134,7 +134,7 @@ public class HistoryFragment extends BaseWorkerFragment
     @Override
     protected void initData() {
         mSbTime.setMax(100);
-//        mSbTime.setProgress(0);
+        // mSbTime.setProgress(0);
     }
 
     @Override

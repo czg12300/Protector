@@ -26,7 +26,7 @@ import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.widgt.RoundImageView;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
 
 /**
@@ -57,9 +57,7 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
 
     private DatePicker mDatePicker;
 
-    @Override
     protected void hideDialog() {
-        super.hideDialog();
         if (mBirthdayDialog != null) {
             mBirthdayDialog.dismiss();
         }
@@ -80,8 +78,8 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
         mBtnNext = (Button) findViewById(R.id.btn_next);
         mEvBabyName = (EditText) findViewById(R.id.ev_baby_name);
         mRivAvator = (RoundImageView) findViewById(R.id.riv_avator);
-//        mRivAvator.setBorderColor(getColor(R.color.gray_999999));
-//        mRivAvator.setBorderWidth(3, TypedValue.COMPLEX_UNIT_DIP);
+        // mRivAvator.setBorderColor(getColor(R.color.gray_999999));
+        // mRivAvator.setBorderWidth(3, TypedValue.COMPLEX_UNIT_DIP);
     }
 
     @Override

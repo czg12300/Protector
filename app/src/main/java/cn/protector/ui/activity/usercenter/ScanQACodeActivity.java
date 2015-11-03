@@ -19,8 +19,9 @@ import com.helper.CaptureHelper;
 import java.util.List;
 
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
+import cn.protector.ui.helper.TipDialogHelper;
 
 /**
  * 描述： 扫描二维码页面
@@ -29,7 +30,9 @@ import cn.protector.ui.activity.CommonTitleActivity;
  */
 public class ScanQACodeActivity extends CommonTitleActivity {
     private static final int MSG_UI_START = 0;
+
     private static final int MSG_UI_BIND_SUCCESS = MSG_UI_START + 1;
+
     private ImageView mIvScanLine;
 
     private ImageView mIvShadowScanFrame;
@@ -40,6 +43,8 @@ public class ScanQACodeActivity extends CommonTitleActivity {
 
     private View vScanFrame;
 
+    private TipDialogHelper mTipDialogHelper;
+
     @Override
     protected void initView() {
         setContentView(R.layout.activity_scan_qa_code);
@@ -49,6 +54,7 @@ public class ScanQACodeActivity extends CommonTitleActivity {
         mSvCamera = (SurfaceView) findViewById(R.id.sv_camera);
         vScanFrame = findViewById(R.id.rl_frame_scan);
         mCaptureHelper = new CaptureHelper(mSvCamera, this);
+        mTipDialogHelper = new TipDialogHelper(this);
     }
 
     @Override
@@ -60,7 +66,7 @@ public class ScanQACodeActivity extends CommonTitleActivity {
                 vScanFrame.setVisibility(View.GONE);
                 mIvShadowScanFrame.setVisibility(View.VISIBLE);
                 // mIvShadowScanFrame.setImageBitmap(bitmap);
-                showLoadingTip(R.string.bind_device_ing, false);
+                mTipDialogHelper.showLoadingTip(R.string.bind_device_ing, false);
                 sendEmptyUiMessageDelayed(MSG_UI_BIND_SUCCESS, 1000);
             }
 
@@ -95,7 +101,6 @@ public class ScanQACodeActivity extends CommonTitleActivity {
         }
     }
 
-    @Override
     protected void onTipDismiss() {
         if (vScanFrame != null && mIvShadowScanFrame != null) {
             vScanFrame.setVisibility(View.VISIBLE);

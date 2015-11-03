@@ -18,7 +18,7 @@ public class AppConfig {
     /**
      * 测试服务器地址
      */
-    public static final String TEST_SERVER = "http://ishoes.e-heneng.com:8005/";
+    public static final String TEST_SERVER = "http://ishoes.e-heneng.com:8005/AppHandler.ashx?Method=";
 
     /**
      * 正式服务器地址
@@ -34,5 +34,12 @@ public class AppConfig {
         AppException.setDebug(isDebug);
     }
 
-    public static final String LOGIN = "AppHandler.ashx?Method=SystemLogin";
+    // 登录接口
+    public static final String LOGIN = "SystemLogin";
+
+    // 注册接口
+    public static final String REGISTER = "UserRegistration";
+
+    // 获取短信验证码
+    public static final String SEND_MESSAGE_CODE = "GetMsgValidateCode";
 }

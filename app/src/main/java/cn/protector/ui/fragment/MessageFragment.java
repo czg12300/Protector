@@ -5,27 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import cn.common.ui.adapter.BaseListAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.common.ui.fragment.BaseWorkerFragment;
-import cn.common.utils.DisplayUtil;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.entity.ChatMessage;
 import cn.protector.ui.activity.usercenter.BabyInfoActivity;
 import cn.protector.ui.adapter.MessageAdapter;
 import cn.protector.ui.helper.MainTitleHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 描述：消息页面数据适配器
@@ -35,8 +29,11 @@ import java.util.List;
 public class MessageFragment extends BaseWorkerFragment
         implements View.OnClickListener, AdapterView.OnItemClickListener {
     private static final int MSG_UI_START = 0;
+
     private static final int MSG_UI_LOAD_MESSAGE_SUCCESS = MSG_UI_START + 1;
+
     private static final int MSG_BACK_START = 100;
+
     private static final int MSG_BACK_LOAD_MESSAGE = MSG_BACK_START + 1;
 
     private MainTitleHelper mTitleHelper;
@@ -48,6 +45,7 @@ public class MessageFragment extends BaseWorkerFragment
     private ListView mLvMessage;
 
     private MessageAdapter mMessageAdapter;
+
     private TextView mTvDate;
 
     @Override
@@ -57,7 +55,8 @@ public class MessageFragment extends BaseWorkerFragment
         View header = inflate(R.layout.header_message);
         mLvMessage.addHeaderView(header);
         mTvDate = (TextView) header.findViewById(R.id.tv_date);
-        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title), MainTitleHelper.STYLE_MESSAGE);
+        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
+                MainTitleHelper.STYLE_MESSAGE);
     }
 
     private void setDate(String date) {
@@ -85,11 +84,13 @@ public class MessageFragment extends BaseWorkerFragment
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
         if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
-            //TODO 切换设备
-            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
+            // TODO 切换设备
+            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent
+                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
             mTitleHelper.setTitle(info.name);
         } else if (TextUtils.equals(action, BroadcastActions.ACTION_GET_ALL_DEVICES)) {
-            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent.getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
+            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent
+                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
             mTitleHelper.setDevice(infos);
         }
     }

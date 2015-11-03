@@ -25,6 +25,7 @@
     <!--标题 end-->
     <string name="app_name">守护者</string>
     <string name="register">注册</string>
+    <string name="register_ing">正在注册</string>
     <string name="register_btn">注册并登录</string>
     <string name="forget_pw">忘记密码</string>
     <string name="pw_hint">输入密码</string>

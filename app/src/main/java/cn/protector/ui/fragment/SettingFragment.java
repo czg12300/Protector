@@ -21,8 +21,8 @@ import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
-import cn.protector.data.BroadcastActions;
-import cn.protector.data.InitSharedData;
+import cn.protector.logic.data.BroadcastActions;
+import cn.protector.logic.data.InitSharedData;
 import cn.protector.ui.activity.setting.CareStaffActivity;
 import cn.protector.ui.activity.setting.DeviceManageActivity;
 import cn.protector.ui.activity.setting.FenceSetActivity;
@@ -137,7 +137,7 @@ public class SettingFragment extends BaseWorkerFragment
         } else if (id == R.id.tv_device_manage) {
             goActivity(DeviceManageActivity.class);
         } else if (id == R.id.btn_exit) {
-            InitSharedData.setUserId(-1);
+            InitSharedData.setUserId("");
             getActivity().finish();
             goActivity(LoginActivity.class);
         }

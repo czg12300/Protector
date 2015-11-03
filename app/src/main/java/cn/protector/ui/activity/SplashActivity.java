@@ -86,19 +86,23 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
             case MSG_BACK_AUTO_LOGIN:
                 HttpRequest<LoginResponse> request = new HttpRequest<>(AppConfig.LOGIN,
                         LoginResponse.class);
+                request.addParam("u", InitSharedData.getMobile());
+                request.addParam("p", InitSharedData.getPassword());
                 try {
                     LoginResponse response = request.request();
+                    int msgWhat = MSG_LOGIN;
                     if (response != null && !TextUtils.isEmpty(response.getCode())) {
                         // 开始心跳包发送
                         HeartBeatHelper.getInstance().start();
                         InitSharedData.setUserId(response.getUserId());
                         InitSharedData.setUserCode(response.getCode());
-                        if ((System.currentTimeMillis() - lastTime) >= DELAYED_TIME) {
-                            sendEmptyUiMessage(MSG_MAIN);
-                        } else {
-                            sendEmptyUiMessageDelayed(MSG_MAIN,
-                                    DELAYED_TIME - (System.currentTimeMillis() - lastTime));
-                        }
+                        msgWhat = MSG_MAIN;
+                    }
+                    if ((System.currentTimeMillis() - lastTime) >= DELAYED_TIME) {
+                        sendEmptyUiMessage(msgWhat);
+                    } else {
+                        sendEmptyUiMessageDelayed(msgWhat,
+                                DELAYED_TIME - (System.currentTimeMillis() - lastTime));
                     }
                 } catch (AppException e) {
                     e.printStackTrace();

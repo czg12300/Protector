@@ -9,15 +9,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.protector.R;
 import cn.protector.logic.entity.FenceInfo;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 描述：设置围栏页面
@@ -28,11 +28,10 @@ public class FenceSetActivity extends CommonTitleActivity {
     private ListView mLvFence;
 
     private FenceAdapter mFenceAdapter;
+
     private BaseDialog mOperatingDialog;
 
-    @Override
     protected void hideDialog() {
-        super.hideDialog();
         if (mOperatingDialog != null) {
             mOperatingDialog.dismiss();
         }
@@ -80,25 +79,27 @@ public class FenceSetActivity extends CommonTitleActivity {
             mOperatingDialog = new BaseDialog(this);
             mOperatingDialog.setWindow(R.style.alpha_animation, 0.3f);
             mOperatingDialog.setContentView(R.layout.dialog_fence_operating);
-            mOperatingDialog.findViewById(R.id.btn_edit_info).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOperatingDialog != null) {
-                        mOperatingDialog.dismiss();
-                    }
-                }
-            });
+            mOperatingDialog.findViewById(R.id.btn_edit_info)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mOperatingDialog != null) {
+                                mOperatingDialog.dismiss();
+                            }
+                        }
+                    });
 
-            mOperatingDialog.findViewById(R.id.btn_delete).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mFenceAdapter.remove(info);
-                    //TODO 删除信息
-                    if (mOperatingDialog != null) {
-                        mOperatingDialog.dismiss();
-                    }
-                }
-            });
+            mOperatingDialog.findViewById(R.id.btn_delete)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mFenceAdapter.remove(info);
+                            // TODO 删除信息
+                            if (mOperatingDialog != null) {
+                                mOperatingDialog.dismiss();
+                            }
+                        }
+                    });
         }
         mOperatingDialog.show();
     }
@@ -146,7 +147,6 @@ public class FenceSetActivity extends CommonTitleActivity {
         }
     }
 
-
     private class FenceAdapter extends BaseListAdapter<FenceInfo> {
         public FenceAdapter(Context context) {
             super(context);
@@ -175,7 +175,8 @@ public class FenceSetActivity extends CommonTitleActivity {
                 if (!TextUtils.isEmpty(info.address)) {
                     holder.tvAddress.setText(info.address);
                 }
-                holder.tvRange.setText(getString(R.string.fence_range_string).replace("#", "" + info.range));
+                holder.tvRange.setText(
+                        getString(R.string.fence_range_string).replace("#", "" + info.range));
             }
 
             return convertView;
@@ -184,8 +185,11 @@ public class FenceSetActivity extends CommonTitleActivity {
         final class ViewHolder {
 
             TextView tvIcon;
+
             TextView tvName;
+
             TextView tvAddress;
+
             TextView tvRange;
 
         }

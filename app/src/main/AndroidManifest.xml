@@ -98,6 +98,9 @@
         <activity
             android:name=".ui.activity.setting.SearchAreaActivity"
             android:theme="@style/swipe_activity_style"/>
+
+        <service android:name=".HeartBeatService"
+            />
     </application>
 
 </manifest>
