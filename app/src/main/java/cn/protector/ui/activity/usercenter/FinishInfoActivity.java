@@ -4,6 +4,7 @@ package cn.protector.ui.activity.usercenter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -35,11 +36,19 @@ import cn.protector.ui.activity.CommonTitleActivity;
  * @auther Created by jakechen on 2015/8/27.
  */
 public class FinishInfoActivity extends CommonTitleActivity implements View.OnClickListener {
-    private Button mBtnNext;
+    private static final int MSG_BACK_SUBMIT = 0;
+
+    private static final int MSG_UI_SUBMIT = 0;
+
+    private Button mBtnSubmit;
 
     private RoundImageView mRivAvator;
 
     private EditText mEvBabyName;
+
+    private EditText mEvNikeName;
+
+    private EditText mEvRelationship;
 
     private TextView mTvBabyBirthday;
 
@@ -66,6 +75,8 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
         }
     }
 
+    private String code;
+
     @Override
     protected void initView() {
         setContentView(R.layout.activity_finish_info);
@@ -75,7 +86,7 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
         mVBirthday = findViewById(R.id.ll_birthday);
         mTvShoeSize = (TextView) findViewById(R.id.tv_shoe_size);
         mTvBabyBirthday = (TextView) findViewById(R.id.tv_birthday);
-        mBtnNext = (Button) findViewById(R.id.btn_next);
+        mBtnSubmit = (Button) findViewById(R.id.btn_submit);
         mEvBabyName = (EditText) findViewById(R.id.ev_baby_name);
         mRivAvator = (RoundImageView) findViewById(R.id.riv_avator);
         // mRivAvator.setBorderColor(getColor(R.color.gray_999999));
@@ -84,7 +95,7 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
 
     @Override
     protected void initEvent() {
-        mBtnNext.setOnClickListener(this);
+        mBtnSubmit.setOnClickListener(this);
         mVAvator.setOnClickListener(this);
         mVShoeSize.setOnClickListener(this);
         mVBirthday.setOnClickListener(this);
@@ -93,6 +104,7 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
     @Override
     protected void initData() {
         mRivAvator.setImageResource(R.drawable.img_head_boy1);
+        code = getIntent().getStringExtra("Code");
     }
 
     @Override
@@ -102,8 +114,8 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
             showBirthdayDialog();
         } else if (id == R.id.ll_shoe_size) {
             showShoeSizeDialog();
-        } else if (id == R.id.btn_next) {
-            goActivity(RelationshipActivity.class);
+        } else if (id == R.id.btn_submit) {
+            sendEmptyBackgroundMessage(MSG_BACK_SUBMIT);
         } else if (id == R.id.ll_avator) {
             goActivityForResult(ChooseAvatorActivity.class);
         } else if (id == R.id.btn_ok) {
@@ -182,6 +194,30 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
         }
     }
 
+    @Override
+    public void handleBackgroundMessage(Message msg) {
+        super.handleBackgroundMessage(msg);
+        switch (msg.what) {
+            case MSG_BACK_SUBMIT:
+                break;
+        }
+    }
+
+    @Override
+    public void setupBroadcastActions(List<String> actions) {
+        super.setupBroadcastActions(actions);
+        actions.add(BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN);
+    }
+
+    @Override
+    public void handleBroadcast(Context context, Intent intent) {
+        super.handleBroadcast(context, intent);
+        String action = intent.getAction();
+        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN)) {
+            finish();
+        }
+    }
+
     private class ShoeSizeAdapter extends BaseListAdapter<String> {
         public ShoeSizeAdapter(Context context, List<String> list) {
             super(context, list);
@@ -208,21 +244,6 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
                 textView.setText(mDataList.get(position) + "码");
             }
             return convertView;
-        }
-    }
-
-    @Override
-    public void setupBroadcastActions(List<String> actions) {
-        super.setupBroadcastActions(actions);
-        actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
-    }
-
-    @Override
-    public void handleBroadcast(Context context, Intent intent) {
-        super.handleBroadcast(context, intent);
-        String action = intent.getAction();
-        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
-            finish();
         }
     }
 }

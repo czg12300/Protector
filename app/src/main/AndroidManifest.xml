@@ -63,9 +63,6 @@
             android:name=".ui.activity.usercenter.FinishInfoActivity"
             android:theme="@style/swipe_activity_style"/>
         <activity
-            android:name=".ui.activity.usercenter.RelationshipActivity"
-            android:theme="@style/swipe_activity_style"/>
-        <activity
             android:name=".ui.activity.usercenter.BabyInfoActivity"
             android:theme="@style/swipe_activity_style"/>
         <activity
@@ -99,8 +96,7 @@
             android:name=".ui.activity.setting.SearchAreaActivity"
             android:theme="@style/swipe_activity_style"/>
 
-        <service android:name=".HeartBeatService"
-            />
+        <service android:name=".HeartBeatService"/>
     </application>
 
 </manifest>

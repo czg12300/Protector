@@ -197,7 +197,7 @@ public abstract class BaseHttpClientRequest<T> {
         }
         HttpUriRequest uriReq = null;
         if (isGet) {
-            uriReq = new HttpGet(getUrlWithQueryString(prevUrl, params));
+            uriReq = new HttpGet(prevUrl + params);
         } else {
             uriReq = new HttpPost(prevUrl);
             ((HttpPost) uriReq).setEntity(getPostRequestEntity());
@@ -222,20 +222,6 @@ public abstract class BaseHttpClientRequest<T> {
         uriReq.setHeader("Connection", "Keep-Alive");
         uriReq.setHeader("User-Agent", getUserAgent());
         return uriReq;
-    }
-
-    /**
-     * 拼接成http请求
-     */
-    public String getUrlWithQueryString(String url, String params) {
-        if (null != url) {
-            if (url.endsWith("&")) {
-                url += params;
-            } else {
-                url += "?" + params;
-            }
-        }
-        return url;
     }
 
     protected abstract Hashtable<String, String> getRequestHeaders();

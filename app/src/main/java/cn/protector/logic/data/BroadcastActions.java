@@ -6,11 +6,24 @@ package cn.protector.logic.data;
  */
 public interface BroadcastActions {
     /**
+     * 关闭主页之前的activity
+     */
+    String ACTION_FINISH_ACTIVITY_BEFORE_MAIN = "cn.protector.data.BroadcastActions.action_finish_activity_before_main";
+
+    /**
+     * 注册成功
+     */
+    String ACTION_REGISTER_SUCCESS = "cn.protector.data.BroadcastActions.action_register_success";
+
+    /**
+     * 登录成功
+     */
+    String ACTION_LOGIN_SUCCESS = "cn.protector.data.BroadcastActions.action_login_success";
+
+    /**
      * 修改头像
      */
     String ACTION_FINISH_USER_INFO_AVATOR = "cn.protector.data.BroadcastActions.action_finish_user_info_avator";
-
-    String ACTION_FINISH_ACITIVTY_BEFORE_MAIN = "cn.protector.data.BroadcastActions.action_finish_acitivty_beforemain";
 
     /**
      * 选择主页的定位tab

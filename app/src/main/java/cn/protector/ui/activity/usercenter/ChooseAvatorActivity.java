@@ -97,9 +97,7 @@ public class ChooseAvatorActivity extends CommonTitleActivity implements View.On
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_next) {
-            goActivity(ChooseAvatorActivity.class);
-        } else if (id == R.id.iv_back) {
+        if (id == R.id.iv_back) {
             if (!isFinishing()) {
                 finish();
             }

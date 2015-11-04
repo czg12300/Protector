@@ -100,27 +100,49 @@ public class LoginActivity extends CommonTitleActivity
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
-            mBtnOk.setEnabled(false);
-            mTipDialogHelper.showLoadingTip(R.string.login_ing);
-            sendEmptyBackgroundMessage(MSG_BACK_LOGIN);
+            login();
         } else if (v.getId() == R.id.tv_register) {
             goActivity(RegisterActivity.class);
         } else if (v.getId() == R.id.tv_forget) {
         }
     }
 
+    /**
+     * 执行登录操作
+     */
+    private void login() {
+        mBtnOk.setEnabled(false);
+        mTipDialogHelper.showLoadingTip(R.string.login_ing);
+        sendEmptyBackgroundMessage(MSG_BACK_LOGIN);
+    }
+
     @Override
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
-        actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+        actions.add(BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN);
+        actions.add(BroadcastActions.ACTION_REGISTER_SUCCESS);
     }
 
     @Override
     public void handleBroadcast(Context context, Intent intent) {
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
-        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN)) {
             finish();
+        } else if (TextUtils.equals(action, BroadcastActions.ACTION_REGISTER_SUCCESS)) {
+            String mobile = intent.getStringExtra("mobile");
+            String password = intent.getStringExtra("password");
+            if (!TextUtils.isEmpty(mobile) && mEvMobile != null) {
+                mEvMobile.setText(mobile);
+                mEvMobile.setSelection(mEvMobile.getText().length());
+            }
+            if (!TextUtils.isEmpty(password) && mEvPw != null) {
+                mEvPw.setText(password);
+                mEvPw.setSelection(mEvPw.getText().length());
+            }
+            if (mBtnOk.isEnabled()) {
+                login();
+            }
         }
     }
 
@@ -135,9 +157,9 @@ public class LoginActivity extends CommonTitleActivity
                     ToastUtil.show(response.getInfo());
                     if (response.getResult() == LoginResponse.SUCCESS) {
                         if (InitSharedData.hasLogin()) {
-                            sendEmptyUiMessageDelayed(MSG_UI_GO_MAIN, 1000);
+                            sendEmptyUiMessage(MSG_UI_GO_MAIN);
                         } else {
-                            sendEmptyUiMessageDelayed(MSG_UI_GO_ADD_DEVICE, 1000);
+                            sendEmptyUiMessage(MSG_UI_GO_ADD_DEVICE);
                         }
                         // InitSharedData.setPassword(mEvPw.getText().toString());
                         InitSharedData.setUserCode(response.getCode());
@@ -147,6 +169,7 @@ public class LoginActivity extends CommonTitleActivity
                         HeartBeatHelper.getInstance().start();
                     }
                 } else {
+                    mTipDialogHelper.hideDialog();
                     ToastUtil.showError();
                 }
                 break;

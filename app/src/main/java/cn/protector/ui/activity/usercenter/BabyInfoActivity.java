@@ -321,14 +321,14 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
     @Override
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
-        actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+        actions.add(BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN);
     }
 
     @Override
     public void handleBroadcast(Context context, Intent intent) {
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
-        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN)) {
             finish();
         }
     }

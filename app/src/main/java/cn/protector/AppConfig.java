@@ -42,4 +42,7 @@ public class AppConfig {
 
     // 获取短信验证码
     public static final String SEND_MESSAGE_CODE = "GetMsgValidateCode";
+
+    // 心跳包
+    public static final String HEART_BEAT = "LoginHeartbeat";
 }

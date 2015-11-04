@@ -4,7 +4,7 @@ package cn.protector.ui.activity.usercenter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Message;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.SurfaceView;
 import android.view.View;
@@ -21,7 +21,6 @@ import java.util.List;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
-import cn.protector.ui.helper.TipDialogHelper;
 
 /**
  * 描述： 扫描二维码页面
@@ -31,7 +30,7 @@ import cn.protector.ui.helper.TipDialogHelper;
 public class ScanQACodeActivity extends CommonTitleActivity {
     private static final int MSG_UI_START = 0;
 
-    private static final int MSG_UI_BIND_SUCCESS = MSG_UI_START + 1;
+    // private static final int MSG_UI_BIND_SUCCESS = MSG_UI_START + 1;
 
     private ImageView mIvScanLine;
 
@@ -43,7 +42,7 @@ public class ScanQACodeActivity extends CommonTitleActivity {
 
     private View vScanFrame;
 
-    private TipDialogHelper mTipDialogHelper;
+    // private TipDialogHelper mTipDialogHelper;
 
     @Override
     protected void initView() {
@@ -54,7 +53,8 @@ public class ScanQACodeActivity extends CommonTitleActivity {
         mSvCamera = (SurfaceView) findViewById(R.id.sv_camera);
         vScanFrame = findViewById(R.id.rl_frame_scan);
         mCaptureHelper = new CaptureHelper(mSvCamera, this);
-        mTipDialogHelper = new TipDialogHelper(this);
+        // mTipDialogHelper = new TipDialogHelper(this);
+        setSwipeBackEnable(false);
     }
 
     @Override
@@ -62,30 +62,42 @@ public class ScanQACodeActivity extends CommonTitleActivity {
         mCaptureHelper.setCaptureListener(new CaptureHelper.CaptureListener() {
             @Override
             public void handleCodeResult(String code, Bitmap bitmap) {
-                mIvScanLine.clearAnimation();
-                vScanFrame.setVisibility(View.GONE);
-                mIvShadowScanFrame.setVisibility(View.VISIBLE);
+                // mIvScanLine.clearAnimation();
+                // vScanFrame.setVisibility(View.GONE);
+                // mIvShadowScanFrame.setVisibility(View.VISIBLE);
                 // mIvShadowScanFrame.setImageBitmap(bitmap);
-                mTipDialogHelper.showLoadingTip(R.string.bind_device_ing, false);
-                sendEmptyUiMessageDelayed(MSG_UI_BIND_SUCCESS, 1000);
+                // mTipDialogHelper.showLoadingTip(R.string.bind_device_ing,
+                // false);
+                // sendEmptyUiMessageDelayed(MSG_UI_BIND_SUCCESS, 1000);
+                Bundle bundle = new Bundle();
+                bundle.putString("Code", code);
+                goActivity(FinishInfoActivity.class, bundle);
+                finish();
             }
 
             @Override
             public void foundPossibleResultPoint(ResultPoint point) {
             }
         });
+        // mTipDialogHelper.setOnDismissListener(new
+        // DialogInterface.OnDismissListener() {
+        // @Override
+        // public void onDismiss(DialogInterface dialog) {
+        // onTipDismiss();
+        // }
+        // });
     }
-
-    @Override
-    public void handleUiMessage(Message msg) {
-        super.handleUiMessage(msg);
-        switch (msg.what) {
-            case MSG_UI_BIND_SUCCESS:
-                goActivity(FinishInfoActivity.class);
-                finish();
-                break;
-        }
-    }
+    //
+    // @Override
+    // public void handleUiMessage(Message msg) {
+    // super.handleUiMessage(msg);
+    // switch (msg.what) {
+    // case MSG_UI_BIND_SUCCESS:
+    // goActivity(FinishInfoActivity.class);
+    // finish();
+    // break;
+    // }
+    // }
 
     private void startScanQa() {
         if (mIvScanLine != null) {
@@ -101,13 +113,13 @@ public class ScanQACodeActivity extends CommonTitleActivity {
         }
     }
 
-    protected void onTipDismiss() {
-        if (vScanFrame != null && mIvShadowScanFrame != null) {
-            vScanFrame.setVisibility(View.VISIBLE);
-            mIvShadowScanFrame.setVisibility(View.GONE);
-            startScanQa();
-        }
-    }
+    // protected void onTipDismiss() {
+    // if (vScanFrame != null && mIvShadowScanFrame != null) {
+    // vScanFrame.setVisibility(View.VISIBLE);
+    // mIvShadowScanFrame.setVisibility(View.GONE);
+    // startScanQa();
+    // }
+    // }
 
     @Override
     protected void onResume() {
@@ -125,14 +137,14 @@ public class ScanQACodeActivity extends CommonTitleActivity {
     @Override
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
-        actions.add(BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN);
+        actions.add(BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN);
     }
 
     @Override
     public void handleBroadcast(Context context, Intent intent) {
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
-        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACITIVTY_BEFORE_MAIN)) {
+        if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN)) {
             finish();
         }
     }
