@@ -70,7 +70,7 @@ public class MainActivity extends BaseWorkerFragmentActivity
         initView();
         initEvent();
         sendEmptyUiMessage(MSG_UI_INIT_DATA);
-
+        mVpContent.setCanScroll(false);
     }
 
     private void initView() {
@@ -146,7 +146,7 @@ public class MainActivity extends BaseWorkerFragmentActivity
                 mRbHistory.setChecked(true);
                 break;
             case 2:
-                mVpContent.setCanScroll(true);
+                mVpContent.setCanScrollRight(true);
                 mRbMessage.setChecked(true);
                 break;
             case 3:

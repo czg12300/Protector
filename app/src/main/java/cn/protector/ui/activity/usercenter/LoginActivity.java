@@ -77,6 +77,7 @@ public class LoginActivity extends CommonTitleActivity
         // 设置点击页面其他地方隐藏软键盘
         setHideInputView(R.id.root);
         mTipDialogHelper = new TipDialogHelper(this);
+        mTvForgetPw.setVisibility(View.GONE);
     }
 
     @Override
@@ -161,10 +162,10 @@ public class LoginActivity extends CommonTitleActivity
                         } else {
                             sendEmptyUiMessage(MSG_UI_GO_ADD_DEVICE);
                         }
-                        // InitSharedData.setPassword(mEvPw.getText().toString());
+                        InitSharedData.setPassword(mEvPw.getText().toString());
                         InitSharedData.setUserCode(response.getCode());
                         InitSharedData.setUserId(response.getUserId());
-                        // InitSharedData.setMobile(mEvMobile.getText().toString());
+                        InitSharedData.setMobile(mEvMobile.getText().toString());
                         // 开始心跳包发送
                         HeartBeatHelper.getInstance().start();
                     }

@@ -29,6 +29,7 @@ import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.ui.activity.CommonTitleActivity;
+import cn.protector.ui.activity.MainActivity;
 
 /**
  * 完善信息页面
@@ -199,6 +200,20 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
         super.handleBackgroundMessage(msg);
         switch (msg.what) {
             case MSG_BACK_SUBMIT:
+                Message subMsg = obtainUiMessage();
+                subMsg.what = MSG_UI_SUBMIT;
+                subMsg.sendToTarget();
+                break;
+        }
+    }
+
+    @Override
+    public void handleUiMessage(Message msg) {
+        super.handleUiMessage(msg);
+        switch (msg.what) {
+            case MSG_UI_SUBMIT:
+                goActivity(MainActivity.class);
+                sendBroadcast(BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN);
                 break;
         }
     }

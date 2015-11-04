@@ -45,4 +45,7 @@ public class AppConfig {
 
     // 心跳包
     public static final String HEART_BEAT = "LoginHeartbeat";
+
+    // 重置密码
+    public static final String MODIFY_PASSWORD = "ResetPwd";
 }
