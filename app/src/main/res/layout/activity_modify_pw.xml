@@ -9,63 +9,27 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@color/white"
-        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/has_bind_mobile"
+            android:textColor="@color/black_333333"
+            android:textSize="@dimen/text_content"/>
+
+        <TextView
+            android:id="@+id/tv_phone_num"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/has_bind_mobile"
-                android:textColor="@color/black_333333"
-                android:textSize="@dimen/text_content"/>
-
-            <TextView
-                android:id="@+id/tv_phone_num"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:textColor="@color/gray_999999"
-                android:textSize="@dimen/text_content"/>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/divider_menu"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <cn.protector.ui.widget.ImageEditText
-                android:id="@+id/ev_code"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"/>
-
-            <Button
-                android:id="@+id/btn_code"
-                android:layout_width="123dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/btn_selector_code"
-                android:onClick="onClick"
-                android:text="@string/code_btn"
-                android:textColor="@color/gray_757575"
-                android:textSize="@dimen/text_content"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textColor="@color/gray_999999"
+            android:textSize="@dimen/text_content"/>
     </LinearLayout>
 
     <cn.protector.ui.widget.ImageEditText

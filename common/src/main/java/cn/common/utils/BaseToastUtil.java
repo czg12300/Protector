@@ -31,7 +31,4 @@ public class BaseToastUtil {
         mToast.show();
     }
 
-    public static void showError() {
-        show("网络异常");
-    }
 }

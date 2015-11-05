@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
 import android.text.InputType;
@@ -26,6 +27,7 @@ import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.Response.LoginResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.MainActivity;
+import cn.protector.ui.activity.setting.ForgetPwActivity;
 import cn.protector.ui.helper.TipDialogHelper;
 import cn.protector.ui.widget.ImageEditText;
 import cn.protector.utils.ToastUtil;
@@ -77,7 +79,6 @@ public class LoginActivity extends CommonTitleActivity
         // 设置点击页面其他地方隐藏软键盘
         setHideInputView(R.id.root);
         mTipDialogHelper = new TipDialogHelper(this);
-        mTvForgetPw.setVisibility(View.GONE);
     }
 
     @Override
@@ -105,6 +106,11 @@ public class LoginActivity extends CommonTitleActivity
         } else if (v.getId() == R.id.tv_register) {
             goActivity(RegisterActivity.class);
         } else if (v.getId() == R.id.tv_forget) {
+            Bundle bundle = new Bundle();
+            if (mEvMobile != null) {
+                bundle.putString(ForgetPwActivity.KEY_MOBILE, mEvMobile.getText().toString());
+            }
+            goActivity(ForgetPwActivity.class, bundle);
         }
     }
 

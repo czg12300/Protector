@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Set;
 
 import cn.common.AppException;
+import cn.common.ui.activity.BaseApplication;
+import cn.common.utils.NetWorkUtil;
 import cn.common.utils.UrlEncodeUtil;
 
 /**
@@ -128,6 +130,10 @@ public abstract class BaseHttpClientRequest<T> {
     }
 
     public T requestWithoutCheck(boolean isRetry) throws AppException {
+        if (!NetWorkUtil.isNetworkAvailable(BaseApplication.getInstance())) {
+            return null;
+        }
+
         HttpClient httpClient = null;
         HttpUriRequest uriReq = null;
         int tryNum = 0;

@@ -13,8 +13,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.List;
-
 import cn.common.AppException;
 import cn.protector.AppConfig;
 import cn.protector.R;
@@ -25,6 +23,8 @@ import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.helper.TipDialogHelper;
 import cn.protector.ui.widget.ImageEditText;
 import cn.protector.utils.ToastUtil;
+
+import java.util.List;
 
 /**
  * 注册页面
@@ -239,6 +239,8 @@ public class RegisterActivity extends CommonTitleActivity
                     } else {
                         ToastUtil.show(response.getInfo());
                     }
+                } else {
+                    ToastUtil.showError();
                 }
                 break;
         }

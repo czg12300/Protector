@@ -1,10 +1,10 @@
 
 package cn.protector.logic.http.Response;
 
-import android.text.TextUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.text.TextUtils;
 
 /**
  * 描述:重置密码返回数据
@@ -12,7 +12,7 @@ import org.json.JSONObject;
  * @author jakechen
  * @since 2015/11/4 19:38
  */
-public class ModifyPwResponse extends Response {
+public class ResetPwResponse extends Response {
     private int logined;
 
     public int getLogined() {

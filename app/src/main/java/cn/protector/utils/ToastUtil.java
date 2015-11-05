@@ -9,5 +9,7 @@ import cn.common.utils.BaseToastUtil;
  * @author Created by jakechen on 2015/8/11.
  */
 public final class ToastUtil extends BaseToastUtil {
-
+    public static void showError() {
+        show("网络异常");
+    }
 }

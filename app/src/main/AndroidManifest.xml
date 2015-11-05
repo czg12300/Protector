@@ -87,6 +87,9 @@
             android:name=".ui.activity.setting.ModifyPwActivity"
             android:theme="@style/swipe_activity_style"/>
         <activity
+            android:name=".ui.activity.setting.ForgetPwActivity"
+            android:theme="@style/swipe_activity_style"/>
+        <activity
             android:name=".ui.activity.setting.LocationRegulateActivity"
             android:theme="@style/swipe_activity_style"/>
         <activity
