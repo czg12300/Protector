@@ -48,4 +48,7 @@ public class AppConfig {
 
     // 重置密码
     public static final String MODIFY_PASSWORD = "ResetPwd";
+
+    // 获取设备列表
+    public static final String GET_BASE_LIST = "GetBaseList";
 }

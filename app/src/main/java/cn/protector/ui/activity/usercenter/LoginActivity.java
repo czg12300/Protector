@@ -18,12 +18,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.common.AppException;
+import cn.common.ui.BaseDialog;
 import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.helper.HeartBeatHelper;
 import cn.protector.logic.http.HttpRequest;
+import cn.protector.logic.http.Response.GetBaseListResponse;
 import cn.protector.logic.http.Response.LoginResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.MainActivity;
@@ -39,11 +41,15 @@ public class LoginActivity extends CommonTitleActivity
         implements TextWatcher, View.OnClickListener {
     private static final int MSG_BACK_LOGIN = 0;
 
+    private static final int MSG_BACK_GET_BASE_LIST = 1;
+
     private static final int MSG_UI_LOGIN = 0;
 
     private static final int MSG_UI_GO_ADD_DEVICE = 1;
 
     private static final int MSG_UI_GO_MAIN = 2;
+
+    private static final int MSG_UI_GET_BASE_LIST = 3;
 
     private ImageEditText mEvMobile;
 
@@ -56,6 +62,8 @@ public class LoginActivity extends CommonTitleActivity
     private TextView mTvForgetPw;
 
     private TipDialogHelper mTipDialogHelper;
+
+    private BaseDialog mFailDialog;
 
     @Override
     protected void initView() {
@@ -160,24 +168,41 @@ public class LoginActivity extends CommonTitleActivity
             case MSG_UI_LOGIN:
                 if (msg.obj != null) {
                     LoginResponse response = (LoginResponse) msg.obj;
-                    mTipDialogHelper.hideDialog();
                     ToastUtil.show(response.getInfo());
+                    mTipDialogHelper.showLoadingTip(R.string.get_base_list_ing);
                     if (response.getResult() == LoginResponse.SUCCESS) {
-                        if (InitSharedData.hasLogin()) {
-                            sendEmptyUiMessage(MSG_UI_GO_MAIN);
-                        } else {
-                            sendEmptyUiMessage(MSG_UI_GO_ADD_DEVICE);
-                        }
                         InitSharedData.setPassword(mEvPw.getText().toString());
                         InitSharedData.setUserCode(response.getCode());
                         InitSharedData.setUserId(response.getUserId());
                         InitSharedData.setMobile(mEvMobile.getText().toString());
                         // 开始心跳包发送
                         HeartBeatHelper.getInstance().start();
+                        sendEmptyBackgroundMessage(MSG_BACK_GET_BASE_LIST);
                     }
                 } else {
                     mTipDialogHelper.hideDialog();
                     ToastUtil.showError();
+                }
+                break;
+            case MSG_UI_GET_BASE_LIST:
+                mTipDialogHelper.hideDialog();
+                if (msg.obj != null) {
+                    GetBaseListResponse response = (GetBaseListResponse) msg.obj;
+                    if (response != null && response.isOk()) {
+                        InitSharedData.setDeviceIds(response.getJson());
+                        if (AppConfig.isDebug) {
+                            ToastUtil.show(response.getJson());
+                        }
+                        if (InitSharedData.hasLogin()) {
+                            sendEmptyUiMessage(MSG_UI_GO_MAIN);
+                        } else {
+                            sendEmptyUiMessage(MSG_UI_GO_ADD_DEVICE);
+                        }
+                    } else {
+                        showGetBaseListFailDialog();
+                    }
+                } else {
+                    showGetBaseListFailDialog();
                 }
                 break;
             case MSG_UI_GO_MAIN:
@@ -189,31 +214,94 @@ public class LoginActivity extends CommonTitleActivity
         }
     }
 
+    /**
+     * 显示获取设备信息失败的弹窗
+     */
+    private void showGetBaseListFailDialog() {
+        if (isFinishing()) {
+            return;
+        }
+        if (mFailDialog == null) {
+            mFailDialog = new BaseDialog(this);
+            mFailDialog.setWindow(R.style.alpha_animation, 0.3f);
+            mFailDialog.setContentView(R.layout.dialog_shutdown);
+            ((TextView) mFailDialog.findViewById(R.id.tv_title)).setText("设备信息获取失败，重新获取？");
+            mFailDialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mFailDialog != null) {
+                        mFailDialog.dismiss();
+                    }
+                    sendEmptyBackgroundMessage(MSG_BACK_GET_BASE_LIST);
+                }
+            });
+            mFailDialog.findViewById(R.id.btn_cancel)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mFailDialog != null) {
+                                mFailDialog.dismiss();
+                            }
+                        }
+                    });
+        }
+        mFailDialog.show();
+    }
+
     @Override
     public void handleBackgroundMessage(Message msg) {
         super.handleBackgroundMessage(msg);
         switch (msg.what) {
             case MSG_BACK_LOGIN:
-                HttpRequest<LoginResponse> request = new HttpRequest<>(AppConfig.LOGIN,
-                        LoginResponse.class);
-                if (mEvMobile != null) {
-                    request.addParam("u", mEvMobile.getText().toString());
-                }
-                if (mEvPw != null) {
-                    request.addParam("p", mEvPw.getText().toString());
-                    // request.addParam("p",
-                    // MD5Util.md5(mEvPw.getText().toString()));
-                }
-                Message uiMsg = obtainUiMessage();
-                uiMsg.what = MSG_UI_LOGIN;
-                try {
-                    uiMsg.obj = request.request();
-                } catch (AppException e) {
-                    e.printStackTrace();
-                }
-                uiMsg.sendToTarget();
+                loginTask();
+                break;
+            case MSG_BACK_GET_BASE_LIST:
+                getBaseListTask();
                 break;
         }
+    }
+
+    /**
+     * 获取设备列表请求
+     */
+    private void getBaseListTask() {
+        HttpRequest<GetBaseListResponse> request = new HttpRequest<>(AppConfig.GET_BASE_LIST,
+                GetBaseListResponse.class);
+        if (!TextUtils.isEmpty(InitSharedData.getUserCode())) {
+            request.addParam("uc", InitSharedData.getUserCode());
+        }
+        Message message = obtainUiMessage();
+        message.what = MSG_UI_GET_BASE_LIST;
+        try {
+            message.obj = request.request();
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+        message.sendToTarget();
+    }
+
+    /**
+     * 登录请求
+     */
+    private void loginTask() {
+        HttpRequest<LoginResponse> request = new HttpRequest<>(AppConfig.LOGIN,
+                LoginResponse.class);
+        if (mEvMobile != null) {
+            request.addParam("u", mEvMobile.getText().toString());
+        }
+        if (mEvPw != null) {
+            request.addParam("p", mEvPw.getText().toString());
+            // request.addParam("p",
+            // MD5Util.md5(mEvPw.getText().toString()));
+        }
+        Message uiMsg = obtainUiMessage();
+        uiMsg.what = MSG_UI_LOGIN;
+        try {
+            uiMsg.obj = request.request();
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+        uiMsg.sendToTarget();
     }
 
     @Override
