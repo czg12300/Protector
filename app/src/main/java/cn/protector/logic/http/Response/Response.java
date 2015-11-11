@@ -1,5 +1,5 @@
 
-package cn.protector.logic.http.Response;
+package cn.protector.logic.http.response;
 
 import cn.common.http.base.BaseResponse;
 

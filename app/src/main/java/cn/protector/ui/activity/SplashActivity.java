@@ -14,7 +14,7 @@ import cn.protector.R;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.helper.HeartBeatHelper;
 import cn.protector.logic.http.HttpRequest;
-import cn.protector.logic.http.Response.LoginResponse;
+import cn.protector.logic.http.response.LoginResponse;
 import cn.protector.ui.activity.usercenter.LoginActivity;
 
 /**

@@ -4,8 +4,13 @@ android {
         debug {
             keyAlias 'protector'
             keyPassword 'root12300'
-            storeFile file('F:/git/github/Protector/protector.keystore')
-//            storeFile file('G:/Android/github/Protector/protector.keystore')
+            storeFile file('H:/Android/github/Protector/protector.keystore')
+            storePassword 'root12300'
+        }
+        release {
+            keyAlias 'protector'
+            keyPassword 'root12300'
+            storeFile file('H:/Android/github/Protector/protector.keystore')
             storePassword 'root12300'
         }
     }
@@ -17,10 +22,24 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        // dex突破65535的限制
+        multiDexEnabled true
     }
     buildTypes {
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
-            minifyEnabled false
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            minifyEnabled true
+            //Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         sourceSets {
@@ -28,6 +47,16 @@ android {
                 jniLibs.srcDirs = ['libs']
             }
         }
+    }
+    //渠道Flavors，我这里写了一些常用的
+    productFlavors {
+        GooglePlay {}
+        xiaomi {}
+        umeng {}
+
+    }
+    productFlavors.all { flavor ->
+        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
 }
 

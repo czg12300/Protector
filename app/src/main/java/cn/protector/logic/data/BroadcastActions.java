@@ -35,9 +35,5 @@ public interface BroadcastActions {
      */
     String ACTION_MAIN_DEVICE_CHANGE = "cn.protector.data.BroadcastActions.action_main_device_change";
 
-    /**
-     * 获取所有设备信息
-     */
-    String ACTION_GET_ALL_DEVICES = "cn.protector.data.BroadcastActions.action_get_all_devices";
 
 }

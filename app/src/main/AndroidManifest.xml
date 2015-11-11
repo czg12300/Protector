@@ -33,6 +33,9 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="f5dcf5c8884d7b000bbc96cb0b7290c4"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
 
         <activity
             android:name=".ui.activity.SplashActivity"
@@ -46,6 +49,7 @@
         </activity>
         <activity
             android:name=".ui.activity.usercenter.LoginActivity"
+            android:launchMode="singleTop"
             android:theme="@style/activity_style"/>
         <activity
             android:name=".ui.activity.MainActivity"
@@ -100,6 +104,7 @@
             android:theme="@style/swipe_activity_style"/>
         <activity
             android:name=".ui.activity.OfflineTipActivity"
+            android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <service android:name=".HeartBeatService"/>

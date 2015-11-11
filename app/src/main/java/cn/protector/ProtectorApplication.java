@@ -10,8 +10,9 @@ import cn.common.ui.activity.BaseApplication;
 import cn.common.ui.activity.BaseWorkerApplication;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.helper.HeartBeatHelper;
+import cn.protector.logic.helper.OfflineHelper;
 import cn.protector.logic.http.HttpRequest;
-import cn.protector.logic.http.Response.CommonResponse;
+import cn.protector.logic.http.response.CommonResponse;
 import cn.protector.ui.activity.OfflineTipActivity;
 
 /**
@@ -50,7 +51,7 @@ public class ProtectorApplication extends BaseWorkerApplication {
     @Override
     protected void onConfig() {
         HeartBeatHelper.getInstance().init(getApplicationContext());
-        sendEmptyBackgroundMessageDelayed(MSG_BACK_CHECK_LOGIN, 500);
+        sendEmptyBackgroundMessageDelayed(MSG_BACK_CHECK_LOGIN, 1000);
     }
 
     @Override
@@ -82,7 +83,7 @@ public class ProtectorApplication extends BaseWorkerApplication {
             e.printStackTrace();
         }
         if (response == null || response.getResult() != CommonResponse.SUCCESS) {
-            startActivity(new Intent(this, OfflineTipActivity.class));
+            OfflineHelper.getInstance().notifyAllListener();
         }
     }
 }

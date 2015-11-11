@@ -12,7 +12,7 @@ import cn.common.AppException;
 import cn.common.BaseWorkService;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.http.HttpRequest;
-import cn.protector.logic.http.Response.CommonResponse;
+import cn.protector.logic.http.response.CommonResponse;
 import cn.protector.utils.LogUtil;
 
 /**

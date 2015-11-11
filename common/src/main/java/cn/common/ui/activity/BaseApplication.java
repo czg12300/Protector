@@ -16,7 +16,7 @@ import java.util.HashMap;
 public abstract class BaseApplication extends Application {
     public static BaseApplication mInstance;
 
-    private HashMap<String, WeakReference<Activity>> mActivityMap;
+    protected HashMap<String, WeakReference<Activity>> mActivityMap;
 
     private Handler mUiHandler;
 

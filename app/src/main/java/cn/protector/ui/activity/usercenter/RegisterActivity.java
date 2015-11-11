@@ -18,7 +18,7 @@ import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.http.HttpRequest;
-import cn.protector.logic.http.Response.CommonResponse;
+import cn.protector.logic.http.response.CommonResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.helper.TipDialogHelper;
 import cn.protector.ui.widget.ImageEditText;

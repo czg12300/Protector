@@ -20,6 +20,8 @@ import cn.common.ui.widgt.ChangeThemeUtils;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
+import cn.protector.logic.entity.DeviceInfo;
+import cn.protector.logic.helper.DeviceInfoHelper;
 
 import java.io.Serializable;
 import java.util.List;
@@ -78,6 +80,7 @@ public class MainTitleHelper implements View.OnClickListener {
         mTvTitle.setOnClickListener(this);
         mIvTitleLeft.setOnClickListener(this);
         mIvTitleRight.setOnClickListener(this);
+        initData();
     }
 
     /**
@@ -174,12 +177,10 @@ public class MainTitleHelper implements View.OnClickListener {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     DeviceInfo info = (DeviceInfo) mDeviceAdapter.getItem(position);
+                    DeviceInfoHelper.getInstance().setPositionDeviceInfo(info);
                     Intent it = new Intent(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
-                    Bundle b = new Bundle();
-                    b.putSerializable(KEY_DEVICE_INFO, info);
-                    it.putExtras(b);
                     sendBroadcast(it);
-                    setTitle(info.name);
+                    setTitle(info.getNikeName());
                     if (mDevicePop != null) {
                         mDevicePop.dismiss();
                     }
@@ -191,16 +192,17 @@ public class MainTitleHelper implements View.OnClickListener {
         mDevicePop.showAsDropDown(mVTitle);
     }
 
-    /**
-     * 设置设备数据
-     *
-     * @param list
-     */
-    public void setDevice(List<DeviceInfo> list) {
-        if (list != null && list.size() > 0) {
-            setTitle(list.get(0).name);
-            mDeviceAdapter.setData(list);
+
+    public void initData() {
+        if (DeviceInfoHelper.getInstance().hasAnyDevice()) {
+            DeviceInfo info = DeviceInfoHelper.getInstance().getDefaultDevice();
+            if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
+                setTitle(info.getNikeName());
+                DeviceInfoHelper.getInstance().setPositionDeviceInfo(info);
+            }
+            mDeviceAdapter.setData(DeviceInfoHelper.getInstance().getDeviceList());
         }
+
     }
 
     class DeviceAdapter extends BaseListAdapter<DeviceInfo> {
@@ -228,7 +230,7 @@ public class MainTitleHelper implements View.OnClickListener {
                 } else {
                     holder.ivAvator.setImageResource(R.drawable.img_head_boy1);
                 }
-                holder.tvName.setText(info.name);
+                holder.tvName.setText(info.getNikeName());
             }
 
             return convertView;
@@ -238,20 +240,6 @@ public class MainTitleHelper implements View.OnClickListener {
             TextView tvName;
 
             ImageView ivAvator;
-        }
-    }
-
-    public static class DeviceInfo implements Serializable {
-        public String avator;
-
-        public String name;
-
-        public int id;
-
-        public DeviceInfo(int id, String avator, String name) {
-            this.id = id;
-            this.avator = avator;
-            this.name = name;
         }
     }
 }

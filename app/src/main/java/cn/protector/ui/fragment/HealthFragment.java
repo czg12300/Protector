@@ -17,6 +17,8 @@ import cn.common.ui.widgt.ChangeThemeUtils;
 import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
+import cn.protector.logic.entity.DeviceInfo;
+import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.ui.activity.usercenter.BabyInfoActivity;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.ui.widget.pulltorefresh.HealthListView;
@@ -68,7 +70,6 @@ public class HealthFragment extends BaseWorkerFragment
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
         actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
-        actions.add(BroadcastActions.ACTION_GET_ALL_DEVICES);
     }
 
     @Override
@@ -76,14 +77,10 @@ public class HealthFragment extends BaseWorkerFragment
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
         if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
-            MainTitleHelper.DeviceInfo info = (MainTitleHelper.DeviceInfo) intent
-                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_INFO);
-            mTitleHelper.setTitle(info.name);
-            // TODO 切换设备
-        } else if (TextUtils.equals(action, BroadcastActions.ACTION_GET_ALL_DEVICES)) {
-            List<MainTitleHelper.DeviceInfo> infos = (List<MainTitleHelper.DeviceInfo>) intent
-                    .getSerializableExtra(MainTitleHelper.KEY_DEVICE_LIST);
-            mTitleHelper.setDevice(infos);
+            DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+            if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
+                mTitleHelper.setTitle(info.getNikeName());
+            }
         }
     }
 

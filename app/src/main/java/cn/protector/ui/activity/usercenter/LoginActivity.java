@@ -23,8 +23,8 @@ import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.helper.HeartBeatHelper;
 import cn.protector.logic.http.HttpRequest;
-import cn.protector.logic.http.Response.GetBaseListResponse;
-import cn.protector.logic.http.Response.LoginResponse;
+import cn.protector.logic.http.response.GetBaseListResponse;
+import cn.protector.logic.http.response.LoginResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.MainActivity;
 import cn.protector.ui.helper.TipDialogHelper;
@@ -63,6 +63,11 @@ public class LoginActivity extends CommonTitleActivity
     private TipDialogHelper mTipDialogHelper;
 
     private BaseDialog mFailDialog;
+
+    @Override
+    protected boolean needListenOffline() {
+        return false;
+    }
 
     @Override
     protected void initView() {

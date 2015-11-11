@@ -20,6 +20,7 @@ import cn.common.ui.widgt.TabRadioGroup;
 import cn.protector.ProtectorApplication;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
+import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.ui.adapter.CommonFragmentPagerAdapter;
 import cn.protector.ui.fragment.HealthFragment;
 import cn.protector.ui.fragment.HistoryFragment;
@@ -33,7 +34,6 @@ public class MainActivity extends BaseWorkerFragmentActivity
         implements ViewPager.OnPageChangeListener, TabRadioGroup.OnCheckedChangeListener {
     private static final int MSG_UI_INIT_DATA = 0;
 
-    private static final int MSG_UI_GET_ALL_DEVICES = 1;
 
     private MainTabViewPager mVpContent;
 
@@ -93,7 +93,8 @@ public class MainActivity extends BaseWorkerFragmentActivity
     private void initData() {
         mVpContent.setAdapter(
                 new CommonFragmentPagerAdapter(getSupportFragmentManager(), getFragments()));
-        sendEmptyUiMessageDelayed(MSG_UI_GET_ALL_DEVICES, 1000);
+        //初始化设备信息
+        DeviceInfoHelper.getInstance();
     }
 
     @Override
@@ -102,15 +103,6 @@ public class MainActivity extends BaseWorkerFragmentActivity
         switch (msg.what) {
             case MSG_UI_INIT_DATA:
                 initData();
-                break;
-            case MSG_UI_GET_ALL_DEVICES:
-                Intent it = new Intent(BroadcastActions.ACTION_GET_ALL_DEVICES);
-                List<MainTitleHelper.DeviceInfo> infos = new ArrayList<MainTitleHelper.DeviceInfo>();
-                infos.add(new MainTitleHelper.DeviceInfo(1, "", "小妮儿"));
-                infos.add(new MainTitleHelper.DeviceInfo(2, "", "大宝儿"));
-                infos.add(new MainTitleHelper.DeviceInfo(3, "", "查看所有设备"));
-                it.putExtra(MainTitleHelper.KEY_DEVICE_LIST, (Serializable) infos);
-                sendBroadcast(it);
                 break;
         }
     }

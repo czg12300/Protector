@@ -1,6 +1,8 @@
 
 package cn.protector.ui.activity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,11 +11,39 @@ import android.widget.TextView;
 import cn.common.ui.activity.BaseTitleActivity;
 import cn.common.utils.CommonUtil;
 import cn.protector.R;
+import cn.protector.logic.helper.OfflineHelper;
+import cn.protector.logic.helper.OfflineListener;
 
-public abstract class CommonTitleActivity extends BaseTitleActivity {
+public abstract class CommonTitleActivity extends BaseTitleActivity implements OfflineListener {
     protected ImageView mIvBack;
 
     protected TextView mTvTitle;
+
+    protected boolean needListenOffline() {
+        return true;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (needListenOffline()) {
+            OfflineHelper.getInstance().addListener(this);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (needListenOffline()) {
+            OfflineHelper.getInstance().removeListener(this);
+        }
+    }
+
+    @Override
+    public void offline() {
+        Intent it = new Intent(this, OfflineTipActivity.class);
+        startActivity(it);
+    }
 
     @Override
     protected View getTitleLayoutView() {

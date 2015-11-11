@@ -3,13 +3,17 @@ package cn.protector.logic.entity;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
+import cn.common.http.JsonParse;
+
 /**
  * 描述:设备信息
  *
  * @author jakechen
  * @since 2015/11/10 17:18
  */
-public class DeviceInfo {
+public class DeviceInfo implements Serializable{
     // "ID": "设备资料ID",
     // "Eid": "设备条码",
     // "Ename": "昵称",
