@@ -87,7 +87,7 @@
             android:name=".ui.activity.setting.ModifyPwActivity"
             android:theme="@style/swipe_activity_style"/>
         <activity
-            android:name=".ui.activity.setting.ForgetPwActivity"
+            android:name=".ui.activity.usercenter.ForgetPwActivity"
             android:theme="@style/swipe_activity_style"/>
         <activity
             android:name=".ui.activity.setting.LocationRegulateActivity"
@@ -98,6 +98,9 @@
         <activity
             android:name=".ui.activity.setting.SearchAreaActivity"
             android:theme="@style/swipe_activity_style"/>
+        <activity
+            android:name=".ui.activity.OfflineTipActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <service android:name=".HeartBeatService"/>
     </application>

@@ -1,5 +1,5 @@
 
-package cn.protector.ui.activity.setting;
+package cn.protector.ui.activity.usercenter;
 
 import android.content.DialogInterface;
 import android.os.CountDownTimer;

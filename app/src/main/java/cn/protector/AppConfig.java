@@ -51,4 +51,7 @@ public class AppConfig {
 
     // 获取设备列表
     public static final String GET_BASE_LIST = "GetBaseList";
+
+    // 检查登录
+    public static final String CHECK_LOGINED = "CheckLogined";
 }

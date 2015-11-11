@@ -3,6 +3,8 @@ package cn.common.ui.activity;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Process;
 
 import java.lang.ref.WeakReference;
@@ -16,6 +18,52 @@ public abstract class BaseApplication extends Application {
 
     private HashMap<String, WeakReference<Activity>> mActivityMap;
 
+    private Handler mUiHandler;
+
+    private static class UiHandler extends Handler {
+        private final WeakReference<BaseApplication> mActivityReference;
+
+        public UiHandler(BaseApplication activity) {
+            mActivityReference = new WeakReference<BaseApplication>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (mActivityReference.get() != null) {
+                mActivityReference.get().handleUiMessage(msg);
+            }
+        }
+
+    }
+
+    public void handleUiMessage(Message msg) {
+
+    }
+
+    protected void sendUiMessage(Message msg) {
+        mUiHandler.sendMessage(msg);
+    }
+
+    protected void sendUiMessageDelayed(Message msg, long delayMillis) {
+        mUiHandler.sendMessageDelayed(msg, delayMillis);
+    }
+
+    protected void sendEmptyUiMessage(int what) {
+        mUiHandler.sendEmptyMessage(what);
+    }
+
+    protected void sendEmptyUiMessageDelayed(int what, long delayMillis) {
+        mUiHandler.sendEmptyMessageDelayed(what, delayMillis);
+    }
+
+    protected void removeUiMessages(int what) {
+        mUiHandler.removeMessages(what);
+    }
+
+    protected Message obtainUiMessage() {
+        return mUiHandler.obtainMessage();
+    }
     @Override
     public void onLowMemory() {
         super.onLowMemory();
@@ -27,6 +75,7 @@ public abstract class BaseApplication extends Application {
         super.onCreate();
         mInstance = getChildInstance();
         mActivityMap = new HashMap<String, WeakReference<Activity>>();
+        mUiHandler = new UiHandler(this);
         onConfig();
     }
 

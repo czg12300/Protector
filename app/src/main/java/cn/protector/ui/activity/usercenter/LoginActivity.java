@@ -15,8 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.List;
-
 import cn.common.AppException;
 import cn.common.ui.BaseDialog;
 import cn.protector.AppConfig;
@@ -29,10 +27,11 @@ import cn.protector.logic.http.Response.GetBaseListResponse;
 import cn.protector.logic.http.Response.LoginResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.MainActivity;
-import cn.protector.ui.activity.setting.ForgetPwActivity;
 import cn.protector.ui.helper.TipDialogHelper;
 import cn.protector.ui.widget.ImageEditText;
 import cn.protector.utils.ToastUtil;
+
+import java.util.List;
 
 /**
  * 登录页面
@@ -169,8 +168,8 @@ public class LoginActivity extends CommonTitleActivity
                 if (msg.obj != null) {
                     LoginResponse response = (LoginResponse) msg.obj;
                     ToastUtil.show(response.getInfo());
-                    mTipDialogHelper.showLoadingTip(R.string.get_base_list_ing);
                     if (response.getResult() == LoginResponse.SUCCESS) {
+                        mTipDialogHelper.showLoadingTip(R.string.get_base_list_ing);
                         InitSharedData.setPassword(mEvPw.getText().toString());
                         InitSharedData.setUserCode(response.getCode());
                         InitSharedData.setUserId(response.getUserId());
@@ -178,7 +177,10 @@ public class LoginActivity extends CommonTitleActivity
                         // 开始心跳包发送
                         HeartBeatHelper.getInstance().start();
                         sendEmptyBackgroundMessage(MSG_BACK_GET_BASE_LIST);
+                    } else {
+                        mTipDialogHelper.hideDialog();
                     }
+
                 } else {
                     mTipDialogHelper.hideDialog();
                     ToastUtil.showError();
@@ -189,11 +191,11 @@ public class LoginActivity extends CommonTitleActivity
                 if (msg.obj != null) {
                     GetBaseListResponse response = (GetBaseListResponse) msg.obj;
                     if (response != null && response.isOk()) {
-                        InitSharedData.setDeviceIds(response.getJson());
+                        InitSharedData.setDeviceData(response.getJson());
                         if (AppConfig.isDebug) {
                             ToastUtil.show(response.getJson());
                         }
-                        if (InitSharedData.hasLogin()) {
+                        if (!TextUtils.isEmpty(InitSharedData.getDeviceData())) {
                             sendEmptyUiMessage(MSG_UI_GO_MAIN);
                         } else {
                             sendEmptyUiMessage(MSG_UI_GO_ADD_DEVICE);

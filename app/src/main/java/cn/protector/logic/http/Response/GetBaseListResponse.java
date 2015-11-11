@@ -1,16 +1,16 @@
 
 package cn.protector.logic.http.Response;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.text.TextUtils;
+import java.util.ArrayList;
 
 import cn.common.http.base.BaseResponse;
 import cn.protector.logic.entity.DeviceInfo;
-
-import java.util.ArrayList;
 
 /**
  * 描述:登录返回数据
@@ -54,7 +54,6 @@ public class GetBaseListResponse extends BaseResponse {
         if (TextUtils.isEmpty(json)) {
             return null;
         }
-        setJson(json);
         try {
             JSONObject object = new JSONObject(json);
             JSONArray array = object.optJSONArray("Data");
@@ -67,6 +66,8 @@ public class GetBaseListResponse extends BaseResponse {
                     }
                 }
                 setList(deviceInfos);
+                String data = array.toString();
+                setJson(data);
             }
             setLogined(object.optInt("Logined"));
         } catch (JSONException e) {

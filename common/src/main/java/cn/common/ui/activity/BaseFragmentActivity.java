@@ -48,7 +48,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
             }
         }
 
-        ;
     }
 
     private ArrayList<String> mActions;

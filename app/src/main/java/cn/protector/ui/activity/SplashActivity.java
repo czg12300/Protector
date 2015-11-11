@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import cn.common.AppException;
 import cn.common.ui.activity.BaseWorkerFragmentActivity;
 import cn.protector.AppConfig;
+import cn.protector.ProtectorApplication;
 import cn.protector.R;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.helper.HeartBeatHelper;
@@ -55,8 +56,10 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
         mIvSplash.setImageResource(R.drawable.loading_page_ishoe);
         mIvSplash.setScaleType(ImageView.ScaleType.FIT_XY);
         setContentView(mIvSplash);
-        if (InitSharedData.hasLogin()) {
+        if (InitSharedData.hasLogin() && !TextUtils.isEmpty(InitSharedData.getDeviceData())) {
             lastTime = System.currentTimeMillis();
+            ProtectorApplication app = (ProtectorApplication) ProtectorApplication.getInstance();
+            app.setIsAutoLogin(true);
             sendEmptyBackgroundMessage(MSG_BACK_AUTO_LOGIN);
         } else {
             sendEmptyUiMessageDelayed(MSG_LOGIN, DELAYED_TIME);

@@ -30,14 +30,14 @@ public final class InitSharedData {
 
     private static final String KEY_PASSWORD = "keyPassWord";
 
-    private static final String KEY_DEVICE_IDS = "key_device_ids";
+    private static final String KEY_DEVICE_DATA = "key_device_data";
 
-    public static void setDeviceIds(String code) {
-        getSharedPreferences().edit().putString(KEY_DEVICE_IDS, code).commit();
+    public static void setDeviceData(String code) {
+        getSharedPreferences().edit().putString(KEY_DEVICE_DATA, code).commit();
     }
 
-    public static String getDeviceIds() {
-        return getSharedPreferences().getString(KEY_DEVICE_IDS, null);
+    public static String getDeviceData() {
+        return getSharedPreferences().getString(KEY_DEVICE_DATA, null);
     }
 
     public static void setUserCode(String code) {
