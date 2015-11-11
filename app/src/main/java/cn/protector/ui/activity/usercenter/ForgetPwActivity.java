@@ -67,6 +67,7 @@ public class ForgetPwActivity extends CommonTitleActivity
         mEvMobile.setInputType(InputType.TYPE_CLASS_PHONE);
         mBtnOk = (Button) findViewById(R.id.btn_ok);
         mEvPw = (ImageEditText) findViewById(R.id.ev_pw);
+        mEvPw.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         // 设置点击页面其他地方隐藏软键盘
         setHideInputView(R.id.root);
         CommonUtil.showSoftInput(this);

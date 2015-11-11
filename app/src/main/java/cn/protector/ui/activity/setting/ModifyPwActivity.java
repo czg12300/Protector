@@ -4,6 +4,7 @@ package cn.protector.ui.activity.setting;
 import android.content.DialogInterface;
 import android.os.Message;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -57,6 +58,7 @@ public class ModifyPwActivity extends CommonTitleActivity implements TextWatcher
         setHideInputView(R.id.root);
         CommonUtil.showSoftInput(this);
         mEvPw.setHint(R.string.new_pw_hint);
+        mEvPw.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mTipDialogHelper = new TipDialogHelper(this);
     }
 
