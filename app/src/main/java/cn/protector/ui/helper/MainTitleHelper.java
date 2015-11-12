@@ -79,7 +79,6 @@ public class MainTitleHelper implements View.OnClickListener {
         mVTitle.setBackgroundColor(getColor(R.color.title_background));
         mTvTitle.setOnClickListener(this);
         mIvTitleLeft.setOnClickListener(this);
-        mIvTitleRight.setOnClickListener(this);
         initData();
     }
 
@@ -121,15 +120,22 @@ public class MainTitleHelper implements View.OnClickListener {
         }
     }
 
+    /**
+     * 设置右边button的点击事件
+     *
+     * @param listener
+     */
+    public void setRightButtonClickListener(View.OnClickListener listener) {
+        if (mIvTitleRight != null && listener != null) {
+            mIvTitleRight.setOnClickListener(listener);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.iv_back) {
             sendBroadcast(new Intent(BroadcastActions.ACTION_MAIN_ACTIVITY_SELECT_TAB_LOCATE));
-        } else if (id == R.id.iv_right) {
-            if (mStyle == STYLE_HISTORY || mStyle == STYLE_MESSAGE) {
-                showCalendarPop();
-            }
         } else if (id == R.id.tv_title) {
             showDevicePop();
         }
@@ -139,23 +145,6 @@ public class MainTitleHelper implements View.OnClickListener {
         getContext().sendBroadcast(it);
     }
 
-    private PopupWindowHelper mCalendarPop;
-
-    private CalendarHelper mCalendarHelper;
-
-    /**
-     * 显示日历控件
-     */
-    private void showCalendarPop() {
-        if (mCalendarPop == null) {
-            mCalendarPop = new PopupWindowHelper(getContext());
-            mCalendarHelper = new CalendarHelper(getContext());
-            mCalendarPop.setView(mCalendarHelper.getView(), mVTitle.getWidth(), 0);
-        }
-        mCalendarHelper.setDataList(2015, 9);
-        mCalendarPop.setHeight(DisplayUtil.dip(313) + 2);
-        mCalendarPop.showAsDropDown(mVTitle);
-    }
 
     private PopupWindowHelper mDevicePop;
 

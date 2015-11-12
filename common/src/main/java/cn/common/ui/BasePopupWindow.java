@@ -16,9 +16,10 @@ public class BasePopupWindow extends PopupWindow {
     public BasePopupWindow(Context context) {
         super(context);
         mContext = context;
+        onCreate();
     }
 
-    public void onCreate() {
+    private void onCreate() {
         setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         setOutsideTouchable(false);

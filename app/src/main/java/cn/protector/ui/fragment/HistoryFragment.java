@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import cn.common.ui.BasePopupWindow;
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.ui.helper.PopupWindowHelper;
 import cn.common.utils.BitmapUtil;
@@ -35,9 +36,11 @@ import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.entity.DeviceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
+import cn.protector.ui.helper.CalendarHelper;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.utils.ToastUtil;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -51,7 +54,7 @@ public class HistoryFragment extends BaseWorkerFragment
 
     private static final int MSG_UI_HIDE_TIME_TIP_POP = MSG_UI_START + 1;
 
-    private PopupWindowHelper mTimeTipPop;
+    private BasePopupWindow mTimeTipPop;
 
     private MainTitleHelper mTitleHelper;
 
@@ -70,6 +73,8 @@ public class HistoryFragment extends BaseWorkerFragment
     private TextView mTvTime;
 
     private SeekBar mSbTime;
+    private CalendarHelper mCalendarHelper;
+    private View mVTitle;
 
     @Override
     public void initView() {
@@ -77,28 +82,43 @@ public class HistoryFragment extends BaseWorkerFragment
         mMapView = (MapView) findViewById(R.id.mv_map);
         // mTvTime = (TextView) findViewById(R.id.tv_time);
         mSbTime = (SeekBar) findViewById(R.id.sb_time);
+        mVTitle = findViewById(R.id.fl_title);
+        mTitleHelper = new MainTitleHelper(mVTitle,
+                MainTitleHelper.STYLE_HISTORY);
+        mCalendarHelper = new CalendarHelper(getActivity());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        mCalendarHelper.setDataList( cal.get(Calendar.YEAR),(cal.get(Calendar.MONTH) - 1));
+        initMapView();
+    }
+
+    private void initMapView() {
         mMapView.onCreate(mSavedInstanceState);// 此方法必须重写
         if (mAMap == null) {
             mAMap = mMapView.getMap();
         }
-        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
-                MainTitleHelper.STYLE_HISTORY);
         UiSettings uiSettings = mAMap.getUiSettings();
         uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
         uiSettings.setZoomControlsEnabled(false);
-        initLocate();
     }
 
     @Override
     protected void initEvent() {
         findViewById(R.id.ib_minus).setOnClickListener(this);
         findViewById(R.id.ib_plus).setOnClickListener(this);
+        mTitleHelper.setRightButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCalendarHelper.showCalendar(mVTitle);
+            }
+        });
         findViewById(R.id.ll_slide_time).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return true;
             }
         });
+
         mSbTime.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -161,7 +181,7 @@ public class HistoryFragment extends BaseWorkerFragment
         String action = intent.getAction();
         if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
             DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
-            if (info!=null&&!TextUtils.isEmpty(info.getNikeName())){
+            if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
                 mTitleHelper.setTitle(info.getNikeName());
             }
         }
@@ -177,44 +197,6 @@ public class HistoryFragment extends BaseWorkerFragment
         }
     }
 
-    /**
-     * 设置一些amap的属性
-     */
-    private void initLocate() {
-        setMyLocationStyle();
-        mAMap.setMyLocationRotateAngle(180);
-        // mAMap.setLocationSource(new LocationSource() {
-        // @Override
-        // public void activate(OnLocationChangedListener
-        // onLocationChangedListener) {
-        // mOnLocationChangedListener = onLocationChangedListener;
-        // startLocate();
-        // }
-        //
-        // @Override
-        // public void deactivate() {
-        // stopLocate();
-        // mOnLocationChangedListener = null;
-        // }
-        // });
-        mAMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-        mAMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-    }
-
-    /**
-     * 自定义定位的样式
-     */
-    private void setMyLocationStyle() {
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromBitmap(BitmapUtil.decodeResource(
-                R.drawable.img_head_girl1, (int) getDimension(R.dimen.locate_baby_avator),
-                (int) getDimension(R.dimen.locate_baby_avator))));// 设置小蓝点的图标
-        myLocationStyle.strokeColor(getColor(R.color.blue_03a9f4));// 设置圆形的边框颜色
-        myLocationStyle.radiusFillColor(getColor(R.color.blue_3003a9f4));// 设置圆形的填充颜色
-        myLocationStyle.strokeWidth(2f);// 设置圆形的边框粗细
-        mAMap.setMyLocationStyle(myLocationStyle);
-    }
 
     /**
      * 隐藏跟随滚动的提示语
@@ -230,9 +212,8 @@ public class HistoryFragment extends BaseWorkerFragment
      */
     private void showTimePop() {
         if (mTimeTipPop == null) {
-            mTimeTipPop = new PopupWindowHelper(getActivity());
-            mTimeTipPop.setView(getLayoutInflater().inflate(R.layout.pop_time_tip, null),
-                    DisplayUtil.dip(40), DisplayUtil.dip(25));
+            mTimeTipPop = new BasePopupWindow(getActivity());
+            mTimeTipPop.setContentView(R.layout.pop_time_tip);
             mTvTime = (TextView) mTimeTipPop.findViewById(R.id.tv_time);
         }
         mTimeTipPop.showAtLocation(mSbTime, Gravity.NO_GRAVITY, 0, 0);
@@ -243,11 +224,10 @@ public class HistoryFragment extends BaseWorkerFragment
      * 更新跟随滚动的提示语的位置
      */
     private void updateTimePopLocation() {
-        int popViewWidth = mTimeTipPop.getView().getMeasuredWidth();
-        int popViewHeight = mTimeTipPop.getView().getMeasuredHeight();
+        int popViewWidth = mTimeTipPop.getWidth();
+        int popViewHeight = mTimeTipPop.getHeight();
         int sbWidth = mSbTime.getWidth();
         int sbHeight = mSbTime.getHeight();
-
         int xOffset = (int) (mSbTime.getProgress() * (sbWidth - mSbTime.getPaddingLeft()
                 - mSbTime.getPaddingRight() - DisplayUtil.dip(16)) / (float) mSbTime.getMax())
                 - popViewWidth / 2 + sbHeight / 2;

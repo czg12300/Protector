@@ -13,7 +13,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.common.ui.BasePopupWindow;
 import cn.common.ui.adapter.BaseListAdapter;
+import cn.common.ui.helper.PopupWindowHelper;
+import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 
 /**
@@ -27,8 +30,10 @@ public class CalendarHelper {
     private CalendarAdapter mCalendarAdapter;
 
     private View mContentView;
+    private Context mContext;
 
     public CalendarHelper(Context context) {
+        mContext = context;
         mContentView = LayoutInflater.from(context).inflate(R.layout.layout_calendar, null);
         mGvCalendar = (GridView) findViewById(R.id.gv_calendar);
         mCalendarAdapter = new CalendarAdapter(context);
@@ -162,4 +167,19 @@ public class CalendarHelper {
     public View getView() {
         return mContentView;
     }
+
+    private BasePopupWindow mCalendarPop;
+
+    /**
+     * 显示日历控件
+     */
+    public void showCalendar(View parent) {
+        if (mCalendarPop == null) {
+            mCalendarPop = new BasePopupWindow(mContext);
+            mCalendarPop.setContentView(mContentView);
+            mCalendarPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        }
+        mCalendarPop.showAsDropDown(parent);
+    }
+
 }

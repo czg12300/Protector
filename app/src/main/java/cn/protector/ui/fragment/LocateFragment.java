@@ -313,7 +313,6 @@ public class LocateFragment extends BaseWorkerFragment
         if (getActivity() != null && !getActivity().isFinishing()) {
             if (mBatteryPopWindow == null) {
                 mBatteryPopWindow = new BasePopupWindow(getActivity());
-                mBatteryPopWindow.onCreate();
                 mBatteryPopWindow.setContentView(R.layout.pop_locate_battery);
                 mTvBatteryTip = (TextView) mBatteryPopWindow.findViewById(R.id.tv_content);
             }
@@ -334,7 +333,6 @@ public class LocateFragment extends BaseWorkerFragment
         if (getActivity() != null && !getActivity().isFinishing()) {
             if (mStepsPopWindow == null) {
                 mStepsPopWindow = new BasePopupWindow(getActivity());
-                mStepsPopWindow.onCreate();
                 mStepsPopWindow.setContentView(R.layout.pop_locate_steps);
                 mTvSpeed = (TextView) mStepsPopWindow.findViewById(R.id.tv_speed);
                 mTvSteps = (TextView) mStepsPopWindow.findViewById(R.id.tv_step);
