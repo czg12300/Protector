@@ -23,6 +23,9 @@ public class DeviceInfoHelper {
     private DeviceInfo positionDeviceInfo;
 
     public DeviceInfo getPositionDeviceInfo() {
+        if (positionDeviceInfo==null){
+            return getDefaultDevice();
+        }
         return positionDeviceInfo;
     }
 

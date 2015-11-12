@@ -86,6 +86,9 @@ public abstract class BaseHttpClientRequest<T> {
     protected abstract void addCommonParam();
 
     public void addParam(String key, String value) {
+        if (value == null) {
+            value = "";
+        }
         mParams.put(key, value);
     }
 

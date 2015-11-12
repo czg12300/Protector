@@ -29,6 +29,9 @@ public class AppConfig {
      * 服务器地址
      */
     public static final String SERVER = isDebug ? TEST_SERVER : RELEASE_SERVER;
+    public static final long REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME_TEST = 5 * 1000;
+    public static final long REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME_RELEASE = 1 * 60 * 1000;
+    public static final long REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME = isDebug ? REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME_TEST : REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME_RELEASE;
 
     static {
         AppException.setDebug(isDebug);
@@ -54,4 +57,8 @@ public class AppConfig {
 
     // 检查登录
     public static final String CHECK_LOGINED = "CheckLogined";
+    //获取设备当前状态信息
+    public static final String GET_NOW_DATA = "GetNowData";
+    //实时定位
+    public static final String COM_GEO_LOCATION = "Com_GeoLocation";
 }

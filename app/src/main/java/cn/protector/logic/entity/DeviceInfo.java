@@ -163,7 +163,7 @@ public class DeviceInfo implements Serializable{
         // "EleQuantity": "电量",
         // "Image": "头像"
         setId(object.optLong("ID"));
-        seteId(object.optString("Eid"));
+        seteId(object.optString("EID"));
         setNikeName(object.optString("Ename"));
         setRelation(object.optInt("Relation"));
         setOtherRelation(object.optInt("OtherRelation"));

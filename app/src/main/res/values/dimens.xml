@@ -10,7 +10,7 @@
     <dimen name="qa_scan_frame">250dp</dimen>
     <dimen name="out_margin">15dp</dimen>
     <dimen name="dialog_width">280dp</dimen>
-    <dimen name="locate_top_btn">35dp</dimen>
+    <dimen name="locate_top_btn">40dp</dimen>
     <dimen name="locate_baby_avator">40dp</dimen>
     <dimen name="avator">60dp</dimen>
 </resources>

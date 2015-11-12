@@ -55,7 +55,8 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_selector_record" />
+                android:src="@drawable/btn_selector_record"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -101,10 +102,11 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_selector_maplisten" />
+                android:src="@drawable/btn_selector_maplisten"
+                android:visibility="gone" />
 
             <ImageButton
-                android:id="@+id/ib_maplocate"
+                android:id="@+id/ib_locate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -174,7 +176,8 @@
                 android:paddingRight="15dp"
                 android:text="@string/go_there"
                 android:textColor="@drawable/text_selector_btn_blue_r"
-                android:textSize="11dp" />
+                android:textSize="11dp"
+                android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
