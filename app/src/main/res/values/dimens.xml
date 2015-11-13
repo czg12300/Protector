@@ -13,4 +13,5 @@
     <dimen name="locate_top_btn">40dp</dimen>
     <dimen name="locate_baby_avator">40dp</dimen>
     <dimen name="avator">60dp</dimen>
+    <dimen name="line_width">5dp</dimen>
 </resources>

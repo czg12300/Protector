@@ -46,11 +46,13 @@ import cn.protector.utils.ToastUtil;
  *
  * @author jakechen on 2015/8/13.
  */
-public class LocateFragment extends BaseWorkerFragment
-        implements View.OnClickListener {
+public class LocateFragment extends BaseWorkerFragment implements View.OnClickListener {
     private static final int MSG_BACK_REFRESH_DEVICE_INFO = 0;
+
     private static final int MSG_BACK_LOCATE = 1;
+
     private static final int MSG_UI_REFRESH_DEVICE_INFO = 0;
+
     private static final int MSG_UI_LOCATE = 1;
 
     public static LocateFragment newInstance() {
@@ -64,12 +66,19 @@ public class LocateFragment extends BaseWorkerFragment
     private AMap mAMap;
 
     private Timer timer;
+
     private NowDeviceInfoResponse mNowDeviceInfo;
+
     private View mVBottom;
+
     private TextView mTvAddress;
+
     private TextView mTvAddressTime;
+
     private TextView mTvAddressTip;
+
     private ImageButton mIbBattery;
+
     private ImageButton mIbStep;
 
     @Override
@@ -133,15 +142,14 @@ public class LocateFragment extends BaseWorkerFragment
     protected void initData() {
         super.initData();
         timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
+        // timer.schedule(new TimerTask() {
+        // @Override
+        // public void run() {
         sendEmptyBackgroundMessage(MSG_BACK_REFRESH_DEVICE_INFO);
-//            }
-//        }, 0, AppConfig.REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME);
+        // }
+        // }, 0, AppConfig.REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME);
 
     }
-
 
     @Override
     public void handleBackgroundMessage(Message msg) {
@@ -157,10 +165,12 @@ public class LocateFragment extends BaseWorkerFragment
     }
 
     private void LocateTask() {
-        HttpRequest<LocationResponse> request = new HttpRequest<>(AppConfig.COM_GEO_LOCATION, LocationResponse.class);
+        HttpRequest<LocationResponse> request = new HttpRequest<>(AppConfig.COM_GEO_LOCATION,
+                LocationResponse.class);
         request.addParam("uc", InitSharedData.getUserCode());
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
         Message message = obtainUiMessage();
         message.what = MSG_UI_LOCATE;
@@ -173,10 +183,12 @@ public class LocateFragment extends BaseWorkerFragment
     }
 
     private void refreshDeviceInfoTask() {
-        HttpRequest<NowDeviceInfoResponse> request = new HttpRequest<>(AppConfig.GET_NOW_DATA, NowDeviceInfoResponse.class);
+        HttpRequest<NowDeviceInfoResponse> request = new HttpRequest<>(AppConfig.GET_NOW_DATA,
+                NowDeviceInfoResponse.class);
         request.addParam("uc", InitSharedData.getUserCode());
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
         Message message = obtainUiMessage();
         message.what = MSG_UI_REFRESH_DEVICE_INFO;
@@ -199,9 +211,11 @@ public class LocateFragment extends BaseWorkerFragment
                 if (msg.obj != null) {
                     LocationResponse locationresponse = (LocationResponse) msg.obj;
                     if (locationresponse != null) {
-                        ToastUtil.show(locationresponse.getInfo());
                         if (locationresponse.getResult() == LocationResponse.SUCCESS) {
                             sendEmptyBackgroundMessage(MSG_UI_REFRESH_DEVICE_INFO);
+                            ToastUtil.show("定位成功");
+                        } else {
+                            ToastUtil.showError();
                         }
                     } else {
                         ToastUtil.showError();
@@ -244,7 +258,9 @@ public class LocateFragment extends BaseWorkerFragment
      * @param info
      */
     private void addMapMark(NowDeviceInfoResponse info) {
-
+        if (info == null) {
+            return;
+        }
         mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
         LatLng latLng = new LatLng(info.getLat(), info.getLon());
 
@@ -303,10 +319,15 @@ public class LocateFragment extends BaseWorkerFragment
     }
 
     private BasePopupWindow mBatteryPopWindow;
+
     private BasePopupWindow mStepsPopWindow;
+
     private TextView mTvBatteryTip;
+
     private TextView mTvSpeed;
+
     private TextView mTvSteps;
+
     private TextView mTvHell;
 
     private void showBatteryPopWindow() {
@@ -324,7 +345,9 @@ public class LocateFragment extends BaseWorkerFragment
                     show = "当前电量为小于1%，请及时充电哦";
                 }
                 mTvBatteryTip.setText(show);
-                mBatteryPopWindow.showAtLocation(mIbBattery, Gravity.NO_GRAVITY, location[0] + mIbBattery.getWidth(), location[1] - mBatteryPopWindow.getHeight());
+                mBatteryPopWindow.showAtLocation(mIbBattery, Gravity.NO_GRAVITY,
+                        location[0] + mIbBattery.getWidth(),
+                        location[1] - mBatteryPopWindow.getHeight());
             }
         }
     }
@@ -343,12 +366,14 @@ public class LocateFragment extends BaseWorkerFragment
             if (mNowDeviceInfo != null) {
                 mTvSpeed.setText("速度：" + mNowDeviceInfo.getSpeed() + "千米/小时");
                 mTvSteps.setText("步数：" + mNowDeviceInfo.getStepNum() + "步");
-                mTvHell.setText("压力：" + mNowDeviceInfo.getSolePress() + "G（脚掌）/" + mNowDeviceInfo.getHellPress() + "G（脚跟）");
-                mStepsPopWindow.showAtLocation(mIbStep, Gravity.NO_GRAVITY, location[0] + mIbStep.getWidth(), location[1] - mStepsPopWindow.getHeight());
+                mTvHell.setText("压力：" + mNowDeviceInfo.getSolePress() + "G（脚掌）/"
+                        + mNowDeviceInfo.getHellPress() + "G（脚跟）");
+                mStepsPopWindow.showAtLocation(mIbStep, Gravity.NO_GRAVITY,
+                        location[0] + mIbStep.getWidth(),
+                        location[1] - mStepsPopWindow.getHeight());
             }
         }
     }
-
 
     @Override
     public void onDestroyView() {

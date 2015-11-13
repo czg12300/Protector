@@ -50,6 +50,10 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
         }
     }
 
+    public List<T> getDataList() {
+        return mDataList;
+    }
+
     public void remove(T t) {
         mDataList.remove(t);
     }

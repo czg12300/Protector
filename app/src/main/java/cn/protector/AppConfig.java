@@ -61,4 +61,7 @@ public class AppConfig {
     public static final String GET_NOW_DATA = "GetNowData";
     //实时定位
     public static final String COM_GEO_LOCATION = "Com_GeoLocation";
+
+    // 历史轨迹
+    public static final String GET_HISTORY_POSI = "GetHistoryPosi";
 }
