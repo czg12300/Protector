@@ -91,25 +91,27 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
                         LoginResponse.class);
                 request.addParam("u", InitSharedData.getMobile());
                 request.addParam("p", InitSharedData.getPassword());
+                LoginResponse response = null;
                 try {
-                    LoginResponse response = request.request();
-                    int msgWhat = MSG_LOGIN;
-                    if (response != null && !TextUtils.isEmpty(response.getCode())) {
-                        // 开始心跳包发送
-                        HeartBeatHelper.getInstance().start();
-                        InitSharedData.setUserId(response.getUserId());
-                        InitSharedData.setUserCode(response.getCode());
-                        msgWhat = MSG_MAIN;
-                    }
-                    if ((System.currentTimeMillis() - lastTime) >= DELAYED_TIME) {
-                        sendEmptyUiMessage(msgWhat);
-                    } else {
-                        sendEmptyUiMessageDelayed(msgWhat,
-                                DELAYED_TIME - (System.currentTimeMillis() - lastTime));
-                    }
+                    response = request.request();
                 } catch (AppException e) {
                     e.printStackTrace();
                 }
+                int msgWhat = MSG_LOGIN;
+                if (response != null && !TextUtils.isEmpty(response.getCode())) {
+                    // 开始心跳包发送
+                    HeartBeatHelper.getInstance().start();
+                    InitSharedData.setUserId(response.getUserId());
+                    InitSharedData.setUserCode(response.getCode());
+                    msgWhat = MSG_MAIN;
+                }
+                if ((System.currentTimeMillis() - lastTime) >= DELAYED_TIME) {
+                    sendEmptyUiMessage(msgWhat);
+                } else {
+                    sendEmptyUiMessageDelayed(msgWhat,
+                            DELAYED_TIME - (System.currentTimeMillis() - lastTime));
+                }
+
                 break;
         }
     }

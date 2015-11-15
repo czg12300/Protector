@@ -20,7 +20,13 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 
 import java.util.List;
 import java.util.Timer;
@@ -46,7 +52,7 @@ import cn.protector.utils.ToastUtil;
  *
  * @author jakechen on 2015/8/13.
  */
-public class LocateFragment extends BaseWorkerFragment implements View.OnClickListener {
+public class LocateFragment extends BaseWorkerFragment implements View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
     private static final int MSG_BACK_REFRESH_DEVICE_INFO = 0;
 
     private static final int MSG_BACK_LOCATE = 1;
@@ -54,6 +60,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     private static final int MSG_UI_REFRESH_DEVICE_INFO = 0;
 
     private static final int MSG_UI_LOCATE = 1;
+    private GeocodeSearch geocoderSearch;
 
     public static LocateFragment newInstance() {
         return new LocateFragment();
@@ -80,6 +87,18 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     private ImageButton mIbBattery;
 
     private ImageButton mIbStep;
+    private BasePopupWindow mBatteryPopWindow;
+
+    private BasePopupWindow mStepsPopWindow;
+
+    private TextView mTvBatteryTip;
+
+    private TextView mTvSpeed;
+
+    private TextView mTvSteps;
+
+    private TextView mTvHell;
+    private long geocodeSearchId;
 
     @Override
     public void initView() {
@@ -109,6 +128,8 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         mAMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         mAMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        geocoderSearch = new GeocodeSearch(getActivity());
+        geocoderSearch.setOnGeocodeSearchListener(this);
     }
 
     /**
@@ -133,6 +154,17 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         findViewById(R.id.ll_bottom).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        mAMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (marker.isInfoWindowShown()) {
+                    marker.hideInfoWindow();
+                } else {
+                    marker.showInfoWindow();
+                }
                 return true;
             }
         });
@@ -232,23 +264,33 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             mVBottom.setVisibility(View.VISIBLE);
             mNowDeviceInfo = (NowDeviceInfoResponse) msg.obj;
             addMapMark(mNowDeviceInfo);
-            if (mTvAddress != null && !TextUtils.isEmpty(mNowDeviceInfo.getAddress())) {
-                mTvAddress.setText(mNowDeviceInfo.getAddress());
+            updateBottomUi(mNowDeviceInfo);
+            if (TextUtils.isEmpty(mNowDeviceInfo.getAddress())) {
+                searchAddressByPosi();
             }
-            if (mTvAddressTime != null) {
-                String mode = "GPS定位";
-                if (mNowDeviceInfo.getPosiMode() == 2) {
-                    mode = "网络定位";
-                }
-                String show = "定位模式：" + mode;
-                if (mNowDeviceInfo.getPosiPrecision() > 0) {
-                    show = show + "(精度到" + mNowDeviceInfo.getPosiPrecision() + "米)";
-                }
-                mTvAddressTime.setText(show);
+        }
+    }
+
+    private void updateBottomUi(NowDeviceInfoResponse info) {
+        if (info == null) {
+            return;
+        }
+        if (mTvAddress != null && !TextUtils.isEmpty(info.getAddress())) {
+            mTvAddress.setText(info.getAddress());
+        }
+        if (mTvAddressTime != null) {
+            String mode = "GPS定位";
+            if (info.getPosiMode() == 2) {
+                mode = "网络定位";
             }
-            if (mTvAddressTip != null && !TextUtils.isEmpty(mNowDeviceInfo.getLastActiveTime())) {
-                mTvAddressTip.setText("更新时间：" + mNowDeviceInfo.getLastActiveTime());
+            String show = "定位模式：" + mode;
+            if (info.getPosiPrecision() > 0) {
+                show = show + "(精度到" + info.getPosiPrecision() + "米)";
             }
+            mTvAddressTime.setText(show);
+        }
+        if (mTvAddressTip != null && !TextUtils.isEmpty(info.getLastActiveTime())) {
+            mTvAddressTip.setText("更新时间：" + info.getLastActiveTime());
         }
     }
 
@@ -318,17 +360,15 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         }
     }
 
-    private BasePopupWindow mBatteryPopWindow;
+    private void searchAddressByPosi() {
+        if (mNowDeviceInfo == null) {
+            return;
+        }
+        geocodeSearchId = mNowDeviceInfo.getId();
+        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(mNowDeviceInfo.getLon(), mNowDeviceInfo.getLat()), 20, GeocodeSearch.AMAP);
+        geocoderSearch.getFromLocationAsyn(query);
+    }
 
-    private BasePopupWindow mStepsPopWindow;
-
-    private TextView mTvBatteryTip;
-
-    private TextView mTvSpeed;
-
-    private TextView mTvSteps;
-
-    private TextView mTvHell;
 
     private void showBatteryPopWindow() {
         if (getActivity() != null && !getActivity().isFinishing()) {
@@ -403,4 +443,17 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         mMapView.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int rCode) {
+        if (mNowDeviceInfo != null && geocodeSearchId == mNowDeviceInfo.getId()) {
+            mNowDeviceInfo.setAddress(regeocodeResult.getRegeocodeAddress().getFormatAddress());
+        }
+        updateBottomUi(mNowDeviceInfo);
+
+    }
+
+    @Override
+    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
+    }
 }

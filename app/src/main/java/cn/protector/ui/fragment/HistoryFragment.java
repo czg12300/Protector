@@ -19,6 +19,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolylineOptions;
 
@@ -51,7 +52,7 @@ import cn.protector.utils.ToastUtil;
  * @author jakechen on 2015/8/13.
  */
 public class HistoryFragment extends BaseWorkerFragment implements View.OnClickListener {
-    private static final float ZOOM = 17f;
+    private static final float ZOOM = 18f;
 
     private static final int MSG_BACK_LOAD_DATA = 0;
 
@@ -80,6 +81,8 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
     private View mVTitle;
 
     private HistoryResponse mHistoryResponse;
+    private boolean isFirstIn = true;
+    private boolean isShowTimePop = true;
 
     @Override
     public void initView() {
@@ -117,6 +120,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             @Override
             public void onItemClick(int position, String date) {
                 mSbTime.setProgress(0);
+                isShowTimePop = false;
                 loadDataByDate(date);
 
             }
@@ -164,6 +168,17 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 updateUi(mHistoryResponse, seekBar.getProgress());
+            }
+        });
+        mAMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (marker.isInfoWindowShown()) {
+                    marker.hideInfoWindow();
+                } else {
+                    marker.showInfoWindow();
+                }
+                return true;
             }
         });
     }
@@ -221,10 +236,20 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                     mHistoryResponse = (HistoryResponse) msg.obj;
                     updateUi(mHistoryResponse, 0);
                 } else {
-                    ToastUtil.showError();
+                    if (!isFirstIn) {
+                        ToastUtil.showError();
+                    }
                 }
                 break;
         }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            isFirstIn = false;
+        }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     private void updateUi(HistoryResponse info, int endHour) {
@@ -243,25 +268,39 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             return;
         }
         mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
-        ArrayList<LatLng> list = getLatLngList(info, endHour);
+        ArrayList<PointInfo> list = getPointList(info, endHour);
         if (list != null && list.size() > 0) {
             ArrayList<MarkerOptions> markerOptionses = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
-                LatLng latLng = list.get(i);
-                if (latLng != null) {
+                PointInfo pointInfo = list.get(i);
+                if (pointInfo != null) {
                     MarkerOptions options = new MarkerOptions();
-                    options.position(latLng);
+                    options.position(new LatLng(pointInfo.getLat(),pointInfo.getLon()));
                     markerOptionses.add(options);
                     if (i == 0) {
-                        options.title("起始点");
+                        if (!TextUtils.isEmpty(pointInfo.getAddress())) {
+                            options.title("起始点:" + pointInfo.getAddress());
+                        } else {
+                            options.title("起始点");
+                        }
                     } else if (i == list.size() - 1) {
                         options.icon(BitmapDescriptorFactory
                                 .fromBitmap(BitmapUtil.decodeResource(R.drawable.img_head_girl1,
                                         (int) getDimension(R.dimen.locate_baby_avator),
                                         (int) getDimension(R.dimen.locate_baby_avator))));
-                        options.title("终点");
+                        if (!TextUtils.isEmpty(pointInfo.getAddress())) {
+                            options.title("终点点:" + pointInfo.getAddress());
+                        } else {
+                            options.title("终点");
+                        }
                     } else {
-                        options.title("经过");
+                        options.icon(BitmapDescriptorFactory
+                                .fromBitmap(BitmapUtil.decodeResource(R.drawable.ico_map_location)));
+                        if (!TextUtils.isEmpty(pointInfo.getAddress())) {
+                            options.title(pointInfo.getAddress());
+                        } else {
+                            options.title("经过");
+                        }
                     }
                 }
             }
@@ -275,23 +314,39 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                 || info != null && info.getList().size() < 1 || endHour == 0 || endHour > 24) {
             return;
         }
-        ArrayList<LatLng> list = getLatLngList(info, endHour);
+        ArrayList<PointInfo> list = getPointList(info, endHour);
         if (list != null && list.size() > 0) {
             PolylineOptions options = new PolylineOptions();
             options.color(getColor(R.color.title_background));
             options.width(getDimension(R.dimen.line_width));
-            options.addAll(list);
+            ArrayList<LatLng> latLngs = getLatlngListByPointList(list);
+            if (latLngs != null && latLngs.size() > 0) {
+                options.addAll(latLngs);
+            }
             mAMap.addPolyline(options);
-            mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(list.get(list.size() - 1), ZOOM));
+            mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngs.get(list.size() - 1), ZOOM));
         }
     }
 
-    private ArrayList<LatLng> getLatLngList(HistoryResponse info, int endHour) {
+    private ArrayList<LatLng> getLatlngListByPointList(ArrayList<PointInfo> list) {
+        if (list != null && list.size() > 0) {
+            ArrayList<LatLng> latLngs = new ArrayList<>();
+            for (PointInfo info : list) {
+                if (info != null) {
+                    latLngs.add(new LatLng(info.getLat(),info.getLon() ));
+                }
+            }
+            return latLngs;
+        }
+        return null;
+    }
+
+    private ArrayList<PointInfo> getPointList(HistoryResponse info, int endHour) {
         if (info == null || info != null && info.getList() == null
                 || info != null && info.getList().size() < 1 || endHour < 0 || endHour > 24) {
             return null;
         }
-        ArrayList<LatLng> list = new ArrayList<>();
+        ArrayList<PointInfo> list = new ArrayList<>();
         for (int i = 0; i < info.getList().size(); i++) {
             HourPointsInfo hourPointsInfo = info.getList().get(i);
             if (hourPointsInfo != null && hourPointsInfo.getHour() <= endHour) {
@@ -299,7 +354,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                 if (pointInfos != null && pointInfos.size() > 0) {
                     for (PointInfo pointInfo : pointInfos) {
                         if (pointInfo != null) {
-                            list.add(new LatLng(pointInfo.getLat(), pointInfo.getLon()));
+                            list.add(pointInfo);
                         }
                     }
                 }
@@ -308,7 +363,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         return list;
     }
 
-    private ArrayList<LatLng> getLatLngList(HistoryResponse info) {
+    private ArrayList<LatLng> getPointList(HistoryResponse info) {
         if (info == null || info != null && info.getList() == null
                 || info != null && info.getList().size() < 1) {
             return null;
@@ -371,15 +426,19 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
      * 显示跟随滚动的提示语
      */
     private void showTimePop() {
+        if (!isShowTimePop) {
+            isShowTimePop = true;
+            return;
+        }
         if (mTimeTipPop == null) {
             mTimeTipPop = new BasePopupWindow(getActivity());
             mTimeTipPop.setContentView(R.layout.pop_time_tip);
+            mTimeTipPop.setWidth(DisplayUtil.dip(40));
+            mTimeTipPop.setHeight(DisplayUtil.dip(25));
             mTvTime = (TextView) mTimeTipPop.findViewById(R.id.tv_time);
+
         }
-        int[] location = new int[2];
-        mSbTime.getLocationOnScreen(location);
-        mTimeTipPop.showAtLocation(mSbTime, Gravity.NO_GRAVITY, location[0] + mSbTime.getWidth(),
-                location[1] - mSbTime.getHeight());
+        mTimeTipPop.showAtLocation(mSbTime, Gravity.NO_GRAVITY, 0, 0);
         updateTimePopLocation();
     }
 

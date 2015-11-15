@@ -52,6 +52,9 @@ public class PointInfo implements Serializable {
     }
 
     public void setLon(double lon) {
+        if (Double.isNaN(lon)) {
+            lon = 0;
+        }
         this.lon = lon;
     }
 
@@ -60,9 +63,11 @@ public class PointInfo implements Serializable {
     }
 
     public void setLat(double lat) {
+        if (Double.isNaN(lat)) {
+            lat = 0;
+        }
         this.lat = lat;
     }
-
     public PointInfo parse(JSONObject root) {
         if (root == null) {
             return null;
