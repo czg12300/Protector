@@ -36,6 +36,11 @@ public class CalendarHelper {
     private OnCalendarListener mOnCalendarListener;
 
     private TextView mTvCenter;
+    private int positionYear = -1;
+    private int positionMonth = -1;
+    private int selectYear = -1;
+    private int selectMonth = -1;
+    private int selectDay = -1;
 
     public CalendarHelper(Context context) {
         mContext = context;
@@ -43,27 +48,76 @@ public class CalendarHelper {
         mGvCalendar = (GridView) findViewById(R.id.gv_calendar);
         mTvCenter = (TextView) findViewById(R.id.tv_center);
         mCalendarAdapter = new CalendarAdapter(context);
+        findViewById(R.id.iv_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (positionYear != -1 && positionMonth != -1) {
+                    if (positionMonth > 12) {
+                        positionMonth = 1;
+                        positionYear++;
+                    } else {
+                        positionMonth++;
+                    }
+                    setDataList(positionYear, positionMonth);
+
+                    if (positionYear == selectYear && positionMonth == selectMonth) {
+                        setSelectItem(selectYear, selectMonth, selectDay);
+                        mTvCenter.setText(selectMonth + "月" + selectDay + "日");
+                    } else {
+                        mTvCenter.setText(positionMonth + "月" + 1 + "日");
+                        mCalendarAdapter.setSelectItem(-1);
+                    }
+                }
+
+            }
+        });
+        findViewById(R.id.iv_prev).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (positionYear != -1 && positionMonth != -1) {
+                    if (positionMonth < 1) {
+                        positionMonth = 12;
+                        positionYear--;
+                    } else {
+                        positionMonth--;
+                    }
+                    setDataList(positionYear, positionMonth);
+                    if (positionYear == selectYear && positionMonth == selectMonth) {
+                        setSelectItem(selectYear, selectMonth, selectDay);
+                        mTvCenter.setText(selectMonth + "月" + selectDay + "日");
+                    } else {
+                        mTvCenter.setText(positionYear + "月" + 1 + "日");
+                        mCalendarAdapter.setSelectItem(-1);
+                    }
+                }
+
+            }
+        });
         mGvCalendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mCalendarAdapter.setSelectItem(position);
                 TimeInfo info = (TimeInfo) parent.getAdapter().getItem(position);
-                if (info != null) {
+                if (info != null && info.status == TimeInfo.STATUS_POSITION_MONTH) {
+                    selectYear = info.year;
+                    selectMonth = info.month;
+                    selectDay = info.day;
+                    mCalendarAdapter.setSelectItem(position);
                     mTvCenter.setText(info.month + "月" + info.day + "日");
                     if (mOnCalendarListener != null && info != null) {
                         mOnCalendarListener.onItemClick(position,
                                 formatDate(info.year, info.month, info.day));
                     }
-                }
-                if (view != null) {
-                    view.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mCalendarPop.dismiss();
-                        }
-                    }, 500);
-                } else {
-                    mCalendarPop.dismiss();
+
+                    if (view != null) {
+                        view.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mCalendarPop.dismiss();
+                            }
+                        }, 500);
+                    } else {
+                        mCalendarPop.dismiss();
+                    }
                 }
             }
         });
@@ -78,6 +132,9 @@ public class CalendarHelper {
 
                 TimeInfo info = mCalendarAdapter.getDataList().get(i);
                 if (info != null && info.year == year && info.month == month && info.day == day) {
+                    selectYear = info.year;
+                    selectMonth = info.month;
+                    selectDay = info.day;
                     mCalendarAdapter.setSelectItem(i);
                     return;
                 }
@@ -86,6 +143,8 @@ public class CalendarHelper {
     }
 
     public void setDataList(int year, int month) {
+        positionYear = year;
+        positionMonth = month;
         List<DateUtil.DayInfo> dayList = DateUtil.getDayListOfMonth(year, month);
         int[] today = DateUtil.getDateInt();
         List<TimeInfo> list = new ArrayList<TimeInfo>();
@@ -111,7 +170,7 @@ public class CalendarHelper {
             } else {
                 info.hasData = false;
             }
-            if (dayInfo.type == DateUtil.DayInfo.TYPE_POSITION_MONTH && dayInfo.day == today[2]) {
+            if (dayInfo.type == DateUtil.DayInfo.TYPE_POSITION_MONTH && year == today[0] && month == today[1] && dayInfo.day == today[2]) {
                 info.status = TimeInfo.STATUS_TODAY;
             }
             info.day = dayInfo.day;
@@ -119,7 +178,7 @@ public class CalendarHelper {
             info.month = month;
             list.add(info);
         }
-        mCalendarAdapter.setData(list);
+        mCalendarAdapter.setDataNotifyDataSetChanged(list);
     }
 
     public String formatDate(int year, int month, int day) {
