@@ -97,7 +97,7 @@ public class CalendarHelper {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TimeInfo info = (TimeInfo) parent.getAdapter().getItem(position);
-                if (info != null && info.status == TimeInfo.STATUS_POSITION_MONTH) {
+                if (info != null && info.status == TimeInfo.STATUS_POSITION_MONTH || info != null && info.status == TimeInfo.STATUS_TODAY) {
                     selectYear = info.year;
                     selectMonth = info.month;
                     selectDay = info.day;
