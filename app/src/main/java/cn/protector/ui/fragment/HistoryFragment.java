@@ -217,11 +217,33 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         Message message = obtainUiMessage();
         message.what = MSG_UI_LOAD_DATA;
         try {
-            message.obj = request.request();
+            HistoryResponse response = request.request();
+            response = sortResponse(response);
+            message.obj = response;
         } catch (AppException e) {
             e.printStackTrace();
         }
         message.sendToTarget();
+    }
+
+    private HistoryResponse sortResponse(HistoryResponse response) {
+        if (response != null) {
+            ArrayList<HourPointsInfo> list = response.getList();
+            if (list != null && list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    for (int j = i+1; j < list.size(); j++) {
+                        if (list.get(j).getHour()<list.get(i).getHour()  ) {
+                            HourPointsInfo tempI = list.get(i);
+                            HourPointsInfo tempJ = list.get(j);
+                            list.set(i, tempJ);
+                            list.set(j, tempI);
+                        }
+                    }
+                    response.setList(list);
+                }
+            }
+        }
+        return response;
     }
 
     @Override
@@ -234,7 +256,9 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             case MSG_UI_LOAD_DATA:
                 if (msg.obj != null) {
                     mHistoryResponse = (HistoryResponse) msg.obj;
-                    updateUi(mHistoryResponse, 0);
+                    int hour = getFirstHour(mHistoryResponse);
+                    mSbTime.setProgress(hour);
+                    updateUi(mHistoryResponse, hour);
                 } else {
                     if (!isFirstIn) {
                         ToastUtil.showError();
@@ -250,6 +274,16 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             isFirstIn = false;
         }
         super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    private int getFirstHour(HistoryResponse info) {
+        if (info != null && info.getList() != null && info.getList().size() > 0) {
+            HourPointsInfo hourPointsInfo = info.getList().get(0);
+            if (hourPointsInfo != null) {
+                return hourPointsInfo.getHour();
+            }
+        }
+        return 0;
     }
 
     private void updateUi(HistoryResponse info, int endHour) {
@@ -275,7 +309,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                 PointInfo pointInfo = list.get(i);
                 if (pointInfo != null) {
                     MarkerOptions options = new MarkerOptions();
-                    options.position(new LatLng(pointInfo.getLat(),pointInfo.getLon()));
+                    options.position(new LatLng(pointInfo.getLat(), pointInfo.getLon()));
                     markerOptionses.add(options);
                     if (i == 0) {
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
@@ -333,7 +367,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             ArrayList<LatLng> latLngs = new ArrayList<>();
             for (PointInfo info : list) {
                 if (info != null) {
-                    latLngs.add(new LatLng(info.getLat(),info.getLon() ));
+                    latLngs.add(new LatLng(info.getLat(), info.getLon()));
                 }
             }
             return latLngs;
