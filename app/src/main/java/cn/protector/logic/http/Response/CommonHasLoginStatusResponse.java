@@ -1,9 +1,10 @@
-package cn.protector.logic.http.response;
 
-import android.text.TextUtils;
+package cn.protector.logic.http.response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.text.TextUtils;
 
 /**
  * 描述:实时定位返回
@@ -11,7 +12,7 @@ import org.json.JSONObject;
  * @author jakechen
  * @since 2015/11/12 15:37
  */
-public class LocationResponse extends Response {
+public class CommonHasLoginStatusResponse extends Response {
     private int logined;
 
     public int getLogined() {

@@ -64,4 +64,7 @@ public class AppConfig {
 
     // 历史轨迹
     public static final String GET_HISTORY_POSI = "GetHistoryPosi";
+
+    // 远程关机
+    public static final String COM_SHUT_DOWN = "Com_Shutdown";
 }

@@ -3,6 +3,7 @@ package cn.protector.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -16,15 +17,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.common.AppException;
 import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.utils.DisplayUtil;
+import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.entity.DeviceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
+import cn.protector.logic.http.HttpRequest;
+import cn.protector.logic.http.response.CommonHasLoginStatusResponse;
 import cn.protector.ui.activity.setting.CareStaffActivity;
 import cn.protector.ui.activity.setting.DeviceManageActivity;
 import cn.protector.ui.activity.setting.FenceSetActivity;
@@ -43,6 +48,9 @@ import cn.protector.ui.helper.MainTitleHelper;
  */
 public class SettingFragment extends BaseWorkerFragment
         implements View.OnClickListener, AdapterView.OnItemClickListener {
+    private static final int MSG_BACK_SHUT_DOWN = 0;
+    private static final int MSG_UI_SHUT_DOWN = 0;
+
     private MainTitleHelper mTitleHelper;
 
     private BaseDialog mShutdownDialog;
@@ -56,12 +64,6 @@ public class SettingFragment extends BaseWorkerFragment
     private View mVBabyInfo;
 
     private Button mBtnExit;
-
-    protected void hideDialog() {
-        if (mShutdownDialog != null) {
-            mShutdownDialog.dismiss();
-        }
-    }
 
     @Override
     public void initView() {
@@ -125,6 +127,43 @@ public class SettingFragment extends BaseWorkerFragment
     }
 
     @Override
+    public void handleUiMessage(Message msg) {
+        super.handleUiMessage(msg);
+        switch (msg.what) {
+            case MSG_UI_SHUT_DOWN:
+                //// TODO: 2015/11/17  
+                break;
+        }
+    }
+
+    @Override
+    public void handleBackgroundMessage(Message msg) {
+        super.handleBackgroundMessage(msg);
+        switch (msg.what) {
+            case MSG_BACK_SHUT_DOWN:
+                shutDownTask();
+                break;
+        }
+    }
+
+    private void shutDownTask() {
+        HttpRequest<CommonHasLoginStatusResponse> request = new HttpRequest<>(AppConfig.COM_SHUT_DOWN, CommonHasLoginStatusResponse.class);
+        request.addParam("uc", InitSharedData.getUserCode());
+        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+        }
+        Message message = obtainUiMessage();
+        message.what = MSG_UI_SHUT_DOWN;
+        try {
+            message.obj = request.request();
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+        message.sendToTarget();
+
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.ll_baby_info) {
@@ -176,7 +215,7 @@ public class SettingFragment extends BaseWorkerFragment
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // TODO 远程关机
+                            sendEmptyBackgroundMessage(MSG_BACK_SHUT_DOWN);
                             if (mShutdownDialog != null) {
                                 mShutdownDialog.dismiss();
                             }

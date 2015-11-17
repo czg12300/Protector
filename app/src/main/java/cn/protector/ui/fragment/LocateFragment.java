@@ -1,18 +1,6 @@
 
 package cn.protector.ui.fragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Message;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
-
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -28,8 +16,17 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 
-import java.util.List;
-import java.util.Timer;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import cn.common.AppException;
 import cn.common.ui.BasePopupWindow;
@@ -42,17 +39,21 @@ import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.entity.DeviceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
-import cn.protector.logic.http.response.LocationResponse;
+import cn.protector.logic.http.response.CommonHasLoginStatusResponse;
 import cn.protector.logic.http.response.NowDeviceInfoResponse;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.utils.ToastUtil;
+
+import java.util.List;
+import java.util.Timer;
 
 /**
  * 描述：定位页面
  *
  * @author jakechen on 2015/8/13.
  */
-public class LocateFragment extends BaseWorkerFragment implements View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
+public class LocateFragment extends BaseWorkerFragment
+        implements View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
     private static final int MSG_BACK_REFRESH_DEVICE_INFO = 0;
 
     private static final int MSG_BACK_LOCATE = 1;
@@ -60,6 +61,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     private static final int MSG_UI_REFRESH_DEVICE_INFO = 0;
 
     private static final int MSG_UI_LOCATE = 1;
+
     private GeocodeSearch geocoderSearch;
 
     public static LocateFragment newInstance() {
@@ -87,6 +89,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     private ImageButton mIbBattery;
 
     private ImageButton mIbStep;
+
     private BasePopupWindow mBatteryPopWindow;
 
     private BasePopupWindow mStepsPopWindow;
@@ -98,6 +101,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     private TextView mTvSteps;
 
     private TextView mTvHell;
+
     private long geocodeSearchId;
 
     @Override
@@ -197,8 +201,8 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     }
 
     private void LocateTask() {
-        HttpRequest<LocationResponse> request = new HttpRequest<>(AppConfig.COM_GEO_LOCATION,
-                LocationResponse.class);
+        HttpRequest<CommonHasLoginStatusResponse> request = new HttpRequest<>(
+                AppConfig.COM_GEO_LOCATION, CommonHasLoginStatusResponse.class);
         request.addParam("uc", InitSharedData.getUserCode());
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
             request.addParam("eid",
@@ -241,9 +245,9 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
                 break;
             case MSG_UI_LOCATE:
                 if (msg.obj != null) {
-                    LocationResponse locationresponse = (LocationResponse) msg.obj;
+                    CommonHasLoginStatusResponse locationresponse = (CommonHasLoginStatusResponse) msg.obj;
                     if (locationresponse != null) {
-                        if (locationresponse.getResult() == LocationResponse.SUCCESS) {
+                        if (locationresponse.getResult() == CommonHasLoginStatusResponse.SUCCESS) {
                             sendEmptyBackgroundMessage(MSG_UI_REFRESH_DEVICE_INFO);
                             ToastUtil.show("定位成功");
                         } else {
@@ -365,10 +369,11 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             return;
         }
         geocodeSearchId = mNowDeviceInfo.getId();
-        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(mNowDeviceInfo.getLon(), mNowDeviceInfo.getLat()), 20, GeocodeSearch.AMAP);
+        RegeocodeQuery query = new RegeocodeQuery(
+                new LatLonPoint(mNowDeviceInfo.getLon(), mNowDeviceInfo.getLat()), 20,
+                GeocodeSearch.AMAP);
         geocoderSearch.getFromLocationAsyn(query);
     }
-
 
     private void showBatteryPopWindow() {
         if (getActivity() != null && !getActivity().isFinishing()) {
