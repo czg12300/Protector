@@ -40,6 +40,7 @@ import cn.protector.ui.activity.setting.QACodeActivity;
 import cn.protector.ui.activity.usercenter.BabyInfoActivity;
 import cn.protector.ui.activity.usercenter.LoginActivity;
 import cn.protector.ui.helper.MainTitleHelper;
+import cn.protector.utils.ToastUtil;
 
 /**
  * 描述：设置页面
@@ -64,13 +65,16 @@ public class SettingFragment extends BaseWorkerFragment
     private View mVBabyInfo;
 
     private Button mBtnExit;
-
+private TextView tvName;
+    private TextView tvSteps;
     @Override
     public void initView() {
         setContentView(R.layout.fragment_setting);
         mGvSetting = (GridView) findViewById(R.id.gv_setting);
         mVBabyInfo = findViewById(R.id.ll_baby_info);
         mBtnExit = (Button) findViewById(R.id.btn_exit);
+        tvName= (TextView) findViewById(R.id.tv_baby_name);
+        tvSteps=(TextView)findViewById(R.id.tv_baby_steps);
         mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
                 MainTitleHelper.STYLE_SETTING);
     }
@@ -87,6 +91,11 @@ public class SettingFragment extends BaseWorkerFragment
     @Override
     protected void initData() {
         mGvSetting.setAdapter(new SettingAdapter(getActivity(), getListSetting()));
+        DeviceInfo info=   DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+        if (info!=null){
+            tvName.setText(info.getNikeName());
+            tvSteps.setText("120");
+        }
     }
 
     /**
@@ -131,8 +140,21 @@ public class SettingFragment extends BaseWorkerFragment
         super.handleUiMessage(msg);
         switch (msg.what) {
             case MSG_UI_SHUT_DOWN:
-                //// TODO: 2015/11/17  
+                handleShutDown(msg.obj);
                 break;
+        }
+    }
+
+    private void handleShutDown(Object obj) {
+        if (obj != null) {
+            CommonHasLoginStatusResponse response = (CommonHasLoginStatusResponse) obj;
+            if (response.getResult() == CommonHasLoginStatusResponse.SUCCESS) {
+                ToastUtil.show("关机成功");
+            } else {
+                ToastUtil.show(response.getInfo());
+            }
+        } else {
+            ToastUtil.showError();
         }
     }
 

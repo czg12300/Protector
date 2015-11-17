@@ -231,8 +231,8 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             ArrayList<HourPointsInfo> list = response.getList();
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
-                    for (int j = i+1; j < list.size(); j++) {
-                        if (list.get(j).getHour()<list.get(i).getHour()  ) {
+                    for (int j = i + 1; j < list.size(); j++) {
+                        if (list.get(j).getHour() < list.get(i).getHour()) {
                             HourPointsInfo tempI = list.get(i);
                             HourPointsInfo tempJ = list.get(j);
                             list.set(i, tempJ);
@@ -311,7 +311,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                     MarkerOptions options = new MarkerOptions();
                     options.position(new LatLng(pointInfo.getLat(), pointInfo.getLon()));
                     markerOptionses.add(options);
-                    if (i == 0) {
+                    if (i == 0 || (i == 0 && i == (list.size() - 1))) {
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
                             options.title("起始点:" + pointInfo.getAddress());
                         } else {
