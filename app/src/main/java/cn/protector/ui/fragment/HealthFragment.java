@@ -3,18 +3,21 @@ package cn.protector.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.util.Xml;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.TextView;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.ui.widgt.ChangeThemeUtils;
-import cn.common.utils.DisplayUtil;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.entity.DeviceInfo;
@@ -23,16 +26,12 @@ import cn.protector.ui.activity.usercenter.BabyInfoActivity;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.ui.widget.pulltorefresh.HealthListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 描述：健康页面
  *
  * @author jakechen on 2015/8/13.
  */
-public class HealthFragment extends BaseWorkerFragment
-        implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class HealthFragment extends BaseWorkerFragment implements View.OnClickListener {
 
     public static HealthFragment newInstance() {
         return new HealthFragment();
@@ -86,31 +85,13 @@ public class HealthFragment extends BaseWorkerFragment
 
     @Override
     protected void initEvent() {
-        mLvActivity.setOnItemClickListener(this);
     }
 
     @Override
     protected void initData() {
-        mLvActivity.setAdapter(new SettingAdapter(getActivity(), getListSetting()));
-    }
-
-    /**
-     * 设置grid view 的设置选项
-     *
-     * @return
-     */
-    private List<ItemInfo> getListSetting() {
-        List<ItemInfo> list = new ArrayList<ItemInfo>();
-        list.add(new ItemInfo(R.drawable.ico_family_setting, getString(R.string.family_setting)));
-        list.add(new ItemInfo(R.drawable.ico_saftey_setting, getString(R.string.saftey_setting)));
-        list.add(new ItemInfo(R.drawable.ico_qrcode_setting, getString(R.string.qrcode_setting)));
-        list.add(new ItemInfo(R.drawable.ico_position_setting,
-                getString(R.string.position_setting)));
-        list.add(new ItemInfo(R.drawable.ico_location_setting,
-                getString(R.string.location_setting)));
-        list.add(new ItemInfo(R.drawable.ico_shutdown_setting,
-                getString(R.string.shutdown_setting)));
-        return list;
+        ArrayList<String> list = new ArrayList<>();
+        list.add("http://www.baidu.com/");
+        mLvActivity.setAdapter(new SettingAdapter(getActivity(), list));
     }
 
     @Override
@@ -121,54 +102,43 @@ public class HealthFragment extends BaseWorkerFragment
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // TODO
-    }
-
-    /**
-     * 用于设置grid view
-     */
-    class ItemInfo {
-        int imgId;
-
-        String name;
-
-        public ItemInfo(int imgId, String name) {
-            this.imgId = imgId;
-            this.name = name;
-        }
-    }
-
     /**
      * grid view 的适配器
      */
-    class SettingAdapter extends BaseListAdapter<ItemInfo> {
-        public SettingAdapter(Context context, List<ItemInfo> list) {
+    class SettingAdapter extends BaseListAdapter<String> {
+        public SettingAdapter(Context context, List<String> list) {
             super(context, list);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            TextView tv = null;
+            WebView webView;
             if (convertView == null) {
-                tv = new TextView(getContext());
-                int padding = DisplayUtil.dip(10);
-                tv.setPadding(0, padding, 0, padding);
-                tv.setGravity(Gravity.CENTER);
-                tv.setCompoundDrawablePadding(padding);
-                tv.setTextColor(getColor(R.color.gray_757575));
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                convertView = tv;
+                webView = createWebView(getContext());
+                convertView = webView;
             } else {
-                tv = (TextView) convertView;
+                webView = (WebView) convertView;
             }
-            ItemInfo info = mDataList.get(position);
-            if (info != null) {
-                tv.setText(info.name);
-                tv.setCompoundDrawablesWithIntrinsicBounds(0, info.imgId, 0, 0);
-            }
+            webView.loadUrl(mDataList.get(position));
             return convertView;
         }
+        private  WebView createWebView(Context context) {
+            WebView webView = new WebView(context);
+            webView.requestFocus();
+            webView.requestFocusFromTouch();
+            webView.setBackgroundColor(Color.WHITE);
+            webView.setWebViewClient(new WebViewClient());
+            webView.setDrawingCacheEnabled(false);
+            WebSettings settings = webView.getSettings();
+            settings.setJavaScriptEnabled(true);
+            settings.setUseWideViewPort(true);
+            settings.setLoadWithOverviewMode(true);
+            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            settings.setDefaultTextEncodingName(Xml.Encoding.UTF_8.toString());
+            settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+            settings.setAppCacheEnabled(false);
+            return webView;
+        }
+
     }
 }
