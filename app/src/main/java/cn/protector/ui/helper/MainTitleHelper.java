@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import cn.common.bitmap.core.ImageLoader;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.helper.PopupWindowHelper;
 import cn.common.ui.widgt.ChangeThemeUtils;
@@ -22,9 +22,6 @@ import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.entity.DeviceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * 描述：用于主页的title逻辑
@@ -206,7 +203,7 @@ public class MainTitleHelper implements View.OnClickListener {
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = inflate(R.layout.item_device);
-                holder.ivAvator = (ImageView) convertView.findViewById(R.id.iv_avator);
+                holder.ivAvatar = (ImageView) convertView.findViewById(R.id.iv_avator);
                 holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
                 convertView.setTag(holder);
             } else {
@@ -214,11 +211,7 @@ public class MainTitleHelper implements View.OnClickListener {
             }
             DeviceInfo info = mDataList.get(position);
             if (info != null) {
-                if (position == mDataList.size() - 1) {
-                    holder.ivAvator.setImageResource(R.drawable.ico_equipment);
-                } else {
-                    holder.ivAvator.setImageResource(R.drawable.img_head_boy1);
-                }
+                ImageLoader.getInstance().displayImage(info.getAvatar(), holder.ivAvatar);
                 holder.tvName.setText(info.getNikeName());
             }
 
@@ -228,7 +221,7 @@ public class MainTitleHelper implements View.OnClickListener {
         final class ViewHolder {
             TextView tvName;
 
-            ImageView ivAvator;
+            ImageView ivAvatar;
         }
     }
 }

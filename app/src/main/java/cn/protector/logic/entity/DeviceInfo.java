@@ -5,8 +5,6 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-import cn.common.http.JsonParse;
-
 /**
  * 描述:设备信息
  *
@@ -48,7 +46,7 @@ public class DeviceInfo implements Serializable{
 
     private int eleQuantity;
 
-    private String avator;
+    private String avatar;
 
     public long getId() {
         return id;
@@ -138,12 +136,12 @@ public class DeviceInfo implements Serializable{
         this.eleQuantity = eleQuantity;
     }
 
-    public String getAvator() {
-        return avator;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvator(String avator) {
-        this.avator = avator;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public DeviceInfo parse(JSONObject object) {
@@ -173,7 +171,7 @@ public class DeviceInfo implements Serializable{
         setLat(object.optDouble("Lat"));
         setAddress(object.optString("Address"));
         setEleQuantity(object.optInt("EleQuantity"));
-        setAvator(object.optString("Image"));
+        setAvatar(object.optString("Image"));
         return this;
     }
 }

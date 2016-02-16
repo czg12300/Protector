@@ -9,7 +9,7 @@ import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
 
 /**
- * 描述：监护人员页面
+ * 描述：定位模式页面
  *
  * @author jakechen
  */

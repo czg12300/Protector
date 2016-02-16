@@ -35,7 +35,7 @@ public class NowDeviceInfoResponse extends Response {
 
     private int eleQuantity;
 
-    private String avator;
+    private String avatar;
     private String phoneNum;
     private int posiPrecision;
     private int posiMode;
@@ -142,12 +142,12 @@ public class NowDeviceInfoResponse extends Response {
         this.eleQuantity = eleQuantity;
     }
 
-    public String getAvator() {
-        return avator;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvator(String avator) {
-        this.avator = avator;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getPhoneNum() {
@@ -294,7 +294,7 @@ public class NowDeviceInfoResponse extends Response {
             setLat(object.optDouble("Lat"));
             setAddress(object.optString("Address"));
             setEleQuantity(object.optInt("EleQuantity"));
-            setAvator(object.optString("Image"));
+            setAvatar(object.optString("Image"));
             setPhoneNum(object.optString("SIM"));
             setPosiPrecision(object.optInt("PosiPrecision"));
             setPosiMode(object.optInt("PosiMode"));

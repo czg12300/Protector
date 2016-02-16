@@ -67,4 +67,8 @@ public class AppConfig {
 
     // 远程关机
     public static final String COM_SHUT_DOWN = "Com_Shutdown";
+    // 上传图片
+    public static final String UPLOAD_IMAGE = "UploadImage";
+    // 设置定位模式
+    public static final String SETUP_LOADMODE = "SetUploadMode";
 }

@@ -30,8 +30,8 @@
 
         <cn.common.ui.widgt.RoundImageView
             android:id="@+id/riv_avator"
-            android:layout_width="@dimen/avator"
-            android:layout_height="@dimen/avator"
+            android:layout_width="@dimen/avatar"
+            android:layout_height="@dimen/avatar"
             android:layout_marginRight="10dp"/>
 
         <ImageView
