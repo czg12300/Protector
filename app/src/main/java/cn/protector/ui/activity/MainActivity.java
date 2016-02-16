@@ -10,7 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.widget.RadioButton;
 
-import java.io.Serializable;
+import com.igexin.sdk.PushManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +28,11 @@ import cn.protector.ui.fragment.HistoryFragment;
 import cn.protector.ui.fragment.LocateFragment;
 import cn.protector.ui.fragment.MessageFragment;
 import cn.protector.ui.fragment.SettingFragment;
-import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.utils.ToastUtil;
 
-public class MainActivity extends BaseWorkerFragmentActivity
-        implements ViewPager.OnPageChangeListener, TabRadioGroup.OnCheckedChangeListener {
+public class MainActivity extends BaseWorkerFragmentActivity implements
+        ViewPager.OnPageChangeListener, TabRadioGroup.OnCheckedChangeListener {
     private static final int MSG_UI_INIT_DATA = 0;
-
 
     private MainTabViewPager mVpContent;
 
@@ -71,6 +70,7 @@ public class MainActivity extends BaseWorkerFragmentActivity
         initEvent();
         sendEmptyUiMessage(MSG_UI_INIT_DATA);
         mVpContent.setCanScroll(false);
+        PushManager.getInstance().initialize(this.getApplicationContext());
     }
 
     private void initView() {
@@ -91,9 +91,9 @@ public class MainActivity extends BaseWorkerFragmentActivity
     }
 
     private void initData() {
-        mVpContent.setAdapter(
-                new CommonFragmentPagerAdapter(getSupportFragmentManager(), getFragments()));
-        //初始化设备信息
+        mVpContent.setAdapter(new CommonFragmentPagerAdapter(getSupportFragmentManager(),
+                getFragments()));
+        // 初始化设备信息
         DeviceInfoHelper.getInstance();
     }
 
@@ -131,22 +131,22 @@ public class MainActivity extends BaseWorkerFragmentActivity
         switch (mVpContent.getCurrentItem()) {
             case 0:
                 mRbLocate.setChecked(true);
-                mVpContent.setCanScroll(false);
+                // mVpContent.setCanScroll(false);
                 break;
             case 1:
-                mVpContent.setCanScroll(false);
+                // mVpContent.setCanScroll(false);
                 mRbHistory.setChecked(true);
                 break;
             case 2:
-                mVpContent.setCanScrollRight(true);
+                // mVpContent.setCanScrollRight(true);
                 mRbMessage.setChecked(true);
                 break;
             case 3:
-                mVpContent.setCanScroll(true);
+                // mVpContent.setCanScroll(true);
                 mRbHealth.setChecked(true);
                 break;
             case 4:
-                mVpContent.setCanScroll(true);
+                // mVpContent.setCanScroll(true);
                 mRbSetting.setChecked(true);
                 break;
         }

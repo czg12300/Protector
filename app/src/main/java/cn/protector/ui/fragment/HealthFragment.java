@@ -50,8 +50,6 @@ public class HealthFragment extends BaseWorkerFragment implements View.OnClickLi
         mLvActivity = (HealthListView) findViewById(R.id.lv_activity);
         mLvActivity.setTitle(mVTitle);
         mTitleHelper = new MainTitleHelper(mVTitle, MainTitleHelper.STYLE_HEALTH);
-        mLvActivity.setCanPullRefresh(true);
-        mLvActivity.setCanPullLoad(true);
         initHeader(inflate(R.layout.header_health));
         mVTitle.getBackground().setAlpha(0);
     }

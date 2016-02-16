@@ -1,18 +1,18 @@
 apply plugin: 'com.android.application'
 android {
     signingConfigs {
-        debug {
-            keyAlias 'protector'
-            keyPassword 'root12300'
-            storeFile file('H:/Android/github/Protector/protector.keystore')
-            storePassword 'root12300'
-        }
-        release {
-            keyAlias 'protector'
-            keyPassword 'root12300'
-            storeFile file('H:/Android/github/Protector/protector.keystore')
-            storePassword 'root12300'
-        }
+//        debug {
+//            keyAlias 'protector'
+//            keyPassword 'root12300'
+//            storeFile file('F:git/github/Protector/protector.keystore')
+//            storePassword 'root12300'
+//        }
+//            release {
+//                keyAlias 'protector'
+//                keyPassword 'root12300'
+//                storeFile file('F:git/github/Protector/protector.keystore')
+//                storePassword 'root12300'
+//            }
     }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
@@ -65,5 +65,7 @@ dependencies {
     compile project(':common')
     compile files('libs/Android_Location_V1.3.3.jar')
     compile files('libs/Android_Map_2.5.1.20150827.jar')
-    compile files('libs/MapApiServices.jar')
+    compile files('libs/GetuiExt-2.0.3.jar')
+    compile files('libs/GetuiSDK2.7.0.0.jar')
+    compile files('libs/json_simple-1.1.jar')
 }
