@@ -71,4 +71,8 @@ public class AppConfig {
     public static final String UPLOAD_IMAGE = "UploadImage";
     // 设置定位模式
     public static final String SETUP_LOADMODE = "SetUploadMode";
+    //  运动数据
+    public static final String GET_SPORT_STAT_DATA = "GetSportStatData";
+    // 受压数据
+    public static final String GET_PRESS_STAT_DATA = "GetPressStatData";
 }

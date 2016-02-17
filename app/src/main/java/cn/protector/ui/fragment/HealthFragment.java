@@ -4,6 +4,7 @@ package cn.protector.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Xml;
 import android.view.View;
@@ -32,6 +33,8 @@ import cn.protector.ui.widget.pulltorefresh.HealthListView;
  * @author jakechen on 2015/8/13.
  */
 public class HealthFragment extends BaseWorkerFragment implements View.OnClickListener {
+private static final int MSG_BACK_LOAD_SPORT_DATA=0;
+private static final int MSG_BACK_LOAD_PRESS_DATA=1;
 
     public static HealthFragment newInstance() {
         return new HealthFragment();
@@ -98,6 +101,16 @@ public class HealthFragment extends BaseWorkerFragment implements View.OnClickLi
         if (id == R.id.ll_baby_info) {
             goActivity(BabyInfoActivity.class);
         }
+    }
+
+    @Override
+    public void handleBackgroundMessage(Message msg) {
+        super.handleBackgroundMessage(msg);
+        loadDataTask();
+    }
+
+    private void loadDataTask() {
+
     }
 
     /**
