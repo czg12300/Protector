@@ -3,6 +3,7 @@ package cn.protector.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
@@ -27,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.common.AppException;
+import cn.common.bitmap.core.ImageLoader;
+import cn.common.bitmap.core.assist.FailReason;
+import cn.common.bitmap.core.listener.ImageLoadingListener;
 import cn.common.ui.BasePopupWindow;
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.utils.BitmapUtil;
@@ -40,7 +44,9 @@ import cn.protector.logic.entity.HourPointsInfo;
 import cn.protector.logic.entity.PointInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
+import cn.protector.logic.http.response.CommonHasLoginStatusResponse;
 import cn.protector.logic.http.response.HistoryResponse;
+import cn.protector.logic.http.response.NowDeviceInfoResponse;
 import cn.protector.ui.helper.CalendarHelper;
 import cn.protector.ui.helper.DateUtil;
 import cn.protector.ui.helper.MainTitleHelper;
@@ -60,7 +66,6 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
 
     private static final int MSG_UI_LOAD_DATA = 1;
 
-    private BasePopupWindow mTimeTipPop;
 
     private MainTitleHelper mTitleHelper;
 
@@ -82,13 +87,12 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
 
     private HistoryResponse mHistoryResponse;
     private boolean isFirstIn = true;
-    private boolean isShowTimePop = true;
 
     @Override
     public void initView() {
         setContentView(R.layout.fragment_history);
         mMapView = (MapView) findViewById(R.id.mv_map);
-        // mTvTime = (TextView) findViewById(R.id.tv_time);
+        mTvTime = (TextView) findViewById(R.id.tv_time_tip);
         mSbTime = (SeekBar) findViewById(R.id.sb_time);
         mVTitle = findViewById(R.id.fl_title);
         initMapView();
@@ -99,7 +103,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         mSbTime.setMax(24);
         mSbTime.setProgress(0);
         mCalendarHelper.setSelectItem(today[0], today[1], today[2]);
-        loadDataByDate(mCalendarHelper.formatDate(today[0], today[1], today[2]));
+        sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
     }
 
     private void initMapView() {
@@ -120,9 +124,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             @Override
             public void onItemClick(int position, String date) {
                 mSbTime.setProgress(0);
-                isShowTimePop = false;
-                loadDataByDate(date);
-
+                sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
             }
         });
         mTitleHelper.setRightButtonClickListener(new View.OnClickListener() {
@@ -142,10 +144,10 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        showTimePop();
+                        mTvTime.setVisibility(View.VISIBLE);
                         break;
                     case MotionEvent.ACTION_UP:
-                        sendEmptyUiMessageDelayed(MSG_UI_HIDE_TIME_TIP_POP, 300);
+                        sendEmptyUiMessageDelayed(MSG_UI_HIDE_TIME_TIP_POP, 500);
                         break;
 
                 }
@@ -158,7 +160,6 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                 if (mTvTime != null) {
                     mTvTime.setText("" + progress);
                 }
-                showTimePop();
             }
 
             @Override
@@ -183,29 +184,17 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         });
     }
 
-    /**
-     * 加载规定日期的数据
-     *
-     * @param date
-     */
-    private void loadDataByDate(String date) {
-        Message message = obtainBackgroundMessage();
-        message.what = MSG_BACK_LOAD_DATA;
-        message.obj = date;
-        message.sendToTarget();
-    }
-
     @Override
     public void handleBackgroundMessage(Message msg) {
         super.handleBackgroundMessage(msg);
         switch (msg.what) {
             case MSG_BACK_LOAD_DATA:
-                loadDataTask((String) msg.obj);
+                loadDataTask();
                 break;
         }
     }
 
-    private void loadDataTask(String date) {
+    private void loadDataTask() {
         HttpRequest<HistoryResponse> request = new HttpRequest<>(AppConfig.GET_HISTORY_POSI,
                 HistoryResponse.class);
         request.addParam("uc", InitSharedData.getUserCode());
@@ -213,7 +202,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             request.addParam("eid",
                     DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
-        request.addParam("hdate", date);
+        request.addParam("hdate", mCalendarHelper.getPositionTime());
         Message message = obtainUiMessage();
         message.what = MSG_UI_LOAD_DATA;
         try {
@@ -251,14 +240,16 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         super.handleUiMessage(msg);
         switch (msg.what) {
             case MSG_UI_HIDE_TIME_TIP_POP:
-                hideTimePop();
+                if (mTvTime != null) {
+                    mTvTime.setVisibility(View.GONE);
+                }
                 break;
             case MSG_UI_LOAD_DATA:
                 if (msg.obj != null) {
                     mHistoryResponse = (HistoryResponse) msg.obj;
                     int hour = getFirstHour(mHistoryResponse);
                     mSbTime.setProgress(hour);
-                    updateUi(mHistoryResponse, hour);
+                        updateUi(mHistoryResponse, hour);
                 } else {
                     if (!isFirstIn) {
                         ToastUtil.showError();
@@ -319,9 +310,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                         }
                     } else if (i == list.size() - 1) {
                         options.icon(BitmapDescriptorFactory
-                                .fromBitmap(BitmapUtil.decodeResource(R.drawable.img_head_girl1,
-                                        (int) getDimension(R.dimen.locate_baby_avator),
-                                        (int) getDimension(R.dimen.locate_baby_avator))));
+                                .fromBitmap(DeviceInfoHelper.getInstance().getAvatar()));
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
                             options.title("终点点:" + pointInfo.getAddress());
                         } else {
@@ -342,6 +331,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         }
 
     }
+
 
     private void addPolyline(HistoryResponse info, int endHour) {
         if (info == null || info != null && info.getList() == null
@@ -397,27 +387,6 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         return list;
     }
 
-    private ArrayList<LatLng> getPointList(HistoryResponse info) {
-        if (info == null || info != null && info.getList() == null
-                || info != null && info.getList().size() < 1) {
-            return null;
-        }
-        ArrayList<LatLng> list = new ArrayList<>();
-        for (int i = 0; i < info.getList().size(); i++) {
-            HourPointsInfo hourPointsInfo = info.getList().get(i);
-            if (hourPointsInfo != null) {
-                ArrayList<PointInfo> pointInfos = hourPointsInfo.getPointList();
-                if (pointInfos != null && pointInfos.size() > 0) {
-                    for (PointInfo pointInfo : pointInfos) {
-                        if (pointInfo != null) {
-                            list.add(new LatLng(pointInfo.getLat(), pointInfo.getLon()));
-                        }
-                    }
-                }
-            }
-        }
-        return list;
-    }
 
     @Override
     public void setupBroadcastActions(List<String> actions) {
@@ -434,6 +403,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
                 mTitleHelper.setTitle(info.getNikeName());
             }
+            sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
         }
     }
 
@@ -447,50 +417,6 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         }
     }
 
-    /**
-     * 隐藏跟随滚动的提示语
-     */
-    private void hideTimePop() {
-        if (mTimeTipPop != null) {
-            mTimeTipPop.dismiss();
-        }
-    }
-
-    /**
-     * 显示跟随滚动的提示语
-     */
-    private void showTimePop() {
-        if (!isShowTimePop) {
-            isShowTimePop = true;
-            return;
-        }
-        if (mTimeTipPop == null) {
-            mTimeTipPop = new BasePopupWindow(getActivity());
-            mTimeTipPop.setContentView(R.layout.pop_time_tip);
-            mTimeTipPop.setWidth(DisplayUtil.dip(40));
-            mTimeTipPop.setHeight(DisplayUtil.dip(25));
-            mTvTime = (TextView) mTimeTipPop.findViewById(R.id.tv_time);
-
-        }
-        mTimeTipPop.showAtLocation(mSbTime, Gravity.NO_GRAVITY, 0, 0);
-        updateTimePopLocation();
-    }
-
-    /**
-     * 更新跟随滚动的提示语的位置
-     */
-    private void updateTimePopLocation() {
-        int popViewWidth = mTimeTipPop.getWidth();
-        int popViewHeight = mTimeTipPop.getHeight();
-        int sbWidth = mSbTime.getWidth();
-        int sbHeight = mSbTime.getHeight();
-        int xOffset = (int) (mSbTime.getProgress() * (sbWidth - mSbTime.getPaddingLeft()
-                - mSbTime.getPaddingRight() - DisplayUtil.dip(16)) / (float) mSbTime.getMax())
-                - popViewWidth / 2 + sbHeight / 2;
-        int yOffset = -(mSbTime.getHeight() + popViewHeight + DisplayUtil.dip(5));
-        mTimeTipPop.update(mSbTime, xOffset, yOffset, -1, -1);
-
-    }
 
     @Override
     public void onDestroyView() {

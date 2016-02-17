@@ -41,6 +41,7 @@ public class CalendarHelper {
     private int selectYear = -1;
     private int selectMonth = -1;
     private int selectDay = -1;
+    private String positionTime;
 
     public CalendarHelper(Context context) {
         mContext = context;
@@ -52,7 +53,7 @@ public class CalendarHelper {
             @Override
             public void onClick(View v) {
                 if (positionYear != -1 && positionMonth != -1) {
-                    if (positionMonth > 12) {
+                    if (positionMonth >= 12) {
                         positionMonth = 1;
                         positionYear++;
                     } else {
@@ -75,7 +76,7 @@ public class CalendarHelper {
             @Override
             public void onClick(View v) {
                 if (positionYear != -1 && positionMonth != -1) {
-                    if (positionMonth < 1) {
+                    if (positionMonth <= 1) {
                         positionMonth = 12;
                         positionYear--;
                     } else {
@@ -86,7 +87,7 @@ public class CalendarHelper {
                         setSelectItem(selectYear, selectMonth, selectDay);
                         mTvCenter.setText(selectMonth + "月" + selectDay + "日");
                     } else {
-                        mTvCenter.setText(positionYear + "月" + 1 + "日");
+                        mTvCenter.setText(positionMonth + "月" + 1 + "日");
                         mCalendarAdapter.setSelectItem(-1);
                     }
                 }
@@ -104,8 +105,9 @@ public class CalendarHelper {
                     mCalendarAdapter.setSelectItem(position);
                     mTvCenter.setText(info.month + "月" + info.day + "日");
                     if (mOnCalendarListener != null && info != null) {
+                        positionTime = formatDate(info.year, info.month, info.day);
                         mOnCalendarListener.onItemClick(position,
-                                formatDate(info.year, info.month, info.day));
+                                positionTime);
                     }
 
                     if (view != null) {
@@ -126,7 +128,12 @@ public class CalendarHelper {
         mTvCenter.setText(today[1] + "月" + today[2] + "日");
     }
 
+    public String getPositionTime() {
+        return positionTime;
+    }
+
     public void setSelectItem(int year, int month, int day) {
+        positionTime = formatDate(year, month, day);
         if (mCalendarAdapter != null && mCalendarAdapter.getCount() > 0) {
             for (int i = 0; i < mCalendarAdapter.getCount(); i++) {
 

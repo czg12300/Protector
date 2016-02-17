@@ -325,8 +325,6 @@ public class LocateFragment extends BaseWorkerFragment
         }
     }
 
-    private String lastAvatar;
-    private Bitmap bmAvatar;
 
     /**
      * 添加到地图上
@@ -337,48 +335,12 @@ public class LocateFragment extends BaseWorkerFragment
         if (info == null) {
             return;
         }
-        final int wh = (int) getDimension(R.dimen.avatar);
-        info.setAvatar("http://img1.hao661.com/uploads/allimg/c141031/1414I3K41130-141910.jpg");
         mAMap.clear();
-        if (!TextUtils.equals(lastAvatar, info.getAvatar())) {
-            lastAvatar = info.getAvatar();
-            ImageLoader.getInstance().loadImage(info.getAvatar(), new ImageLoadingListener() {
-                @Override
-                public void onLoadingStarted(String imageUri, View view) {
-
-                }
-
-                @Override
-                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-                }
-
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    bmAvatar = BitmapUtil.scale(loadedImage, wh, wh);
-                    addMarker(info);
-                }
-
-                @Override
-                public void onLoadingCancelled(String imageUri, View view) {
-
-                }
-            });
-        }
-
-        if (bmAvatar == null) {
-            bmAvatar = BitmapUtil.decodeResource(R.drawable.img_head_baby, wh, wh);
-        }
-        addMarker(info);
-
-    }
-
-    private void addMarker(NowDeviceInfoResponse info) {
         // 设置Marker的图标样式
         mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
         LatLng latLng = new LatLng(info.getLat(), info.getLon());
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bmAvatar.copy(bmAvatar.getConfig(),false)));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(DeviceInfoHelper.getInstance().getAvatar()));
         // 设置Marker点击之后显示的标题
         markerOptions.title(info.getAddress());
         // 设置Marker的坐标，为我们点击地图的经纬度坐标
@@ -391,6 +353,7 @@ public class LocateFragment extends BaseWorkerFragment
         mAMap.addMarker(markerOptions).setObject(info);
         mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f));
     }
+
 
     @Override
     public void setupBroadcastActions(List<String> actions) {

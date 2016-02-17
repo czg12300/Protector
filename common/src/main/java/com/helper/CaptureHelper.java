@@ -37,7 +37,7 @@ public class CaptureHelper implements SurfaceHolder.Callback, Handler.Callback {
   }
 
   private enum State {
-    PREVIEW, SUCCESS, DONE
+    PREVIEW, SUCCESS, CommonHasLoginStatusResponse, DONE
   }
 
   public static final int MSG_RESTART_PREVIEW = 0;
