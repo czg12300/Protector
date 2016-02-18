@@ -75,4 +75,6 @@ public class AppConfig {
     public static final String GET_SPORT_STAT_DATA = "GetSportStatData";
     // 受压数据
     public static final String GET_PRESS_STAT_DATA = "GetPressStatData";
+    // 监护人列表
+    public static final String GET_EQUI_USER_LIST = "GetEquiUserList";
 }

@@ -1,14 +1,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_gray">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_gray">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/title_main" />
+        <include layout="@layout/title_main"/>
 
         <LinearLayout
             android:id="@+id/ll_baby_info"
@@ -23,7 +23,7 @@
                 android:layout_width="@dimen/avatar"
                 android:layout_height="@dimen/avatar"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/img_head_girl1" />
+                android:src="@drawable/img_head_baby"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -37,13 +37,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="小妮儿"
                     android:textColor="@color/black_333333"
-                    android:textSize="@dimen/text_title" />
+                    android:textSize="@dimen/text_title"/>
 
                 <TextView
                     android:id="@+id/tv_baby_steps"
                     android:layout_width="wrap_content"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:drawableLeft="@drawable/ico_min_steps_blue"
@@ -51,7 +51,7 @@
                     android:singleLine="true"
                     android:text="1252"
                     android:textColor="@color/blue_03a9f4"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"/>
 
             </LinearLayout>
 
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/ico_right" />
+                android:src="@drawable/ico_right"/>
         </LinearLayout>
 
         <cn.common.ui.widgt.InnerGridView
@@ -71,7 +71,7 @@
             android:cacheColorHint="@color/trans"
             android:listSelector="@drawable/list_selector_backgroud_gray"
             android:numColumns="3"
-            android:padding="10dp" />
+            android:padding="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,14 +91,14 @@
                 android:paddingRight="10dp"
                 android:text="@string/modify_pw"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/text_content" />
+                android:textSize="@dimen/text_content"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@color/divider_menu" />
+                android:background="@color/divider_menu"/>
 
             <TextView
                 android:id="@+id/tv_device_manage"
@@ -111,7 +111,7 @@
                 android:paddingRight="10dp"
                 android:text="@string/device_manage"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/text_content" />
+                android:textSize="@dimen/text_content"/>
         </LinearLayout>
 
         <Button
@@ -121,6 +121,6 @@
             android:layout_margin="15dp"
             android:background="@drawable/btn_selector_red_r"
             android:text="@string/exit_login"
-            android:textColor="@drawable/text_selector_btn_red_r" />
+            android:textColor="@drawable/text_selector_btn_red_r"/>
     </LinearLayout>
 </ScrollView>

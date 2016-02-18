@@ -2,19 +2,26 @@
 package cn.protector.ui.activity.setting;
 
 import android.content.Context;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import cn.common.ui.adapter.BaseListAdapter;
-import cn.common.ui.widgt.RoundImageView;
-import cn.protector.R;
-import cn.protector.ui.activity.CommonTitleActivity;
-import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.common.AppException;
+import cn.common.ui.adapter.BaseListAdapter;
+import cn.common.ui.widgt.RoundImageView;
+import cn.protector.AppConfig;
+import cn.protector.R;
+import cn.protector.logic.data.InitSharedData;
+import cn.protector.logic.helper.DeviceInfoHelper;
+import cn.protector.logic.http.HttpRequest;
+import cn.protector.logic.http.response.CareStaffListResponse;
+import cn.protector.ui.activity.CommonTitleActivity;
+import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
 
 /**
  * 描述：监护人员页面
@@ -22,6 +29,8 @@ import java.util.List;
  * @author jakechen
  */
 public class CareStaffActivity extends CommonTitleActivity {
+    private static final int MSG_BACK_LOAD_DATA=0;
+    private static final int MSG_UI_LOAD_DATA=0;
     private ListView mLvCareStaff;
 
     private CareStaffAdapter mCareStaffAdapter;
@@ -39,6 +48,35 @@ public class CareStaffActivity extends CommonTitleActivity {
     protected void initData() {
         super.initData();
         mCareStaffAdapter.setData(getList());
+        sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
+    }
+
+    @Override
+    public void handleBackgroundMessage(Message msg) {
+        super.handleBackgroundMessage(msg);
+        switch (msg.what){
+            case MSG_BACK_LOAD_DATA:
+                loadDataTask();
+                break;
+        }
+    }
+
+    private void loadDataTask() {
+        HttpRequest<CareStaffListResponse> request = new HttpRequest<>(AppConfig.GET_EQUI_USER_LIST,
+                CareStaffListResponse.class);
+        request.addParam("uc", InitSharedData.getUserCode());
+        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+        }
+        Message uiMsg = obtainUiMessage();
+        uiMsg.what = MSG_UI_LOAD_DATA;
+        try {
+            uiMsg.obj = request.request();
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+        uiMsg.sendToTarget();
     }
 
     private List<CareStaff> getList() {

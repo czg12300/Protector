@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.common.AppException;
+import cn.common.bitmap.core.ImageLoader;
 import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.common.ui.fragment.BaseWorkerFragment;
@@ -47,9 +49,10 @@ import cn.protector.utils.ToastUtil;
  *
  * @author jakechen on 2015/8/13.
  */
-public class SettingFragment extends BaseWorkerFragment
-        implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class SettingFragment extends BaseWorkerFragment implements View.OnClickListener,
+        AdapterView.OnItemClickListener {
     private static final int MSG_BACK_SHUT_DOWN = 0;
+
     private static final int MSG_UI_SHUT_DOWN = 0;
 
     private MainTitleHelper mTitleHelper;
@@ -65,18 +68,25 @@ public class SettingFragment extends BaseWorkerFragment
     private View mVBabyInfo;
 
     private Button mBtnExit;
-private TextView tvName;
+
+    private TextView tvName;
+
     private TextView tvSteps;
+
+    private ImageView ivAvatar;
+
     @Override
     public void initView() {
         setContentView(R.layout.fragment_setting);
         mGvSetting = (GridView) findViewById(R.id.gv_setting);
         mVBabyInfo = findViewById(R.id.ll_baby_info);
+        ivAvatar = (ImageView) findViewById(R.id.riv_avator);
         mBtnExit = (Button) findViewById(R.id.btn_exit);
-        tvName= (TextView) findViewById(R.id.tv_baby_name);
-        tvSteps=(TextView)findViewById(R.id.tv_baby_steps);
+        tvName = (TextView) findViewById(R.id.tv_baby_name);
+        tvSteps = (TextView) findViewById(R.id.tv_baby_steps);
         mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
                 MainTitleHelper.STYLE_SETTING);
+
     }
 
     @Override
@@ -91,10 +101,15 @@ private TextView tvName;
     @Override
     protected void initData() {
         mGvSetting.setAdapter(new SettingAdapter(getActivity(), getListSetting()));
-        DeviceInfo info=   DeviceInfoHelper.getInstance().getPositionDeviceInfo();
-        if (info!=null){
-            tvName.setText(info.getNikeName());
-            tvSteps.setText("120");
+        DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+        if (info != null) {
+            ImageLoader.getInstance().displayImage(info.getAvatar(), ivAvatar);
+            String text = "";
+            if (!TextUtils.isEmpty(info.getNikeName())) {
+                text = info.getNikeName();
+            }
+            tvName.setText(text);
+            // tvSteps.setText("120");
         }
     }
 
@@ -108,12 +123,9 @@ private TextView tvName;
         list.add(new ItemInfo(R.drawable.ico_family_setting, getString(R.string.family_setting)));
         list.add(new ItemInfo(R.drawable.ico_saftey_setting, getString(R.string.saftey_setting)));
         list.add(new ItemInfo(R.drawable.ico_qrcode_setting, getString(R.string.qrcode_setting)));
-        list.add(new ItemInfo(R.drawable.ico_position_setting,
-                getString(R.string.position_setting)));
-        list.add(new ItemInfo(R.drawable.ico_location_setting,
-                getString(R.string.location_setting)));
-        list.add(new ItemInfo(R.drawable.ico_shutdown_setting,
-                getString(R.string.shutdown_setting)));
+        list.add(new ItemInfo(R.drawable.ico_position_setting, getString(R.string.position_setting)));
+        list.add(new ItemInfo(R.drawable.ico_location_setting, getString(R.string.location_setting)));
+        list.add(new ItemInfo(R.drawable.ico_shutdown_setting, getString(R.string.shutdown_setting)));
         return list;
     }
 
@@ -131,6 +143,9 @@ private TextView tvName;
             DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
             if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
                 mTitleHelper.setTitle(info.getNikeName());
+            }
+            if (info != null) {
+                ImageLoader.getInstance().displayImage(info.getAvatar(), ivAvatar);
             }
         }
     }
@@ -169,7 +184,8 @@ private TextView tvName;
     }
 
     private void shutDownTask() {
-        HttpRequest<CommonHasLoginStatusResponse> request = new HttpRequest<>(AppConfig.COM_SHUT_DOWN, CommonHasLoginStatusResponse.class);
+        HttpRequest<CommonHasLoginStatusResponse> request = new HttpRequest<>(
+                AppConfig.COM_SHUT_DOWN, CommonHasLoginStatusResponse.class);
         request.addParam("uc", InitSharedData.getUserCode());
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
             request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
@@ -233,8 +249,8 @@ private TextView tvName;
             mShutdownDialog = new BaseDialog(getActivity());
             mShutdownDialog.setWindow(R.style.alpha_animation, 0.3f);
             mShutdownDialog.setContentView(R.layout.dialog_shutdown);
-            mShutdownDialog.findViewById(R.id.btn_ok)
-                    .setOnClickListener(new View.OnClickListener() {
+            mShutdownDialog.findViewById(R.id.btn_ok).setOnClickListener(
+                    new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             sendEmptyBackgroundMessage(MSG_BACK_SHUT_DOWN);
@@ -243,8 +259,8 @@ private TextView tvName;
                             }
                         }
                     });
-            mShutdownDialog.findViewById(R.id.btn_cancel)
-                    .setOnClickListener(new View.OnClickListener() {
+            mShutdownDialog.findViewById(R.id.btn_cancel).setOnClickListener(
+                    new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (mShutdownDialog != null) {
