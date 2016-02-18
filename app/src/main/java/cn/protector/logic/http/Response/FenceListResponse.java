@@ -5,27 +5,26 @@ import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import cn.protector.logic.entity.CareStaffInfo;
+import cn.protector.logic.entity.FenceInfo;
 
 /**
- * 描述:监护人列表
+ * 描述:围栏列表
  *
  * @author jakechen
  * @since 2015/10/29 15:37
  */
-public class CareStaffListResponse extends Response {
-    // {"Data":[记录内容, 记录内容, 记录内容] ,"Logined":"0/1"}
-    private ArrayList<CareStaffInfo> list;
+public class FenceListResponse extends Response {
+    private ArrayList<FenceInfo> list;
 
-    public ArrayList<CareStaffInfo> getList() {
+    public ArrayList<FenceInfo> getList() {
         return list;
     }
 
-    public void setList(ArrayList<CareStaffInfo> list) {
+    public void setList(ArrayList<FenceInfo> list) {
         this.list = list;
     }
 
@@ -37,9 +36,9 @@ public class CareStaffListResponse extends Response {
         try {
             JSONArray array = new JSONArray(json);
             if (array != null && array.length() > 0) {
-                ArrayList<CareStaffInfo> list = new ArrayList<>();
+                ArrayList<FenceInfo> list = new ArrayList<>();
                 for (int i = 0; i < array.length(); i++) {
-                    CareStaffInfo info = CareStaffInfo.parse(array.optJSONObject(i));
+                    FenceInfo info = FenceInfo.parse(array.optJSONObject(i));
                     if (info != null) {
                         list.add(info);
                     }

@@ -1,19 +1,11 @@
 
 package cn.protector.ui.activity.setting;
 
-import android.content.Context;
 import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import cn.common.AppException;
-import cn.common.ui.adapter.BaseListAdapter;
-import cn.common.ui.widgt.RoundImageView;
 import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.InitSharedData;
@@ -22,6 +14,8 @@ import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.CareStaffListResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
+import cn.protector.ui.adapter.CareStaffAdapter;
+import cn.protector.ui.widget.StatusView;
 
 /**
  * 描述：监护人员页面
@@ -29,32 +23,53 @@ import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
  * @author jakechen
  */
 public class CareStaffActivity extends CommonTitleActivity {
-    private static final int MSG_BACK_LOAD_DATA=0;
-    private static final int MSG_UI_LOAD_DATA=0;
+    private static final int MSG_BACK_LOAD_DATA = 0;
+    private static final int MSG_UI_LOAD_DATA = 0;
     private ListView mLvCareStaff;
 
     private CareStaffAdapter mCareStaffAdapter;
+    private StatusView mStatusView;
 
     @Override
     protected void initView() {
-        setContentView(R.layout.activity_care_staff);
+        mStatusView = new StatusView(this);
+        setContentView(mStatusView);
         setTitle(R.string.title_care_staff);
+        mStatusView.setContentView(R.layout.activity_care_staff);
         mLvCareStaff = (ListView) findViewById(R.id.lv_care_staff);
-        mCareStaffAdapter = new CareStaffAdapter(this);
-        mLvCareStaff.setAdapter(mCareStaffAdapter);
+//        mLvCareStaff.addHeaderView(inflate(R.layout.view_empty_divider));
+//        mLvCareStaff.addFooterView(inflate(R.layout.view_empty_divider));
+    }
+
+    @Override
+    protected void initEvent() {
+        super.initEvent();
+        mStatusView.setStatusListener(new StatusView.StatusListener() {
+            @Override
+            public void reLoadData() {
+                loadData();
+            }
+        });
+    }
+
+    private void loadData() {
+        mStatusView.showLoadingView();
+        sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
     }
 
     @Override
     protected void initData() {
         super.initData();
-        mCareStaffAdapter.setData(getList());
-        sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
+        mCareStaffAdapter = new CareStaffAdapter(this);
+        mLvCareStaff.setAdapter(mCareStaffAdapter);
+        loadData();
+        mStatusView.setNoDataTip("暂无监护人员");
     }
 
     @Override
     public void handleBackgroundMessage(Message msg) {
         super.handleBackgroundMessage(msg);
-        switch (msg.what){
+        switch (msg.what) {
             case MSG_BACK_LOAD_DATA:
                 loadDataTask();
                 break;
@@ -79,15 +94,33 @@ public class CareStaffActivity extends CommonTitleActivity {
         uiMsg.sendToTarget();
     }
 
-    private List<CareStaff> getList() {
-        List<CareStaff> list = new ArrayList<CareStaff>();
-        list.add(new CareStaff("爸爸", true));
-        list.add(new CareStaff("妈妈", false));
-        list.add(new CareStaff("哥哥", false));
-        list.add(new CareStaff("姐姐", false));
-        list.add(new CareStaff("爷爷", false));
-        list.add(new CareStaff("奶奶", false));
-        return list;
+    @Override
+    public void handleUiMessage(Message msg) {
+        super.handleUiMessage(msg);
+        switch (msg.what) {
+            case MSG_UI_LOAD_DATA:
+                if (msg.obj != null) {
+                    handleLoadData((CareStaffListResponse) msg.obj);
+                } else {
+                    mStatusView.showFailView();
+                }
+                break;
+        }
+    }
+
+    private void handleLoadData(CareStaffListResponse response) {
+        if (response.isOk()) {
+            if (response.getList() != null && response.getList().size() > 0) {
+                mStatusView.showContentView();
+                mCareStaffAdapter.setData(response.getList());
+                mCareStaffAdapter.notifyDataSetChanged();
+            } else {
+                mStatusView.showNoDataView();
+            }
+        } else {
+            mStatusView.showFailView();
+        }
+
     }
 
     public void onClick(View v) {
@@ -96,56 +129,5 @@ public class CareStaffActivity extends CommonTitleActivity {
         }
     }
 
-    private class CareStaff {
-        public String relationship;
-
-        public boolean isManager;
-
-        public CareStaff(String relationship, boolean isManager) {
-            this.relationship = relationship;
-            this.isManager = isManager;
-        }
-    }
-
-    private class CareStaffAdapter extends BaseListAdapter<CareStaff> {
-        public CareStaffAdapter(Context context) {
-            super(context);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflate(R.layout.item_care_staff);
-                holder.rivAvator = (RoundImageView) convertView.findViewById(R.id.riv_avator);
-                holder.tvRelationship = (TextView) convertView.findViewById(R.id.tv_relationship);
-                holder.tvManager = (TextView) convertView.findViewById(R.id.tv_manager);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            CareStaff careStaff = mDataList.get(position);
-            if (careStaff != null) {
-                if (careStaff.isManager) {
-                    holder.tvManager.setVisibility(View.VISIBLE);
-                } else {
-                    holder.tvManager.setVisibility(View.GONE);
-                }
-                holder.tvRelationship.setText(careStaff.relationship);
-                holder.rivAvator.setImageResource(R.drawable.img_head_father);
-            }
-
-            return convertView;
-        }
-
-        final class ViewHolder {
-            RoundImageView rivAvator;
-
-            TextView tvRelationship;
-
-            TextView tvManager;
-        }
-    }
 
 }

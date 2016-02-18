@@ -101,15 +101,21 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
     @Override
     protected void initData() {
         mGvSetting.setAdapter(new SettingAdapter(getActivity(), getListSetting()));
+        updateTop();
+    }
+
+    private void updateTop() {
         DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
         if (info != null) {
+            if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
+                mTitleHelper.setTitle(info.getNikeName());
+            }
             ImageLoader.getInstance().displayImage(info.getAvatar(), ivAvatar);
             String text = "";
             if (!TextUtils.isEmpty(info.getNikeName())) {
                 text = info.getNikeName();
             }
             tvName.setText(text);
-            // tvSteps.setText("120");
         }
     }
 
@@ -140,13 +146,7 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
         super.handleBroadcast(context, intent);
         String action = intent.getAction();
         if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
-            DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
-            if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
-                mTitleHelper.setTitle(info.getNikeName());
-            }
-            if (info != null) {
-                ImageLoader.getInstance().displayImage(info.getAvatar(), ivAvatar);
-            }
+            updateTop();
         }
     }
 

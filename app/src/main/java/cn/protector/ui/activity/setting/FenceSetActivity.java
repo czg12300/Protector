@@ -2,6 +2,8 @@
 package cn.protector.ui.activity.setting;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +14,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.common.AppException;
 import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
+import cn.protector.AppConfig;
 import cn.protector.R;
+import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.entity.FenceInfo;
+import cn.protector.logic.helper.DeviceInfoHelper;
+import cn.protector.logic.http.HttpRequest;
+import cn.protector.logic.http.response.CareStaffListResponse;
+import cn.protector.logic.http.response.FenceListResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
+import cn.protector.ui.adapter.FenceAdapter;
+import cn.protector.ui.widget.StatusView;
 
 /**
  * 描述：设置围栏页面
@@ -25,11 +36,14 @@ import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
  * @author jakechen
  */
 public class FenceSetActivity extends CommonTitleActivity {
+    private static final int MSG_BACK_LOAD_DATA = 0;
+    private static final int MSG_UI_LOAD_DATA = 0;
     private ListView mLvFence;
 
     private FenceAdapter mFenceAdapter;
 
     private BaseDialog mOperatingDialog;
+    private StatusView mStatusView;
 
     protected void hideDialog() {
         if (mOperatingDialog != null) {
@@ -53,20 +67,37 @@ public class FenceSetActivity extends CommonTitleActivity {
                 goActivity(AddFenceActivity.class);
             }
         });
+        setBackgroundColor(getColor(R.color.background_gray));
         return vTitle;
     }
 
     @Override
     protected void initView() {
-        setContentView(R.layout.activity_care_staff);
+        mStatusView = new StatusView(this);
+        setContentView(mStatusView);
+        mStatusView.setContentView(R.layout.activity_care_staff);
         setTitle(R.string.title_fence_set);
         mLvFence = (ListView) findViewById(R.id.lv_care_staff);
-        mFenceAdapter = new FenceAdapter(this);
-        mLvFence.setAdapter(mFenceAdapter);
+
+    }
+
+    @Override
+    protected void initEvent() {
+        super.initEvent();
+        mStatusView.setStatusListener(new StatusView.StatusListener() {
+            @Override
+            public void reLoadData() {
+                loadData();
+            }
+        });
         mLvFence.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showOperatingDialog((FenceInfo) mFenceAdapter.getItem(position));
+                FenceInfo info = (FenceInfo) mFenceAdapter.getItem(position);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("FenceDetailActivity", info);
+                goActivity(FenceDetailActivity.class, bundle);
+//                showOperatingDialog((FenceInfo) mFenceAdapter.getItem(position));
             }
         });
     }
@@ -107,38 +138,71 @@ public class FenceSetActivity extends CommonTitleActivity {
     @Override
     protected void initData() {
         super.initData();
-        mFenceAdapter.setData(getList());
+        mFenceAdapter = new FenceAdapter(this);
+        mLvFence.setAdapter(mFenceAdapter);
+        loadData();
     }
 
-    private List<FenceInfo> getList() {
-        List<FenceInfo> list = new ArrayList<FenceInfo>();
-        FenceInfo info;
-        info = new FenceInfo();
-        info.name = "老师";
-        info.address = "广州市天河区岑村红花岗";
-        info.range = 500;
-        list.add(info);
-        info = new FenceInfo();
-        info.name = "姐姐家";
-        info.address = "广州市天河区上社";
-        info.range = 500;
-        list.add(info);
-        info = new FenceInfo();
-        info.name = "爷爷家";
-        info.address = "广州市天河区五山路口";
-        info.range = 500;
-        list.add(info);
-        info = new FenceInfo();
-        info.name = "外婆家";
-        info.address = "广州市白云区上下九";
-        info.range = 500;
-        list.add(info);
-        info = new FenceInfo();
-        info.name = "家";
-        info.address = "广州市天河区岗顶";
-        info.range = 1500;
-        list.add(info);
-        return list;
+    private void loadData() {
+        mStatusView.showLoadingView();
+        sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
+    }
+
+    @Override
+    public void handleBackgroundMessage(Message msg) {
+        super.handleBackgroundMessage(msg);
+        switch (msg.what) {
+            case MSG_BACK_LOAD_DATA:
+                loadDataTask();
+                break;
+        }
+    }
+
+    private void loadDataTask() {
+        HttpRequest<FenceListResponse> request = new HttpRequest<>(AppConfig.GET_ELEC_FENCE_LIST,
+                FenceListResponse.class);
+        request.addParam("uc", InitSharedData.getUserCode());
+        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+        }
+        Message uiMsg = obtainUiMessage();
+        uiMsg.what = MSG_UI_LOAD_DATA;
+        try {
+            uiMsg.obj = request.request();
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+        uiMsg.sendToTarget();
+    }
+
+    @Override
+    public void handleUiMessage(Message msg) {
+        super.handleUiMessage(msg);
+        switch (msg.what) {
+            case MSG_UI_LOAD_DATA:
+                if (msg.obj != null) {
+                    handleLoadData((FenceListResponse) msg.obj);
+                } else {
+                    mStatusView.showFailView();
+                }
+                break;
+        }
+    }
+
+    private void handleLoadData(FenceListResponse response) {
+        if (response.isOk()) {
+            if (response.getList() != null && response.getList().size() > 0) {
+                mStatusView.showContentView();
+                mFenceAdapter.setData(response.getList());
+                mFenceAdapter.notifyDataSetChanged();
+            } else {
+                mStatusView.showNoDataView();
+            }
+        } else {
+            mStatusView.showFailView();
+        }
+
     }
 
     public void onClick(View v) {
@@ -147,52 +211,5 @@ public class FenceSetActivity extends CommonTitleActivity {
         }
     }
 
-    private class FenceAdapter extends BaseListAdapter<FenceInfo> {
-        public FenceAdapter(Context context) {
-            super(context);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflate(R.layout.item_fence);
-                holder.tvIcon = (TextView) convertView.findViewById(R.id.tv_icon);
-                holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
-                holder.tvAddress = (TextView) convertView.findViewById(R.id.tv_address);
-                holder.tvRange = (TextView) convertView.findViewById(R.id.tv_range);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            FenceInfo info = mDataList.get(position);
-            if (info != null) {
-                if (!TextUtils.isEmpty(info.name)) {
-                    holder.tvIcon.setText(info.name.substring(0, 1));
-                    holder.tvName.setText(info.name);
-                }
-                if (!TextUtils.isEmpty(info.address)) {
-                    holder.tvAddress.setText(info.address);
-                }
-                holder.tvRange.setText(
-                        getString(R.string.fence_range_string).replace("#", "" + info.range));
-            }
-
-            return convertView;
-        }
-
-        final class ViewHolder {
-
-            TextView tvIcon;
-
-            TextView tvName;
-
-            TextView tvAddress;
-
-            TextView tvRange;
-
-        }
-    }
 
 }

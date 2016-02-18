@@ -77,4 +77,6 @@ public class AppConfig {
     public static final String GET_PRESS_STAT_DATA = "GetPressStatData";
     // 监护人列表
     public static final String GET_EQUI_USER_LIST = "GetEquiUserList";
+    //获取围栏列表
+    public static final String GET_ELEC_FENCE_LIST = "GetElecFenceList";
 }
