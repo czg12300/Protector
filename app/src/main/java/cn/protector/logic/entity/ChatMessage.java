@@ -57,6 +57,6 @@ public class ChatMessage implements Serializable{
   }
 
   public String getFormatTime() {
-    return new SimpleDateFormat("YYYY年MM月DD日  HH:mm:ss").format(new Date(time));
+    return new SimpleDateFormat("yyyy年MM月dd日  HH:mm:ss").format(new Date(time));
   }
 }

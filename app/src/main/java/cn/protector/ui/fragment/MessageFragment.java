@@ -152,7 +152,7 @@ public class MessageFragment extends BaseWorkerFragment implements View.OnClickL
         }
         mLvMessage.stopRefresh();
         mLvMessage.stopLoadMore();
-        mLvMessage.setRefreshTime(new SimpleDateFormat("YYYY-MM-DD HH:mm:ss").format(new Date(System.currentTimeMillis())));
+        mLvMessage.setRefreshTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
         break;
     }
   }
