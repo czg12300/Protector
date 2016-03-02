@@ -69,11 +69,11 @@ public class DbHelper extends SQLiteOpenHelper {
     Cursor cursor = null;
     try {
       if (time > 0) {
-        cursor = db.query("message", null, "_time" + "<?", new String[]{"" + time}, null, null, "_time" + " DESC", "10");
+        cursor = db.query("message", null, "_time" + "<"+time,new String[]{"_time"}, null, null, "_time" + " desc", "2");
       } else {
-        cursor = db.query("message", null, null, null, null, null, "_time" + " DESC", "10");
+        cursor = db.query("message", null, null, null, null, null, "_time" + " desc", "10");
       }
-      if (cursor != null) {
+      if (cursor != null&&cursor.getCount()>0) {
         list = new ArrayList<>();
         while (cursor.moveToNext()) {
           ChatMessage chatMessage = new ChatMessage();

@@ -9,10 +9,15 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import cn.common.ui.fragment.BaseWorkerFragment;
+import cn.common.ui.widgt.PullDragHelper;
+import cn.common.ui.widgt.PullEnableListView;
+import cn.common.ui.widgt.PullListener;
+import cn.common.ui.widgt.PullToRefreshLayout;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
@@ -31,161 +36,202 @@ import cn.protector.ui.widget.pulltorefresh.XListView;
  *
  * @author Created by jakechen on 2015/8/13.
  */
-public class MessageFragment extends BaseWorkerFragment implements View.OnClickListener {
-  private static final int MSG_UI_START = 0;
+public class MessageFragment extends BaseWorkerFragment {
+    private static final int MSG_UI_START = 0;
 
-  private static final int MSG_UI_LOAD_MESSAGE_SUCCESS = MSG_UI_START + 1;
+    private static final int MSG_UI_LOAD_MESSAGE_SUCCESS = 1;
 
-  private static final int MSG_BACK_START = 100;
+    private static final int MSG_BACK_START = 100;
 
-  private static final int MSG_BACK_LOAD_MESSAGE = MSG_BACK_START + 1;
+    private static final int MSG_BACK_LOAD_MESSAGE = MSG_BACK_START + 1;
 
-  private MainTitleHelper mTitleHelper;
+    private MainTitleHelper mTitleHelper;
+    private PullToRefreshLayout pullLayout;
 
-  public static MessageFragment newInstance() {
-    return new MessageFragment();
-  }
-
-  private XListView mLvMessage;
-
-  private MessageAdapter mMessageAdapter;
-  private TextView tvNoData;
-  private boolean isFistLoadData = true;
-
-  @Override
-  public void initView() {
-    setContentView(R.layout.fragment_message);
-    tvNoData = (TextView) findViewById(R.id.tv_no_data);
-    mLvMessage = (XListView) findViewById(R.id.lv_message);
-    mLvMessage.setPullLoadEnable(false);
-    mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title), MainTitleHelper.STYLE_MESSAGE);
-    showMessageList(false);
-    mLvMessage.setXListViewListener(new XListView.IXListViewListener() {
-      @Override
-      public void onRefresh() {
-        sendEmptyBackgroundMessage(MSG_BACK_LOAD_MESSAGE);
-      }
-
-      @Override
-      public void onLoadMore() {
-      }
-    });
-  }
-
-  private void showMessageList(boolean isShow) {
-    tvNoData.setVisibility(isShow ? View.GONE : View.VISIBLE);
-    mLvMessage.setVisibility(isShow ? View.VISIBLE : View.GONE);
-  }
-
-  @Override
-  protected void initData() {
-    mMessageAdapter = new MessageAdapter(getActivity());
-    mLvMessage.setAdapter(mMessageAdapter);
-    sendEmptyBackgroundMessage(MSG_BACK_LOAD_MESSAGE);
-  }
-
-  @Override
-  public void setupBroadcastActions(List<String> actions) {
-    super.setupBroadcastActions(actions);
-    actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
-    actions.add(BroadcastActions.ACTION_PUSH_COMMON_MESSAGE);
-  }
-
-  @Override
-  public void handleBroadcast(Context context, Intent intent) {
-    super.handleBroadcast(context, intent);
-    String action = intent.getAction();
-    if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
-      DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
-      if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
-        mTitleHelper.setTitle(info.getNikeName());
-      }
-    } else if (TextUtils.equals(action, BroadcastActions.ACTION_PUSH_COMMON_MESSAGE)) {
-      ChatMessage message = (ChatMessage) intent.getSerializableExtra(PushMessageReceiver.KEY_COMMON_MESSAGE);
-      if (message != null) {
-        mMessageAdapter.addToLast(message);
-        mMessageAdapter.notifyDataSetChanged();
-      }
-      if (getActivity() != null) {
-        TextView textView = (TextView) getActivity().findViewById(R.id.tv_message_num);
-        if (textView != null) {
-          int num = 1;
-          try {
-            num = Integer.valueOf(textView.getText().toString()) + 1;
-          } catch (Exception e) {
-          }
-          textView.setText("" + num);
-          textView.setVisibility(View.VISIBLE);
-        }
-      }
-    }
-  }
-
-
-  @Override
-  public void handleBackgroundMessage(Message msg) {
-    super.handleBackgroundMessage(msg);
-    switch (msg.what) {
-      case MSG_BACK_LOAD_MESSAGE:
-        if (mMessageAdapter.getCount() > 0) {
-          ChatMessage chatMessage = mMessageAdapter.getDataList().get(mMessageAdapter.getCount() - 1);
-          mMessageAdapter.addToTop(DbHelper.getInstance().queryMessage(chatMessage.getTime()));
-        } else {
-          mMessageAdapter.addToTop(DbHelper.getInstance().queryMessage(0));
-        }
-        sendEmptyUiMessageDelayed(MSG_UI_LOAD_MESSAGE_SUCCESS, 800);
-        break;
+    public static MessageFragment newInstance() {
+        return new MessageFragment();
     }
 
-  }
+    private PullEnableListView mLvMessage;
 
-  @Override
-  public void handleUiMessage(Message msg) {
-    super.handleUiMessage(msg);
-    switch (msg.what) {
-      case MSG_UI_LOAD_MESSAGE_SUCCESS:
-        mMessageAdapter.notifyDataSetChanged();
-        if (isFistLoadData && mMessageAdapter.getCount() > 0) {
-          isFistLoadData = false;
-        } else {
-          mLvMessage.setSelectionFromTop(mMessageAdapter.getCount() - 1, mLvMessage.getRefreshHeight());
-        }
-        mLvMessage.stopRefresh();
-        mLvMessage.stopLoadMore();
-        mLvMessage.setRefreshTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
-        break;
+    private MessageAdapter mMessageAdapter;
+    private TextView tvNoData;
+
+    @Override
+    public void initView() {
+        setContentView(R.layout.fragment_message);
+        tvNoData = (TextView) findViewById(R.id.tv_no_data);
+        mLvMessage = new PullEnableListView(getActivity());
+        mLvMessage.setDividerHeight(0);
+        mLvMessage.setCanScrollUp(false);
+        pullLayout = (PullToRefreshLayout) findViewById(R.id.pull);
+        pullLayout.setContentView(mLvMessage);
+        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title), MainTitleHelper.STYLE_MESSAGE);
+        showMessageList(false);
+        pullLayout.setPullListener(new PullListener() {
+            @Override
+            public void onLoadMore(PullDragHelper pullDragHelper) {
+
+            }
+
+            @Override
+            public void onRefresh(PullDragHelper pullDragHelper) {
+                sendEmptyBackgroundMessage(MSG_BACK_LOAD_MESSAGE);
+            }
+        });
+        setRedDot();
     }
-  }
 
-
-  @Override
-  public void onClick(View v) {
-    int id = v.getId();
-    if (id == R.id.ll_baby_info) {
-      goActivity(BabyInfoActivity.class);
-    }
-  }
-
-
-  @Override
-  public void setUserVisibleHint(boolean isVisibleToUser) {
-    super.setUserVisibleHint(isVisibleToUser);
-    if (!isVisibleToUser) {
-      if (mMessageAdapter != null && mMessageAdapter.getCount() > 0) {
-        ChatMessage chatMessage = mMessageAdapter.getDataList().get(mMessageAdapter.getCount() - 1);
-        if (chatMessage != null) {
-          InitSharedData.setMessageTime(chatMessage.getTime());
-        }
-        mMessageAdapter.notifyDataSetChanged();
+    private void setRedDot() {
+        int num = InitSharedData.getMessageNum();
         if (getActivity() != null) {
-          TextView textView = (TextView) getActivity().findViewById(R.id.tv_message_num);
-          if (textView != null) {
-            textView.setText("1");
-            textView.setVisibility(View.GONE);
-          }
+            TextView textView = (TextView) getActivity().findViewById(R.id.tv_message_num);
+            if (num > 0) {
+                textView.setText("" + num);
+                textView.setVisibility(View.VISIBLE);
+            } else {
+                textView.setVisibility(View.GONE);
+            }
         }
-      }
+    }
+
+    private void showMessageList(boolean isShow) {
+        tvNoData.setVisibility(isShow ? View.GONE : View.VISIBLE);
+        pullLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    protected void initData() {
+        mMessageAdapter = new MessageAdapter(getActivity());
+        mLvMessage.setAdapter(mMessageAdapter);
+        sendEmptyBackgroundMessage(MSG_BACK_LOAD_MESSAGE);
+    }
+
+    @Override
+    public void setupBroadcastActions(List<String> actions) {
+        super.setupBroadcastActions(actions);
+        actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
+        actions.add(BroadcastActions.ACTION_PUSH_COMMON_MESSAGE);
+    }
+
+    @Override
+    public void handleBroadcast(Context context, Intent intent) {
+        super.handleBroadcast(context, intent);
+        String action = intent.getAction();
+        if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
+            DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+            if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
+                mTitleHelper.setTitle(info.getNikeName());
+            }
+        } else if (TextUtils.equals(action, BroadcastActions.ACTION_PUSH_COMMON_MESSAGE)) {
+            ChatMessage message = (ChatMessage) intent.getSerializableExtra(PushMessageReceiver.KEY_COMMON_MESSAGE);
+            if (message != null) {
+                mMessageAdapter.addToLast(message);
+                mMessageAdapter.notifyDataSetChanged();
+                mLvMessage.setSelection(mMessageAdapter.getCount());
+                showMessageList(true);
+            }
+            InitSharedData.setMessageNum(InitSharedData.getMessageNum() + 1);
+            setRedDot();
+        }
+    }
+
+
+    @Override
+    public void handleBackgroundMessage(Message msg) {
+        super.handleBackgroundMessage(msg);
+        switch (msg.what) {
+            case MSG_BACK_LOAD_MESSAGE:
+                ArrayList<ChatMessage> list = null;
+                if (mMessageAdapter.getCount() > 0) {
+                    ChatMessage chatMessage = mMessageAdapter.getDataList().get(mMessageAdapter.getCount() - 1);
+                    list = DbHelper.getInstance().queryMessage(chatMessage.getTime());
+                    if (list != null && list.size() > 0) {
+                        list = changeDesc(list);
+                    }
+                } else {
+                    list = DbHelper.getInstance().queryMessage(0);
+                    list = changeDesc(list);
+                }
+                Message message = obtainUiMessage();
+                message.what = MSG_UI_LOAD_MESSAGE_SUCCESS;
+                message.obj = list;
+                message.sendToTarget();
+                break;
+        }
 
     }
-  }
+
+    private ArrayList<ChatMessage> changeDesc(ArrayList<ChatMessage> list) {
+        if (list != null && list.size() > 0) {
+            ArrayList<ChatMessage> result = new ArrayList<>();
+            for (int i = list.size() - 1; i >= 0; i--) {
+                result.add(list.get(i));
+            }
+            return result;
+        }
+        return list;
+    }
+
+    @Override
+    public void handleUiMessage(Message msg) {
+        super.handleUiMessage(msg);
+        switch (msg.what) {
+            case MSG_UI_LOAD_MESSAGE_SUCCESS:
+                if (msg.obj != null) {
+                    if (mMessageAdapter.getCount() > 0) {
+                        ArrayList<ChatMessage> list = (ArrayList<ChatMessage>) msg.obj;
+                        if (list.size() > 0) {
+                            mMessageAdapter.addToTop(list);
+                            mMessageAdapter.notifyDataSetChanged();
+                            pullLayout.finishTask(true);
+                            mLvMessage.setSelection(list.size());
+                        } else {
+                            pullLayout.finishTask(false);
+                        }
+                    } else {
+                        ArrayList<ChatMessage> list = (ArrayList<ChatMessage>) msg.obj;
+                        if (list.size() > 0) {
+                            mMessageAdapter.setData(list);
+                            mMessageAdapter.notifyDataSetChanged();
+                            showMessageList(true);
+                        }
+                    }
+                } else {
+                    if (mMessageAdapter.getCount() > 0) {
+                        pullLayout.finishTask(false);
+                    }
+                }
+                break;
+        }
+    }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            hideRedDot();
+
+        }
+    }
+
+    private void hideRedDot() {
+        if (mMessageAdapter != null && mMessageAdapter.getCount() > 0) {
+            ChatMessage chatMessage = mMessageAdapter.getDataList().get(mMessageAdapter.getCount() - 1);
+            if (chatMessage != null && InitSharedData.getMessageTime() < chatMessage.getTime()) {
+                InitSharedData.setMessageTime(chatMessage.getTime());
+                mMessageAdapter.notifyDataSetChanged();
+                InitSharedData.setMessageNum(0);
+                setRedDot();
+            }
+
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        hideRedDot();
+    }
 }

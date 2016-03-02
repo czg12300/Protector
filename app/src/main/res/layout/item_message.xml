@@ -1,23 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="top"
-              android:orientation="horizontal"
-              android:padding="5dp"
-              android:paddingLeft="10dp"
-              android:paddingRight="15dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_gray"
+    android:gravity="top"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingLeft="10dp"
+    android:paddingRight="15dp">
 
     <cn.common.ui.widgt.RoundImageView
         android:id="@+id/iv_avator"
         android:layout_width="40dp"
+        android:background="@color/trans"
+        android:src="@drawable/img_head_girl1"
         android:layout_height="40dp"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:orientation="vertical"
+        android:background="@drawable/bg_selector_message"
         android:paddingLeft="15dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp">
@@ -35,7 +40,7 @@
                 android:singleLine="true"
                 android:text="小妮儿"
                 android:textColor="@color/gray_999999"
-                android:textSize="11dp"/>
+                android:textSize="11dp" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -45,7 +50,7 @@
                 android:singleLine="true"
                 android:text="9:20"
                 android:textColor="@color/gray_999999"
-                android:textSize="11dp"/>
+                android:textSize="11dp" />
         </LinearLayout>
 
         <TextView
@@ -54,7 +59,7 @@
             android:layout_height="wrap_content"
             android:text="@string/add_device_hint"
             android:textColor="@color/black_333333"
-            android:textSize="14dp"/>
+            android:textSize="14dp" />
 
     </LinearLayout>
 
@@ -64,5 +69,5 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:src="@drawable/im_item_red_point"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </LinearLayout>

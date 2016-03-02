@@ -1,5 +1,5 @@
 
-package cn.common.ui.widgt.pulltorefresh;
+package cn.common.ui.widgt;
 
 /**
  * can pull or not
