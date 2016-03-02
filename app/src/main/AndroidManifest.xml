@@ -129,6 +129,9 @@
             android:name=".ui.activity.OfflineTipActivity"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name=".ui.activity.WebActivity"
+            android:theme="@style/swipe_activity_style"/>
 
         <service android:name=".HeartBeatService"/>
 

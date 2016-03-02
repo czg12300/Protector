@@ -18,7 +18,24 @@ public class SportResponse extends Response {
   private int allStepNumber;
   private int avgStepNumber;
   private String message;
+  private String activityUrl;
+  private String activityPicture;
 
+  public String getActivityPicture() {
+    return activityPicture;
+  }
+
+  public void setActivityPicture(String activityPicture) {
+    this.activityPicture = activityPicture;
+  }
+
+  public String getActivityUrl() {
+    return activityUrl;
+  }
+
+  public void setActivityUrl(String activityUrl) {
+    this.activityUrl = activityUrl;
+  }
 
   public String getEid() {
     return eid;
@@ -65,11 +82,12 @@ public class SportResponse extends Response {
     if (TextUtils.isEmpty(json)) {
       return null;
     }
-//    {"Eid":"E20150826120345000003" , "WorkDay":"100" ,"AllStepNumber":"96500","AvgStepNumber":"1000","Message":"运动少，多走动对身体发育有帮助" }
     try {
       JSONObject object = new JSONObject(json);
       setEid(object.optString("Eid"));
       setMessage(object.optString("Message"));
+      setActivityUrl(object.optString("ActivityURL"));
+      setActivityPicture(object.optString("ActivityPicture"));
       setWorkDay(object.optInt("WorkDay"));
       setAllStepNumber(object.optInt("AllStepNumber"));
       setAvgStepNumber(object.optInt("AvgStepNumber"));
