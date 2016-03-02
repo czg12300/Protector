@@ -1,34 +1,62 @@
-
 package cn.protector.logic.entity;
 
-import cn.common.http.base.BaseResponse;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 描述：宝贝信息实体类
  *
  * @author Created by Administrator on 2015/9/4.
  */
-public class ChatMessage extends BaseResponse {
-    public static final int TYPE_MESSAGE = 1;
+public class ChatMessage implements Serializable{
+  private int time;
+  private String image;
+  private String content;
+  private String sender;
+  private String url;
 
-    public static final int TYPE_VOICE = 2;
+  public int getTime() {
+    return time;
+  }
 
-    public String name;
+  public void setTime(int time) {
+    this.time = time;
+  }
 
-    public String avator;
+  public String getImage() {
+    return image;
+  }
 
-    public String time;
+  public void setImage(String image) {
+    this.image = image;
+  }
 
-    public String message;
+  public String getContent() {
+    return content;
+  }
 
-    public int type;
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    public String voice;
+  public String getSender() {
+    return sender;
+  }
 
-    public int id;
+  public void setSender(String sender) {
+    this.sender = sender;
+  }
 
-    @Override
-    public ChatMessage parse(String json) {
-        return this;
-    }
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public String getFormatTime() {
+    return new SimpleDateFormat("YYYY年MM月DD日  HH:mm:ss").format(new Date(time));
+  }
 }

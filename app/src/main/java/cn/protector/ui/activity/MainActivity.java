@@ -10,8 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.widget.RadioButton;
 
-import com.igexin.sdk.PushManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +68,6 @@ public class MainActivity extends BaseWorkerFragmentActivity implements
         initEvent();
         sendEmptyUiMessage(MSG_UI_INIT_DATA);
         mVpContent.setCanScroll(false);
-        PushManager.getInstance().initialize(this.getApplicationContext());
     }
 
     private void initView() {

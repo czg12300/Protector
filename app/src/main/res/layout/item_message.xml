@@ -1,24 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="top"
-    android:orientation="horizontal"
-    android:padding="5dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="15dp">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="top"
+              android:orientation="horizontal"
+              android:padding="5dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="15dp">
 
-    <ImageView
+    <cn.common.ui.widgt.RoundImageView
         android:id="@+id/iv_avator"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="10dp"
-        android:src="@drawable/img_head_girl1" />
+        android:layout_marginLeft="10dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:background="@drawable/bg_selector_message"
         android:orientation="vertical"
         android:paddingLeft="15dp"
         android:paddingRight="10dp"
@@ -37,7 +35,7 @@
                 android:singleLine="true"
                 android:text="小妮儿"
                 android:textColor="@color/gray_999999"
-                android:textSize="11dp" />
+                android:textSize="11dp"/>
 
             <TextView
                 android:id="@+id/tv_time"
@@ -47,7 +45,7 @@
                 android:singleLine="true"
                 android:text="9:20"
                 android:textColor="@color/gray_999999"
-                android:textSize="11dp" />
+                android:textSize="11dp"/>
         </LinearLayout>
 
         <TextView
@@ -56,19 +54,8 @@
             android:layout_height="wrap_content"
             android:text="@string/add_device_hint"
             android:textColor="@color/black_333333"
-            android:textSize="14dp" />
+            android:textSize="14dp"/>
 
-        <TextView
-            android:id="@+id/tv_voice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/im_item_recording_0"
-            android:drawablePadding="10dp"
-            android:singleLine="true"
-            android:text="录音 15’"
-            android:textColor="@color/black_333333"
-            android:textSize="14dp"
-            android:visibility="gone" />
     </LinearLayout>
 
     <ImageView
@@ -77,5 +64,5 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:src="@drawable/im_item_red_point"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 </LinearLayout>

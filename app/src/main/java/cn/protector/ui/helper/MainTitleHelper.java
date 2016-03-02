@@ -98,6 +98,7 @@ public class MainTitleHelper implements View.OnClickListener {
                 break;
             case STYLE_MESSAGE:
                 mIvTitleLeft.setVisibility(View.GONE);
+                mIvTitleRight.setVisibility(View.GONE);
                 break;
             case STYLE_SETTING:
                 mIvTitleLeft.setVisibility(View.VISIBLE);

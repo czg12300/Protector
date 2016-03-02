@@ -6,6 +6,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
+import com.igexin.sdk.PushManager;
+
 import cn.common.AppException;
 import cn.common.ui.activity.BaseWorkerFragmentActivity;
 import cn.protector.AppConfig;
@@ -52,6 +54,7 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PushManager.getInstance().initialize(this.getApplicationContext());
         mIvSplash = new ImageView(this);
         mIvSplash.setImageResource(R.drawable.loading_page_ishoe);
         mIvSplash.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -91,6 +94,7 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
                         LoginResponse.class);
                 request.addParam("u", InitSharedData.getMobile());
                 request.addParam("p", InitSharedData.getPassword());
+                request.addParam("ClientMac",  PushManager.getInstance().getClientid(this));
                 LoginResponse response = null;
                 try {
                     response = request.request();

@@ -31,7 +31,15 @@ public final class InitSharedData {
     private static final String KEY_PASSWORD = "keyPassWord";
 
     private static final String KEY_DEVICE_DATA = "key_device_data";
+    private static final String KEY_MESSAGE_TIME = "key_message_time";
 
+    public static void setMessageTime(int time) {
+        getSharedPreferences().edit().putInt(KEY_MESSAGE_TIME, time).commit();
+    }
+
+    public static int getMessageTime() {
+        return getSharedPreferences().getInt(KEY_MESSAGE_TIME, 0);
+    }
     public static void setDeviceData(String code) {
         getSharedPreferences().edit().putString(KEY_DEVICE_DATA, code).commit();
     }

@@ -15,6 +15,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.igexin.sdk.PushManager;
+
+import java.util.List;
+
 import cn.common.AppException;
 import cn.common.ui.BaseDialog;
 import cn.protector.AppConfig;
@@ -30,8 +34,6 @@ import cn.protector.ui.activity.MainActivity;
 import cn.protector.ui.helper.TipDialogHelper;
 import cn.protector.ui.widget.ImageEditText;
 import cn.protector.utils.ToastUtil;
-
-import java.util.List;
 
 /**
  * 登录页面
@@ -301,6 +303,7 @@ public class LoginActivity extends CommonTitleActivity
             // request.addParam("p",
             // MD5Util.md5(mEvPw.getText().toString()));
         }
+        request.addParam("ClientMac",  PushManager.getInstance().getClientid(this));
         Message uiMsg = obtainUiMessage();
         uiMsg.what = MSG_UI_LOGIN;
         try {

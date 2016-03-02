@@ -1,15 +1,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <include layout="@layout/title_main" />
+    <include layout="@layout/title_main"/>
 
-    <ListView
-        android:id="@+id/lv_message"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:cacheColorHint="@color/trans"
-        android:divider="@color/trans"
-        android:listSelector="@color/trans" />
+        android:background="@color/background_gray"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="暂时没有消息"
+            android:layout_gravity="center"
+            android:textColor="@color/gray_757575"
+            android:textSize="16dp"/>
+        <cn.protector.ui.widget.pulltorefresh.XListView
+            android:id="@+id/lv_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@color/trans"
+            android:divider="@color/trans"
+            android:visibility="gone"
+            android:listSelector="@color/trans"/>
+    </FrameLayout>
+
+
 </LinearLayout>

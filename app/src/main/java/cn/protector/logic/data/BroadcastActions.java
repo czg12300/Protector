@@ -34,6 +34,10 @@ public interface BroadcastActions {
      * 选择不同的设备
      */
     String ACTION_MAIN_DEVICE_CHANGE = "cn.protector.data.BroadcastActions.action_main_device_change";
+    /**
+     * 普通消息
+     */
+    String ACTION_PUSH_COMMON_MESSAGE = "cn.protector.data.BroadcastActions.action_push_common_message";
 
 
 }
