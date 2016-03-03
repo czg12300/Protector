@@ -18,7 +18,7 @@ import cn.protector.logic.entity.ChatMessage;
  * @since 2016/3/2 15:48
  */
 public class DbHelper extends SQLiteOpenHelper {
-
+  public static final int PAGE_SIZE = 10;
   private static DbHelper instance;
 
   public static DbHelper getInstance() {
@@ -69,11 +69,11 @@ public class DbHelper extends SQLiteOpenHelper {
     Cursor cursor = null;
     try {
       if (time > 0) {
-        cursor = db.query("message", null, "_time" + "<"+time,new String[]{"_time"}, null, null, "_time" + " desc", "2");
+        cursor = db.query("message", null, "_time" + "<?", new String[]{String.valueOf(time)}, null, null, "_time" + " desc", String.valueOf(PAGE_SIZE));
       } else {
-        cursor = db.query("message", null, null, null, null, null, "_time" + " desc", "10");
+        cursor = db.query("message", null, null, null, null, null, "_time" + " desc", String.valueOf(PAGE_SIZE));
       }
-      if (cursor != null&&cursor.getCount()>0) {
+      if (cursor != null && cursor.getCount() > 0) {
         list = new ArrayList<>();
         while (cursor.moveToNext()) {
           ChatMessage chatMessage = new ChatMessage();
