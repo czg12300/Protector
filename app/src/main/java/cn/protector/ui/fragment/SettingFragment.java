@@ -229,6 +229,7 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
                 break;
             case 2:
                 goActivity(QACodeActivity.class);
+                break;
             case 3:
                 goActivity(LocationRegulateActivity.class);
                 break;

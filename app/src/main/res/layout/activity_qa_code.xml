@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
@@ -10,7 +10,7 @@
         android:layout_marginTop="30dp"
         android:text="@string/qa_code_tip"
         android:textColor="@color/black_333333"
-        android:textSize="@dimen/text_litter" />
+        android:textSize="@dimen/text_litter"/>
 
     <ImageView
         android:id="@+id/iv_code"
@@ -19,6 +19,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="45dp"
         android:background="@color/white"
-        android:padding="30dp"
-        android:src="@drawable/test_qa_code" />
+        android:padding="30dp"/>
+
 </LinearLayout>

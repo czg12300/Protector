@@ -79,4 +79,6 @@ public class AppConfig {
     public static final String GET_EQUI_USER_LIST = "GetEquiUserList";
     //获取围栏列表
     public static final String GET_ELEC_FENCE_LIST = "GetElecFenceList";
+    //获取二维码
+    public static final String GET_QR_CODE = "GetQRCode";
 }
