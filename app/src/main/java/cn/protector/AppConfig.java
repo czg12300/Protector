@@ -81,4 +81,6 @@ public class AppConfig {
     public static final String GET_ELEC_FENCE_LIST = "GetElecFenceList";
     //获取二维码
     public static final String GET_QR_CODE = "GetQRCode";
+    //删除
+    public static final String DEL_CUSTODIAN = "DelCustodian";
 }

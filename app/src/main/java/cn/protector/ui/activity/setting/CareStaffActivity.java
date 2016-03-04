@@ -15,6 +15,7 @@ import cn.protector.logic.entity.CareStaffInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.CareStaffListResponse;
+import cn.protector.logic.http.response.CommonResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
 import cn.protector.ui.adapter.CareStaffAdapter;
@@ -78,7 +79,6 @@ public class CareStaffActivity extends CommonTitleActivity {
           CareStaffInfo info = (CareStaffInfo) v.getTag();
           if (!info.isManager()) {
             showDeleteDialog(info);
-            ToastUtil.showError();
           }
         }
       }
@@ -91,6 +91,7 @@ public class CareStaffActivity extends CommonTitleActivity {
   private void showDeleteDialog(final CareStaffInfo info) {
     if (info != null && !isFinishing()) {
       final BaseDialog dialog = new BaseDialog(this);
+      dialog.setWindow(R.style.alpha_animation, 0.3f);
       dialog.setContentView(R.layout.dialog_delete_care_staff);
       TextView text = (TextView) dialog.findViewById(R.id.tv_title);
       text.setText("确定要删除“" + info.getNickName() + "”吗？");
@@ -110,7 +111,7 @@ public class CareStaffActivity extends CommonTitleActivity {
           dialog.dismiss();
         }
       });
-
+      dialog.show();
     }
   }
 
@@ -130,15 +131,20 @@ public class CareStaffActivity extends CommonTitleActivity {
   }
 
   private void deleteDataTask(CareStaffInfo info) {
-    HttpRequest<CareStaffListResponse> request = new HttpRequest<>(AppConfig.GET_EQUI_USER_LIST, CareStaffListResponse.class);
+    HttpRequest<CommonResponse> request = new HttpRequest<>(AppConfig.DEL_CUSTODIAN, CommonResponse.class);
     request.addParam("uc", InitSharedData.getUserCode());
     if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
       request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
     }
+    request.addParam("user", info.getId());
     Message uiMsg = obtainUiMessage();
-    uiMsg.what = MSG_UI_LOAD_DATA;
+    uiMsg.what = MSG_UI_DELETE;
     try {
-      uiMsg.obj = request.request();
+      CommonResponse response = request.request();
+      if (response != null) {
+        uiMsg.arg1 = response.getResult();
+        uiMsg.obj = info;
+      }
     } catch (AppException e) {
       e.printStackTrace();
     }
@@ -170,6 +176,23 @@ public class CareStaffActivity extends CommonTitleActivity {
           handleLoadData((CareStaffListResponse) msg.obj);
         } else {
           mStatusView.showFailView();
+        }
+        break;
+      case MSG_UI_DELETE:
+        if (msg.obj != null) {
+          if (msg.arg1 == 1) {
+            CareStaffInfo info = (CareStaffInfo) msg.obj;
+            try {
+              mCareStaffAdapter.getDataList().remove(info);
+              mCareStaffAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          } else {
+            ToastUtil.show("删除失败，请重试");
+          }
+        } else {
+          ToastUtil.showError();
         }
         break;
     }

@@ -22,6 +22,8 @@ import cn.protector.utils.ToastUtil;
  * @author jakechen
  */
 public class QACodeActivity extends CommonTitleActivity {
+  private static final int MSG_BACK_LOAD_DATA = 0;
+  private static final int MSG_UI_LOAD_DATA = 0;
   private ImageView mIvCode;
   private StatusView mStatusView;
 
@@ -33,13 +35,13 @@ public class QACodeActivity extends CommonTitleActivity {
     setTitle(R.string.title_qa_code);
     mStatusView.setNoDataTip("暂无二维码信息");
     mIvCode = (ImageView) findViewById(R.id.iv_code);
-    sendEmptyBackgroundMessage(0);
     mStatusView.showLoadingView();
+    sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
     mStatusView.setStatusListener(new StatusView.StatusListener() {
       @Override
       public void reLoadData() {
-        sendEmptyBackgroundMessage(0);
         mStatusView.showLoadingView();
+        sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
       }
     });
   }
@@ -47,43 +49,45 @@ public class QACodeActivity extends CommonTitleActivity {
   @Override
   public void handleBackgroundMessage(Message msg) {
     super.handleBackgroundMessage(msg);
-    HttpRequest<QACodeResponse> request = new HttpRequest<>(AppConfig.GET_QR_CODE, QACodeResponse.class);
-    request.addParam("uc", InitSharedData.getUserCode());
-    if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-      request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+    if (msg.what == MSG_BACK_LOAD_DATA) {
+      HttpRequest<QACodeResponse> request = new HttpRequest<>(AppConfig.GET_QR_CODE, QACodeResponse.class);
+      request.addParam("uc", InitSharedData.getUserCode());
+      if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+        request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+      }
+      Message message = obtainUiMessage();
+      try {
+        message.obj = request.request();
+      } catch (AppException e) {
+        e.printStackTrace();
+      }
+      message.what = MSG_UI_LOAD_DATA;
+      message.sendToTarget();
     }
-    Message message = obtainUiMessage();
-    try {
-      QACodeResponse mSportResponse = request.request();
-      message.obj = mSportResponse;
-
-    } catch (AppException e) {
-      e.printStackTrace();
-    }
-    message.what = 0;
-    message.sendToTarget();
   }
 
   @Override
   public void handleUiMessage(Message msg) {
     super.handleUiMessage(msg);
-    if (msg.obj != null) {
-      QACodeResponse response = (QACodeResponse) msg.obj;
-      if (response.isOk()) {
-        if (!TextUtils.isEmpty(response.getCodeURL())) {
-          mStatusView.showContentView();
-          ImageLoader.getInstance().displayImage(response.getCodeURL(), mIvCode);
-        } else {
-          if (!TextUtils.isEmpty(response.getInfo())) {
-            ToastUtil.show(response.getInfo());
+    if (msg.what == MSG_UI_LOAD_DATA) {
+      if (msg.obj != null) {
+        QACodeResponse response = (QACodeResponse) msg.obj;
+        if (response.isOk()) {
+          if (!TextUtils.isEmpty(response.getCodeURL())) {
+            mStatusView.showContentView();
+            ImageLoader.getInstance().displayImage(response.getCodeURL(), mIvCode);
+          } else {
+            if (!TextUtils.isEmpty(response.getInfo())) {
+              ToastUtil.show(response.getInfo());
+            }
+            mStatusView.showNoDataView();
           }
-          mStatusView.showNoDataView();
+        } else {
+          mStatusView.showFailView();
         }
       } else {
         mStatusView.showFailView();
       }
-    }else{
-      mStatusView.showFailView();
     }
   }
 }
