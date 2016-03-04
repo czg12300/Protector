@@ -6,7 +6,6 @@ import android.widget.ImageView;
 
 import cn.protector.R;
 import cn.protector.ui.activity.CommonTitleActivity;
-import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
 
 /**
  * 描述：定位模式页面
@@ -23,11 +22,11 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
     protected void initView() {
         setContentView(R.layout.activity_locate_mode);
         setTitle(R.string.title_locate_mode);
-        mIvNormal = (ImageView) findViewById(R.id.iv_mode_normal);
-        mIvSave = (ImageView) findViewById(R.id.iv_mode_save);
-        findViewById(R.id.ll_mode_normal).setOnClickListener(this);
-        findViewById(R.id.ll_mode_save).setOnClickListener(this);
-        setMode(MODE_NORMAL);
+//        mIvNormal = (ImageView) findViewById(R.id.iv_mode_normal);
+//        mIvSave = (ImageView) findViewById(R.id.iv_mode_save);
+//        findViewById(R.id.ll_mode_normal).setOnClickListener(this);
+//        findViewById(R.id.ll_mode_save).setOnClickListener(this);
+//        setMode(MODE_NORMAL);
     }
 
     @Override
