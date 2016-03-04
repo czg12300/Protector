@@ -36,11 +36,11 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.ll_mode_save) {
-            setMode(MODE_SAVE);
-        } else if (v.getId() == R.id.ll_mode_normal) {
-            setMode(MODE_NORMAL);
-        }
+//        if (v.getId() == R.id.ll_mode_save) {
+//            setMode(MODE_SAVE);
+//        } else if (v.getId() == R.id.ll_mode_normal) {
+//            setMode(MODE_NORMAL);
+//        }
     }
 
     public void setMode(int mode) {
