@@ -241,14 +241,14 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
         switch (response.getSwitchState()) {
           case ModeStateResponse.MODE_SAVE:
             radioGroup.check(R.id.rb_save);
-            rbSave.setText("省电模式");
+            rbSave.setText(Html.fromHtml("省电模式  <font color=\"#ff5b5b\">     切换中</font>"));
             break;
           case ModeStateResponse.MODE_NORMAL:
-            rbNormal.setText("正常模式");
+            rbNormal.setText(Html.fromHtml("正常模式  <font color=\"#ff5b5b\">     切换中</font>"));
             radioGroup.check(R.id.rb_normal);
             break;
           case ModeStateResponse.MODE_FOLLOW:
-            rbFollow.setText("跟踪模式");
+            rbFollow.setText(Html.fromHtml("跟踪模式  <font color=\"#ff5b5b\">    切换中</font>"));
             radioGroup.check(R.id.rb_follow);
             break;
         }
