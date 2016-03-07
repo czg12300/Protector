@@ -81,6 +81,12 @@ public class AppConfig {
     public static final String GET_ELEC_FENCE_LIST = "GetElecFenceList";
     //获取二维码
     public static final String GET_QR_CODE = "GetQRCode";
-    //删除
+    //删除监护人
     public static final String DEL_CUSTODIAN = "DelCustodian";
+    //获取设备当前模式
+    public static final String COM_GETEQUIPMENTSTATE = "Com_GetEquipmentState";
+    //取消切换设备模式
+    public static final String CANCEL_UPLOADMODE = "CancelUploadMode";
+    //切换设备模式
+    public static final String COM_SETUPLOADMODE = "Com_SetUploadMode";
 }

@@ -32,13 +32,11 @@ import cn.protector.ui.helper.MainTitleHelper;
  * @author Created by jakechen on 2015/8/13.
  */
 public class MessageFragment extends BaseWorkerFragment {
-  private static final int MSG_UI_START = 0;
 
   private static final int MSG_UI_LOAD_MESSAGE_SUCCESS = 1;
 
-  private static final int MSG_BACK_START = 100;
 
-  private static final int MSG_BACK_LOAD_MESSAGE = MSG_BACK_START + 1;
+  private static final int MSG_BACK_LOAD_MESSAGE =  1;
 
   private MainTitleHelper mTitleHelper;
   private PullToRefreshLayout pullLayout;
@@ -151,7 +149,7 @@ public class MessageFragment extends BaseWorkerFragment {
         } else {
           list = DbHelper.getInstance().queryMessage(0);
           list = changeDesc(list);
-          if (list.size() < DbHelper.PAGE_SIZE) {
+          if (list!=null&&list.size() < DbHelper.PAGE_SIZE) {
             mLvMessage.setCanScrollDown(false);
           }
         }
@@ -224,11 +222,10 @@ public class MessageFragment extends BaseWorkerFragment {
       if (chatMessage != null && InitSharedData.getMessageTime() < chatMessage.getTime()) {
         InitSharedData.setMessageTime(chatMessage.getTime());
         mMessageAdapter.notifyDataSetChanged();
-        InitSharedData.setMessageNum(0);
-        setRedDot();
       }
-
     }
+    InitSharedData.setMessageNum(0);
+    setRedDot();
   }
 
   @Override

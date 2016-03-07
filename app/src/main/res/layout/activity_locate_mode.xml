@@ -9,6 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="30dp">
 
@@ -20,15 +21,24 @@
             android:textSize="16dp"/>
 
         <TextView
-            android:id="@+id/tv_position_mode"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_mode"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="正常模式"
+            android:layout_weight="1"
+            android:text="@string/loading_position_mode"
             android:textColor="@color/black_363636"
             android:textSize="18dp"/>
+
+        <ImageView
+            android:id="@+id/iv_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:src="@drawable/ico_refesh_navigation_gray"/>
     </LinearLayout>
 
     <RadioGroup
+        android:id="@+id/rg_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -73,7 +83,7 @@
     </RadioGroup>
 
     <Button
-        android:id="@+id/btn_change"
+        android:id="@+id/btn_switch"
         style="@style/btn_blue"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="30dp"
