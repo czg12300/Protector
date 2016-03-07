@@ -44,8 +44,6 @@ public class CareStaffActivity extends CommonTitleActivity {
     setTitle(R.string.title_care_staff);
     mStatusView.setContentView(R.layout.activity_care_staff);
     mLvCareStaff = (ListView) findViewById(R.id.lv_care_staff);
-//        mLvCareStaff.addHeaderView(inflate(R.layout.view_empty_divider));
-//        mLvCareStaff.addFooterView(inflate(R.layout.view_empty_divider));
   }
 
   @Override
