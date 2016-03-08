@@ -94,6 +94,8 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
         if (v.getId() == R.id.iv_refresh) {
             refresh();
         } else if (v.getId() == R.id.btn_switch) {
+            RadioButton b=(RadioButton)findViewById(radioGroup.getCheckedRadioButtonId());
+            if (!TextUtils.equals(b.getText(),tvMode.getText())){
             if (TextUtils.equals(btnSwitch.getText(), CANCEL)) {
                 cancelMode();
             } else {
@@ -102,6 +104,8 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
                 } else {
                     switchMode();
                 }
+            }}else{
+                ToastUtil.show("你还没选择想要切换的模式呢");
             }
         }
     }
@@ -213,15 +217,15 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
     }
 
     private void cancelSwitchModeTask() {
-        HttpRequest<CommonResponse> sportRequest = new HttpRequest<>(AppConfig.CANCEL_UPLOADMODE, CommonResponse.class);
-        sportRequest.addParam("uc", InitSharedData.getUserCode());
+        HttpRequest<CommonResponse> request = new HttpRequest<>(AppConfig.CANCEL_UPLOADMODE, CommonResponse.class);
+        request.addParam("uc", InitSharedData.getUserCode());
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            sportRequest.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
         Message msg = obtainUiMessage();
         msg.what = MSG_UI_CANCEL_SWITCH_MODE;
         try {
-            msg.obj = sportRequest.request();
+            msg.obj = request.request();
         } catch (AppException e) {
             e.printStackTrace();
         }

@@ -13,7 +13,7 @@ public class AppConfig {
     /**
      * 当前运行版本是否为测试包
      */
-    public static final boolean isDebug = true;
+    public static final boolean isDebug = false;
 
     /**
      * 测试服务器地址
@@ -23,7 +23,7 @@ public class AppConfig {
     /**
      * 正式服务器地址
      */
-    public static final String RELEASE_SERVER = "";
+    public static final String RELEASE_SERVER = "http://ishoes.e-heneng.com:8005/AppHandler.ashx?Method=";
 
     /**
      * 服务器地址
@@ -86,7 +86,7 @@ public class AppConfig {
     //获取设备当前模式
     public static final String COM_GETEQUIPMENTSTATE = "Com_GetEquipmentState";
     //取消切换设备模式
-    public static final String CANCEL_UPLOADMODE = "CancelUploadMode";
+    public static final String CANCEL_UPLOADMODE = "Com_CancelUploadMode";
     //切换设备模式
     public static final String COM_SETUPLOADMODE = "Com_SetUploadMode";
 }
