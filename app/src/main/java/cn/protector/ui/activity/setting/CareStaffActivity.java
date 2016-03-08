@@ -92,7 +92,7 @@ public class CareStaffActivity extends CommonTitleActivity {
       dialog.setWindow(R.style.alpha_animation, 0.3f);
       dialog.setContentView(R.layout.dialog_delete_care_staff);
       TextView text = (TextView) dialog.findViewById(R.id.tv_title);
-      text.setText("确定要删除“" + info.getNickName() + "”吗？");
+      text.setText("确定要删除监护人“" + info.getNickName() + "”吗？");
       dialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {

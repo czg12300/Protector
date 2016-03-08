@@ -1,11 +1,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.amap.api.maps.MapView
         android:id="@+id/mv_map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/tv_time_tip"
+        android:layout_width="65dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_history_time_tip"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="25dp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/ll_slide_time"
@@ -27,9 +39,9 @@
             android:minHeight="8dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:progress="10"
+            android:progress="1"
             android:progressDrawable="@drawable/bg_seekbar_history"
-            android:thumb="@drawable/btn_slide_time"/>
+            android:thumb="@drawable/btn_slide_time" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -42,18 +54,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="0:00"
+                android:text="0米"
                 android:textColor="@color/gray_999999"
-                android:textSize="12dp"/>
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/tv_time_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="23:59"
+                android:text="1000米"
                 android:textColor="@color/gray_999999"
-                android:textSize="12dp"/>
+                android:textSize="12dp" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -74,22 +86,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="@string/locate_regulate"
-                android:textColor="@color/black_333333"
-                android:textSize="14dp"/>
+                android:text="当前地址"
+                android:textColor="@color/black_363636"
+                android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/tv_save_hint"
+                android:id="@+id/tv_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="@string/add_device_hint"
-                android:textColor="@color/gray_999999"
-                android:textSize="11dp"/>
+                android:layout_marginLeft="3dp"
+                android:textColor="@color/gray_757575"
+                android:textSize="10dp" />
         </LinearLayout>
 
         <TextView
@@ -98,22 +109,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:singleLine="true"
-            android:text="@string/add_device_hint"
-            android:textColor="@color/gray_999999"
-            android:textSize="11dp"/>
+            android:textColor="@color/black_363636"
+            android:textSize="12dp" />
 
         <Button
             android:id="@+id/btn_save"
             style="@style/btn_blue"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/btn_selector_blue_r"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="@string/save"
-            android:textColor="@drawable/text_selector_btn_blue_r"
-            android:textSize="11dp"/>
+            android:text="保存"
+            android:layout_marginTop="10dp"
+            />
     </LinearLayout>
 </FrameLayout>

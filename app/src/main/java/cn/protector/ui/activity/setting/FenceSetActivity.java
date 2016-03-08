@@ -2,6 +2,7 @@
 package cn.protector.ui.activity.setting;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
@@ -19,16 +20,19 @@ import cn.common.ui.BaseDialog;
 import cn.common.ui.adapter.BaseListAdapter;
 import cn.protector.AppConfig;
 import cn.protector.R;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.entity.FenceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.CareStaffListResponse;
+import cn.protector.logic.http.response.CommonResponse;
 import cn.protector.logic.http.response.FenceListResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
 import cn.protector.ui.adapter.FenceAdapter;
 import cn.protector.ui.widget.StatusView;
+import cn.protector.utils.ToastUtil;
 
 /**
  * 描述：设置围栏页面
@@ -38,18 +42,14 @@ import cn.protector.ui.widget.StatusView;
 public class FenceSetActivity extends CommonTitleActivity {
     private static final int MSG_BACK_LOAD_DATA = 0;
     private static final int MSG_UI_LOAD_DATA = 0;
+    private static final int MSG_BACK_DELETE = 1;
+    private static final int MSG_UI_DELETE = 1;
     private ListView mLvFence;
 
     private FenceAdapter mFenceAdapter;
 
-    private BaseDialog mOperatingDialog;
     private StatusView mStatusView;
 
-    protected void hideDialog() {
-        if (mOperatingDialog != null) {
-            mOperatingDialog.dismiss();
-        }
-    }
 
     @Override
     protected View getTitleLayoutView() {
@@ -97,42 +97,42 @@ public class FenceSetActivity extends CommonTitleActivity {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("FenceDetailActivity", info);
                 goActivity(FenceDetailActivity.class, bundle);
-//                showOperatingDialog((FenceInfo) mFenceAdapter.getItem(position));
+            }
+        });
+        mLvFence.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showDeleteDialog((FenceInfo) mFenceAdapter.getItem(position));
+                return true;
             }
         });
     }
 
-    /**
-     * 显示操作的弹窗
-     */
-    private void showOperatingDialog(final FenceInfo info) {
-        if (mOperatingDialog == null) {
-            mOperatingDialog = new BaseDialog(this);
-            mOperatingDialog.setWindow(R.style.alpha_animation, 0.3f);
-            mOperatingDialog.setContentView(R.layout.dialog_fence_operating);
-            mOperatingDialog.findViewById(R.id.btn_edit_info)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mOperatingDialog != null) {
-                                mOperatingDialog.dismiss();
-                            }
-                        }
-                    });
-
-            mOperatingDialog.findViewById(R.id.btn_delete)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mFenceAdapter.remove(info);
-                            // TODO 删除信息
-                            if (mOperatingDialog != null) {
-                                mOperatingDialog.dismiss();
-                            }
-                        }
-                    });
+    private void showDeleteDialog(final FenceInfo info) {
+        if (info != null && !isFinishing()) {
+            final BaseDialog dialog = new BaseDialog(this);
+            dialog.setWindow(R.style.alpha_animation, 0.3f);
+            dialog.setContentView(R.layout.dialog_delete_care_staff);
+            TextView text = (TextView) dialog.findViewById(R.id.tv_title);
+            text.setText("确定要删除围栏“" + info.getName() + "”吗？");
+            dialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Message msg = obtainBackgroundMessage();
+                    msg.what = MSG_BACK_DELETE;
+                    msg.obj = info;
+                    msg.sendToTarget();
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
         }
-        mOperatingDialog.show();
     }
 
     @Override
@@ -155,7 +155,36 @@ public class FenceSetActivity extends CommonTitleActivity {
             case MSG_BACK_LOAD_DATA:
                 loadDataTask();
                 break;
+            case MSG_BACK_DELETE:
+                deleteTask(msg.obj);
+                break;
         }
+    }
+
+    private void deleteTask(Object obj) {
+        if (obj == null) {
+            return;
+        }
+        FenceInfo info = (FenceInfo) obj;
+        HttpRequest<CommonResponse> request = new HttpRequest<>(AppConfig.DEL_ELECFENCE,
+                CommonResponse.class);
+        request.addParam("uc", InitSharedData.getUserCode());
+        request.addParam("rid", info.getRid());
+        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+        }
+        Message uiMsg = obtainUiMessage();
+        uiMsg.what = MSG_UI_DELETE;
+        try {
+            CommonResponse response = request.request();
+            if (response != null && response.getResult() > 0) {
+                uiMsg.obj = info;
+            }
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+        uiMsg.sendToTarget();
     }
 
     private void loadDataTask() {
@@ -187,6 +216,16 @@ public class FenceSetActivity extends CommonTitleActivity {
                     mStatusView.showFailView();
                 }
                 break;
+            case MSG_UI_DELETE:
+                if (msg.obj != null) {
+                    ToastUtil.show("删除成功");
+                    FenceInfo info = (FenceInfo) msg.obj;
+                    mFenceAdapter.remove(info);
+                    mFenceAdapter.notifyDataSetChanged();
+                } else {
+                    ToastUtil.show("删除失败");
+                }
+                break;
         }
     }
 
@@ -211,5 +250,18 @@ public class FenceSetActivity extends CommonTitleActivity {
         }
     }
 
+    @Override
+    public void setupBroadcastActions(List<String> actions) {
+        super.setupBroadcastActions(actions);
+        actions.add(BroadcastActions.ACTION_ADD_FENCE_SUCCESS);
+    }
 
+    @Override
+    public void handleBroadcast(Context context, Intent intent) {
+        super.handleBroadcast(context, intent);
+        String action=intent.getAction();
+        if (TextUtils.equals(BroadcastActions.ACTION_ADD_FENCE_SUCCESS,action)){
+            sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
+        }
+    }
 }

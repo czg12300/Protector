@@ -2,8 +2,10 @@ package cn.protector.ui.activity.setting;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -18,9 +20,11 @@ import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.PolygonOptions;
 
 import java.util.List;
 
@@ -47,9 +51,14 @@ public class FenceDetailActivity extends CommonTitleActivity {
             ToastUtil.show("初始化失败，请重试");
             finish();
         }
-        mMapView = new MapView(this);
-        setContentView(mMapView);
-        setTitle(mFenceInfo.getName());
+        setContentView(R.layout.activity_fence_detail);
+        setTitle("围栏详情");
+        ((TextView) findViewById(R.id.tv_name)).setText("" + mFenceInfo.getName());
+        ((TextView) findViewById(R.id.tv_radius)).setText(mFenceInfo.getRadius() + "米");
+        ((TextView) findViewById(R.id.tv_lat_lon)).setText("经度（" +
+                mFenceInfo.getLat() + "）、" + "纬度（" +
+                mFenceInfo.getLon() + ")");
+        mMapView = (MapView) findViewById(R.id.mv_map);
         mMapView.requestDisallowInterceptTouchEvent(true);
     }
 
@@ -62,8 +71,8 @@ public class FenceDetailActivity extends CommonTitleActivity {
         }
         setSwipeBackEnable(false);
         UiSettings uiSettings = mAMap.getUiSettings();
-        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
-        uiSettings.setZoomControlsEnabled(false);
+        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_BUTTOM);
+        uiSettings.setZoomControlsEnabled(true);
         mAMap.clear();
         // 设置Marker的图标样式
         mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
@@ -78,7 +87,12 @@ public class FenceDetailActivity extends CommonTitleActivity {
         markerOptions.draggable(false);
         // 将Marker添加到地图上去
         mAMap.addMarker(markerOptions);
-        mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f));
+        mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.5f));
+        // 绘制一个圆形
+        mAMap.addCircle(new CircleOptions().center(latLng)
+                .radius(mFenceInfo.getRadius()).strokeColor(getColor(R.color.red_ef0b0b)).fillColor(getColor(R.color.trans))
+                .strokeWidth(6));
+
     }
 
 

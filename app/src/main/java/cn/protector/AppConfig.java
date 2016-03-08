@@ -79,6 +79,10 @@ public class AppConfig {
     public static final String GET_EQUI_USER_LIST = "GetEquiUserList";
     //获取围栏列表
     public static final String GET_ELEC_FENCE_LIST = "GetElecFenceList";
+    //删除围栏
+    public static final String DEL_ELECFENCE = "DelElecFence";
+    //设置围栏
+    public static final String SET_ELECFENCE = "SetElecFence";
     //获取二维码
     public static final String GET_QR_CODE = "GetQRCode";
     //删除监护人

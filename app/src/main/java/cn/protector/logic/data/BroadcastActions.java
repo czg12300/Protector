@@ -38,6 +38,10 @@ public interface BroadcastActions {
      * 普通消息
      */
     String ACTION_PUSH_COMMON_MESSAGE = "cn.protector.data.BroadcastActions.action_push_common_message";
+    /**
+     * 添加围栏成功
+     */
+    String ACTION_ADD_FENCE_SUCCESS = "cn.protector.data.BroadcastActions.action_add_fence_success";
 
 
 }
