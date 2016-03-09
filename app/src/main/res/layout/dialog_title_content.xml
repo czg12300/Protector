@@ -7,16 +7,17 @@
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:gravity="center"
-        android:text="@string/dialog_title_shutdown"
-        android:textColor="@color/gray_999999"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:lineSpacingMultiplier="1.2"
+        android:padding="15dp"
+        android:textColor="@color/black_363636"
         android:textSize="@dimen/text_content"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/blue_03a9f4"/>
+        android:background="@color/divider_list"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,25 +28,17 @@
 
         <Button
             android:id="@+id/btn_cancel"
-            style="@style/btn_blue"
-            android:layout_height="38dp"
-            android:layout_alignParentBottom="true"
+            style="@style/btn_cancel"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:background="@drawable/btn_selector_gray_r"
-            android:text="@string/cancel"
-            android:textColor="@drawable/text_selector_btn_gray_r"/>
+            android:text="@string/cancel"/>
 
         <Button
             android:id="@+id/btn_ok"
-            style="@style/btn_blue"
-            android:layout_height="38dp"
-            android:layout_alignParentBottom="true"
+            style="@style/btn_ok"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:background="@drawable/btn_selector_red_r"
-            android:text="@string/ok"
-            android:textColor="@drawable/text_selector_btn_red_r"/>
+            android:text="@string/ok"/>
 
 
     </LinearLayout>

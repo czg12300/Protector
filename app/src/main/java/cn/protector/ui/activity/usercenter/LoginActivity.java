@@ -233,7 +233,7 @@ public class LoginActivity extends CommonTitleActivity
         if (mFailDialog == null) {
             mFailDialog = new BaseDialog(this);
             mFailDialog.setWindow(R.style.alpha_animation, 0.3f);
-            mFailDialog.setContentView(R.layout.dialog_shutdown);
+            mFailDialog.setContentView(R.layout.dialog_title_content);
             ((TextView) mFailDialog.findViewById(R.id.tv_title)).setText("设备信息获取失败，重新获取？");
             mFailDialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
                 @Override

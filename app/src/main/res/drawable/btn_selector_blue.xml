@@ -2,7 +2,7 @@
     <item android:state_enabled="true" android:state_pressed="false">
         <shape>
             <corners android:radius="2dp"/>
-            <solid android:color="@color/blue_48c2f8"/>
+            <solid android:color="@color/title_background"/>
         </shape>
     </item>
     <item android:state_enabled="true" android:state_pressed="true">

@@ -33,7 +33,7 @@ public class HeartBeatService extends BaseWorkService {
      */
     private static final long TIME_SPIT_TEST = 3 * 1000;
 
-    private static final long TIME_SPIT_RELEASE = 15 * 60 * 1000;
+    private static final long TIME_SPIT_RELEASE = 1 * 60 * 1000;
 
     private static final long TIME_SPIT = AppConfig.isDebug ? TIME_SPIT_TEST : TIME_SPIT_RELEASE;
 

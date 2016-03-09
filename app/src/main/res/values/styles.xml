@@ -17,6 +17,27 @@
         <item name="android:textSize">16dp</item>
         <item name="android:background">@drawable/btn_selector_blue</item>
     </style>
+    <style name="btn_red">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:textColor">@drawable/text_selector_btn_blue</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:background">@drawable/btn_selector_red</item>
+    </style>
+    <style name="btn_ok">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:textColor">@drawable/text_selector_btn_ok</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:background">@drawable/btn_selector_ok</item>
+    </style>
+    <style name="btn_cancel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:textColor">@drawable/text_selector_btn_cancel</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:background">@drawable/btn_selector_cancel</item>
+    </style>
     <!-- 上面进出动画样式 -->
     <style name="slide_top_bottom_animation" mce_bogus="1" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/slide_in_top</item>

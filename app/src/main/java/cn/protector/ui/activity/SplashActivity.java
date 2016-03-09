@@ -104,9 +104,9 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
                 int msgWhat = MSG_LOGIN;
                 if (response != null && !TextUtils.isEmpty(response.getCode())) {
                     // 开始心跳包发送
-                    HeartBeatHelper.getInstance().start();
                     InitSharedData.setUserId(response.getUserId());
                     InitSharedData.setUserCode(response.getCode());
+                    HeartBeatHelper.getInstance().start();
                     msgWhat = MSG_MAIN;
                 }
                 if ((System.currentTimeMillis() - lastTime) >= DELAYED_TIME) {

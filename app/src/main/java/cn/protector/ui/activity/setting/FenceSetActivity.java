@@ -7,17 +7,14 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.common.AppException;
 import cn.common.ui.BaseDialog;
-import cn.common.ui.adapter.BaseListAdapter;
 import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
@@ -25,7 +22,6 @@ import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.entity.FenceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
-import cn.protector.logic.http.response.CareStaffListResponse;
 import cn.protector.logic.http.response.CommonResponse;
 import cn.protector.logic.http.response.FenceListResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
@@ -112,7 +108,7 @@ public class FenceSetActivity extends CommonTitleActivity {
         if (info != null && !isFinishing()) {
             final BaseDialog dialog = new BaseDialog(this);
             dialog.setWindow(R.style.alpha_animation, 0.3f);
-            dialog.setContentView(R.layout.dialog_delete_care_staff);
+            dialog.setContentView(R.layout.dialog_title_content);
             TextView text = (TextView) dialog.findViewById(R.id.tv_title);
             text.setText("确定要删除围栏“" + info.getName() + "”吗？");
             dialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {

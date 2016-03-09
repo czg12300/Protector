@@ -9,13 +9,13 @@
         android:layout_height="44dp"
         android:gravity="center"
         android:text="@string/dialog_title_select_sex"
-        android:textColor="@color/gray_999999"
+        android:textColor="@color/black_363636"
         android:textSize="@dimen/text_content" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/blue_03a9f4" />
+        android:background="@color/divider_list" />
 
     <Button
         android:id="@+id/btn_male"
@@ -32,7 +32,7 @@
         android:layout_height="1px"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/divider_menu" />
+        android:background="@color/divider_list" />
 
     <Button
         android:id="@+id/btn_female"

@@ -249,7 +249,8 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
         if (mShutdownDialog == null) {
             mShutdownDialog = new BaseDialog(getActivity());
             mShutdownDialog.setWindow(R.style.alpha_animation, 0.3f);
-            mShutdownDialog.setContentView(R.layout.dialog_shutdown);
+            mShutdownDialog.setContentView(R.layout.dialog_title_content);
+            ((TextView) mShutdownDialog.findViewById(R.id.tv_title)).setText("确定要远程关机吗？");
             mShutdownDialog.findViewById(R.id.btn_ok).setOnClickListener(
                     new View.OnClickListener() {
                         @Override
