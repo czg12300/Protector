@@ -42,6 +42,10 @@ public interface BroadcastActions {
      * 添加围栏成功
      */
     String ACTION_ADD_FENCE_SUCCESS = "cn.protector.data.BroadcastActions.action_add_fence_success";
+    /**
+     * 修改穿戴者信息成功
+     */
+    String ACTION_MODIFY_WEAR_INFO_SUCCESS = "cn.protector.data.BroadcastActions.ACTION_MODIFY_WEAR_INFO_SUCCESS";
 
 
 }

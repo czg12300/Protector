@@ -198,23 +198,23 @@ public class BabyInfoActivity extends CommonTitleActivity implements View.OnClic
      * 显示选择鞋子尺码的弹窗
      */
     private void showShoeSizeDialog() {
-        if (mShoeSizeDialog == null) {
-            mShoeSizeDialog = new BaseDialog(this);
-            mShoeSizeDialog.setWindow(R.style.alpha_animation, 0.3f);
-            mShoeSizeDialog.setContentView(R.layout.dialog_select_relationship);
-            ListView lv = (ListView) mShoeSizeDialog.findViewById(R.id.lv_shoe_size);
-            lv.setAdapter(new ShoeSizeAdapter(this, getShoeSizeList()));
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    mTvShoeSize.setText((String) parent.getAdapter().getItem(position));
-                    if (mShoeSizeDialog != null && mShoeSizeDialog.isShowing()) {
-                        mShoeSizeDialog.dismiss();
-                    }
-                }
-            });
-        }
-        mShoeSizeDialog.show();
+//        if (mShoeSizeDialog == null) {
+//            mShoeSizeDialog = new BaseDialog(this);
+//            mShoeSizeDialog.setWindow(R.style.alpha_animation, 0.3f);
+//            mShoeSizeDialog.setContentView(R.layout.dialog_select_relationship);
+//            ListView lv = (ListView) mShoeSizeDialog.findViewById(R.id.lv_shoe_size);
+//            lv.setAdapter(new ShoeSizeAdapter(this, getShoeSizeList()));
+//            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    mTvShoeSize.setText((String) parent.getAdapter().getItem(position));
+//                    if (mShoeSizeDialog != null && mShoeSizeDialog.isShowing()) {
+//                        mShoeSizeDialog.dismiss();
+//                    }
+//                }
+//            });
+//        }
+//        mShoeSizeDialog.show();
     }
 
     /**

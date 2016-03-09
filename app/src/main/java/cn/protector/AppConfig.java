@@ -97,4 +97,6 @@ public class AppConfig {
     public static final String GET_BASELIST = "GetBaseList";
     //获取穿戴者信息
     public static final String GET_WEARERINFO = "GetWearerInfo";
+    //更新穿戴者信息
+    public static final String SET_WEARERINFO = "SetWearerInfo";
 }

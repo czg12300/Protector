@@ -145,6 +145,9 @@ public abstract class BaseHttpClientRequest<T> {
                 httpClient = createHttpClient();
                 uriReq = createHttpUriRequest();
                 HttpResponse httpResponse = httpClient.execute(uriReq);
+                if (isDebug){
+                    Log.d("request","request:"+uriReq.getURI().toString());
+                }
                 int statusCode = httpResponse.getStatusLine().getStatusCode();
                 if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_CREATED
                         && statusCode != HttpStatus.SC_NO_CONTENT
@@ -153,6 +156,9 @@ public abstract class BaseHttpClientRequest<T> {
                 }
                 String result = EntityUtils
                         .toString(new BufferedHttpEntity(httpResponse.getEntity()), HTTP.UTF_8);
+                if (isDebug){
+                    Log.d("response","response:"+result);
+                }
                 if (mClazz != null) {
                     BaseResponse response = (BaseResponse) mClazz.newInstance();
                     if (response != null) {

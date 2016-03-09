@@ -110,6 +110,8 @@ public class TipDialogHelper {
                 animation.setInterpolator(new LinearInterpolator());// 不停顿
                 mIvTip.setAnimation(animation);
                 animation.startNow();
+            }else{
+                mIvTip.clearAnimation();
             }
             if (!mTipDialog.isShowing()) {
                 mTipDialog.show();

@@ -1,6 +1,7 @@
 package cn.common.utils;
 
 import android.graphics.Bitmap;
+import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -27,7 +28,41 @@ public class UploadUtil {
 
 
     private static final String CHARSET = "utf-8"; // 设置编码
+    public static String bitmap2StrByBase64(Bitmap bit){
+        ByteArrayOutputStream bos=new ByteArrayOutputStream();
+        bit.compress(Bitmap.CompressFormat.JPEG, 40, bos);//参数100表示不压缩
+        byte[] bytes=bos.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+    /**
+     *
+     * @param bitmap
+     * @return
+     */
+    public static String imgToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream out = null;
+        try {
+            out = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
+            out.flush();
+            out.close();
+
+            byte[] imgBytes = out.toByteArray();
+            return Base64.encodeToString(imgBytes, Base64.DEFAULT);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            return null;
+        } finally {
+            try {
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
     public static String bitmap2String(Bitmap photo) {
         String result = null;
         try {

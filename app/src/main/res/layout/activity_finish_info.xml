@@ -41,6 +41,7 @@
                     android:id="@+id/riv_avator"
                     android:layout_width="@dimen/avatar"
                     android:layout_height="@dimen/avatar"
+                    android:src="@drawable/img_head_boy1"
                     android:layout_marginRight="10dp"/>
 
                 <ImageView
@@ -74,12 +75,14 @@
                     <EditText
                         android:id="@+id/ev_baby_nickname"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
                         android:background="@color/trans"
                         android:hint="请输入昵称"
                         android:textColor="@color/text_content"
                         android:textColorHint="@color/gray_999999"
+                        android:paddingLeft="10dp"
                         android:textSize="@dimen/text_content"/>
                 </LinearLayout>
 
@@ -207,20 +210,22 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="体重"
+                        android:text="体重(kg)"
                         android:textColor="@color/text_content"
                         android:textSize="@dimen/text_content"/>
 
                     <EditText
                         android:id="@+id/ev_weight"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
                         android:background="@color/trans"
                         android:hint="请输入体重"
                         android:inputType="number"
                         android:textColor="@color/text_content"
                         android:textColorHint="@color/gray_999999"
+                        android:paddingLeft="10dp"
                         android:textSize="@dimen/text_content"/>
                 </LinearLayout>
 
@@ -249,8 +254,10 @@
                     <EditText
                         android:id="@+id/ev_shoe_size"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginLeft="15dp"
+                        android:paddingLeft="10dp"
+                        android:layout_marginRight="15dp"
                         android:background="@color/trans"
                         android:hint="请输入鞋子尺码"
                         android:inputType="number"
