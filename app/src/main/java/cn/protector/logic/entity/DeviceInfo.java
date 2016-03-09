@@ -175,11 +175,11 @@ public class DeviceInfo implements Serializable {
     return info;
   }
 
-  public static String parseRelation(int relation) {
+  public static String parseRelation(int relation,String otherRelation) {
     String result = "其他";
     switch (relation) {
       case 0:
-        result = "其他";
+        result = otherRelation;
         break;
       case 1:
         result = "爸爸";

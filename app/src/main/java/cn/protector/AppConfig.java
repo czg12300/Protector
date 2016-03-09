@@ -95,4 +95,6 @@ public class AppConfig {
     public static final String COM_SETUPLOADMODE = "Com_SetUploadMode";
     //获取设备列表
     public static final String GET_BASELIST = "GetBaseList";
+    //获取穿戴者信息
+    public static final String GET_WEARERINFO = "GetWearerInfo";
 }

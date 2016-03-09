@@ -1,7 +1,6 @@
 package cn.protector.ui.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,9 +43,8 @@ public class DeviceManagerAdapter extends BaseListAdapter<DeviceInfo> {
       holder.tvName.setText("" + info.getNikeName());
       holder.tvAddress.setText("" + info.getAddress());
       ImageLoader.getInstance().displayImage(info.getAvatar(), holder.rivAvatar);
-      holder.tvRelationship.setText("(" + (TextUtils.isEmpty(info.getOtherRelation()) ? DeviceInfo.parseRelation(info.getRelation()) : info.getOtherRelation()) + ")");
-    }
-    return convertView;
+      holder.tvRelationship.setText("(" + DeviceInfo.parseRelation(info.getRelation(), info.getOtherRelation()) + ")");
+    } return convertView;
   }
 
   final class ViewHolder {

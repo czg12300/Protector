@@ -2,9 +2,11 @@ package cn.protector.ui.activity.setting;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import cn.protector.logic.http.response.CommonResponse;
 import cn.protector.logic.http.response.DeviceListResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.AddDeviceActivity;
+import cn.protector.ui.activity.usercenter.FinishInfoActivity;
 import cn.protector.ui.activity.usercenter.ScanQACodeActivity;
 import cn.protector.ui.adapter.DeviceManagerAdapter;
 import cn.protector.ui.widget.StatusView;
@@ -82,6 +85,19 @@ public class DeviceManageActivity extends CommonTitleActivity {
         loadData();
       }
     });
+    mLvContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(FinishInfoActivity.KEY_TYPE, FinishInfoActivity.TYPE_MODIFY);
+        try {
+          bundle.putString(FinishInfoActivity.KEY_EID, mDeviceAdapter.getDataList().get(position).geteId());
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        goActivity(FinishInfoActivity.class, bundle);
+      }
+    });
   }
 
   @Override
@@ -107,7 +123,7 @@ public class DeviceManageActivity extends CommonTitleActivity {
       dialog.setContentView(R.layout.dialog_title_content);
       TextView text = (TextView) dialog.findViewById(R.id.tv_title);
       String show = "昵称：" + info.getNikeName() + "\n" +
-              "关系：" + (TextUtils.isEmpty(info.getOtherRelation()) ? DeviceInfo.parseRelation(info.getRelation()) : info.getOtherRelation()) + "\n地址：" + info.getAddress() + "\n\n确定要删除该设备吗？";
+              "关系：" +  DeviceInfo.parseRelation(info.getRelation(), info.getOtherRelation()) + "\n地址：" + info.getAddress() + "\n\n确定要删除该设备吗？";
       text.setText(show);
       dialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
         @Override

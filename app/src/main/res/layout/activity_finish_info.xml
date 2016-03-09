@@ -1,227 +1,275 @@
-<LinearLayout
-    android:id="@+id/root"
+<cn.protector.ui.widget.ResizeLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:descendantFocusability="afterDescendants"
-    android:orientation="vertical"
-    android:paddingTop="25dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/ll_avator"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="15dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="15dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="@string/baby_avator"
-            android:textColor="@color/text_content"
-            android:textSize="@dimen/text_content"/>
-
-        <cn.common.ui.widgt.RoundImageView
-            android:id="@+id/riv_avator"
-            android:layout_width="@dimen/avatar"
-            android:layout_height="@dimen/avatar"
-            android:layout_marginRight="10dp"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ico_right"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/root"
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:layout_height="match_parent"
+            android:descendantFocusability="afterDescendants"
+            android:orientation="vertical"
+            android:paddingTop="25dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/baby_nickname"
-                android:textColor="@color/text_content"
-                android:textSize="@dimen/text_content"/>
-
-            <EditText
-                android:id="@+id/ev_baby_nickname"
+            <LinearLayout
+                android:id="@+id/ll_avator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:background="@color/trans"
-                android:hint="@string/baby_nickname_hint"
-                android:textColor="@color/text_content"
-                android:textColorHint="@color/gray_999999"
-                android:textSize="@dimen/text_content"/>
-        </LinearLayout>
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="15dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/divider_menu"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:text="@string/baby_avator"
+                    android:textColor="@color/text_content"
+                    android:textSize="@dimen/text_content"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+                <cn.common.ui.widgt.RoundImageView
+                    android:id="@+id/riv_avator"
+                    android:layout_width="@dimen/avatar"
+                    android:layout_height="@dimen/avatar"
+                    android:layout_marginRight="10dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/relationship"
-                android:textColor="@color/text_content"
-                android:textSize="@dimen/text_content"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ico_right"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/ev_relationship"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:background="@color/trans"
-                android:hint="@string/relationship_hint"
-                android:textColor="@color/text_content"
-                android:textColorHint="@color/gray_999999"
-                android:textSize="@dimen/text_content"/>
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/baby_nickname"
+                        android:textColor="@color/text_content"
+                        android:textSize="@dimen/text_content"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/baby_name"
-                android:textColor="@color/text_content"
-                android:textSize="@dimen/text_content"/>
+                    <EditText
+                        android:id="@+id/ev_baby_nickname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:background="@color/trans"
+                        android:hint="请输入昵称"
+                        android:textColor="@color/text_content"
+                        android:textColorHint="@color/gray_999999"
+                        android:textSize="@dimen/text_content"/>
+                </LinearLayout>
 
-            <EditText
-                android:id="@+id/ev_baby_name"
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/divider_menu"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_relationship"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/relationship"
+                        android:textColor="@color/text_content"
+                        android:textSize="@dimen/text_content"/>
+
+                    <TextView
+                        android:id="@+id/tv_relationship"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:background="@color/trans"
+                        android:hint="请选择关系"
+                        android:textColor="@color/text_content"
+                        android:textColorHint="@color/gray_999999"
+                        android:textSize="@dimen/text_content"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:background="@color/trans"
-                android:hint="@string/baby_name_hint"
-                android:textColor="@color/text_content"
-                android:textColorHint="@color/gray_999999"
-                android:textSize="@dimen/text_content"/>
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:id="@+id/ll_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="性别"
+                        android:textColor="@color/text_content"
+                        android:textSize="@dimen/text_content"/>
+
+                    <TextView
+                        android:id="@+id/tv_sex"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:background="@color/trans"
+                        android:hint="请选择性别"
+                        android:textColor="@color/text_content"
+                        android:textColorHint="@color/gray_999999"
+                        android:textSize="@dimen/text_content"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/divider_menu"/>
+                <LinearLayout
+                    android:id="@+id/ll_birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/baby_birthday"
+                        android:textColor="@color/text_content"
+                        android:textSize="@dimen/text_content"/>
+
+                    <TextView
+                        android:id="@+id/tv_birthday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:background="@color/trans"
+                        android:hint="@string/birthday_hint"
+                        android:textColor="@color/text_content"
+                        android:textColorHint="@color/gray_999999"
+                        android:textSize="@dimen/text_content"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/divider_menu"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="体重"
+                        android:textColor="@color/text_content"
+                        android:textSize="@dimen/text_content"/>
+
+                    <EditText
+                        android:id="@+id/ev_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:background="@color/trans"
+                        android:hint="请输入体重"
+                        android:inputType="number"
+                        android:textColor="@color/text_content"
+                        android:textColorHint="@color/gray_999999"
+                        android:textSize="@dimen/text_content"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/divider_menu"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/shoe_size"
+                        android:textColor="@color/text_content"
+                        android:textSize="@dimen/text_content"/>
+
+                    <EditText
+                        android:id="@+id/ev_shoe_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:background="@color/trans"
+                        android:hint="请输入鞋子尺码"
+                        android:inputType="number"
+                        android:textColor="@color/text_content"
+                        android:textColorHint="@color/gray_999999"
+                        android:textSize="@dimen/text_content"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_submit"
+                style="@style/btn_blue"
+                android:layout_margin="15dp"
+                android:background="@drawable/btn_selector_blue_r"
+                android:text="@string/submit"
+                android:textColor="@drawable/text_selector_btn_blue_r"/>
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/divider_menu"/>
-
-        <LinearLayout
-            android:id="@+id/ll_birthday"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/baby_birthday"
-                android:textColor="@color/text_content"
-                android:textSize="@dimen/text_content"/>
-
-            <TextView
-                android:id="@+id/tv_birthday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:background="@color/trans"
-                android:hint="@string/birthday_hint"
-                android:textColor="@color/text_content"
-                android:textColorHint="@color/gray_999999"
-                android:textSize="@dimen/text_content"/>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/divider_menu"/>
-
-        <LinearLayout
-            android:id="@+id/ll_shoe_size"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/shoe_size"
-                android:textColor="@color/text_content"
-                android:textSize="@dimen/text_content"/>
-
-            <TextView
-                android:id="@+id/tv_shoe_size"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:background="@color/trans"
-                android:hint="@string/shoe_size_hint"
-                android:textColor="@color/text_content"
-                android:textColorHint="@color/gray_999999"
-                android:textSize="@dimen/text_content"/>
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-    <Button
-        android:id="@+id/btn_submit"
-        style="@style/btn_blue"
-        android:layout_margin="15dp"
-        android:background="@drawable/btn_selector_blue_r"
-        android:text="@string/submit"
-        android:textColor="@drawable/text_selector_btn_blue_r"/>
-</LinearLayout>
+    </ScrollView>
+</cn.protector.ui.widget.ResizeLinearLayout>

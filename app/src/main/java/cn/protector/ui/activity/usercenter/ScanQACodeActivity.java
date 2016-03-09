@@ -70,7 +70,7 @@ public class ScanQACodeActivity extends CommonTitleActivity {
                 // false);
                 // sendEmptyUiMessageDelayed(MSG_UI_BIND_SUCCESS, 1000);
                 Bundle bundle = new Bundle();
-                bundle.putString("Code", code);
+                bundle.putString(FinishInfoActivity.KEY_EID, code);
                 goActivity(FinishInfoActivity.class, bundle);
                 finish();
             }
