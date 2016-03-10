@@ -3,10 +3,12 @@ package cn.common.utils;
 import android.graphics.Bitmap;
 import android.util.Base64;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -15,132 +17,137 @@ import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 
+import cn.common.bitmap.core.ImageLoader;
+
 /**
  * 上传文件到服务器类
  *
  * @author tom
  */
 public class UploadUtil {
-    private static final String TAG = "uploadFile";
+  private static final String TAG = "uploadFile";
 
 
-    private static final int TIME_OUT = 10 * 1000; // 超时时间
+  private static final int TIME_OUT = 10 * 1000; // 超时时间
 
 
-    private static final String CHARSET = "utf-8"; // 设置编码
-    public static String bitmap2StrByBase64(Bitmap bit){
-        ByteArrayOutputStream bos=new ByteArrayOutputStream();
-        bit.compress(Bitmap.CompressFormat.JPEG, 40, bos);//参数100表示不压缩
-        byte[] bytes=bos.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
+  private static final String CHARSET = "utf-8"; // 设置编码
+
+  public static String bitmap2StrByBase64(Bitmap bit) {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    bit.compress(Bitmap.CompressFormat.JPEG, 40, bos);//参数100表示不压缩
+    byte[] bytes = bos.toByteArray();
+    return Base64.encodeToString(bytes, Base64.DEFAULT);
+  }
+
+  /**
+   * @param bitmap
+   * @return
+   */
+  public static String imgToBase64(Bitmap bitmap) {
+    ByteArrayOutputStream out = null;
+    try {
+      out = new ByteArrayOutputStream();
+      bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+      out.flush();
+      out.close();
+      byte[] imgBytes = out.toByteArray();
+      return Base64.encodeToString(imgBytes, Base64.DEFAULT);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      return null;
+    } finally {
+      try {
+        out.flush();
+        out.close();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
-    /**
-     *
-     * @param bitmap
-     * @return
-     */
-    public static String imgToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream out = null;
-        try {
-            out = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+  }
 
-            out.flush();
-            out.close();
+  public static String bitmap2String(Bitmap photo) {
+    String result = null;
+    try {
+      ByteArrayOutputStream stream = new ByteArrayOutputStream();
+      photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+      byte[] b = stream.toByteArray();
+      // 将图片流以字符串形式存储下来
+      result = new String(Base64Coder.encodeLines(b));//tp 就是最终的参数
 
-            byte[] imgBytes = out.toByteArray();
-            return Base64.encodeToString(imgBytes, Base64.DEFAULT);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            return null;
-        } finally {
-            try {
-                out.flush();
-                out.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  /**
+   * Android上传文件到服务端
+   *
+   * @param file      需要上传的文件
+   * @param uploadUrl 请求的rul
+   * @return 返回响应的内容
+   */
+  public static boolean uploadFile(Bitmap file, String uploadUrl) {
+    return uploadFile(bitmapToFile(file), uploadUrl);
+  }
+
+  public static String uploadFile(Bitmap bit, String uploadUrl, Map<String, String> params) {
+    return uploadFile(bitmapToFile(bit), uploadUrl, params);
+  }
+
+  public static boolean uploadFile(File file, String uploadUrl) {
+    String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
+    String PREFIX = "--", LINE_END = "\r\n";
+    String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+    boolean isSuccess = false;
+    try {
+      URL url = new URL(uploadUrl);
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setReadTimeout(TIME_OUT);
+      conn.setConnectTimeout(TIME_OUT);
+      conn.setDoInput(true); // 允许输入流
+      conn.setDoOutput(true); // 允许输出流
+      conn.setUseCaches(false); // 不允许使用缓存
+      conn.setRequestMethod("POST"); // 请求方式
+      conn.setRequestProperty("Charset", CHARSET); // 设置编码
+      conn.setRequestProperty("connection", "keep-alive");
+      conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+      if (file != null) {
+        /**
+         * 当文件不为空，把文件包装并且上传
+         */
+        DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+        StringBuffer sb = new StringBuffer();
+        sb.append(PREFIX);
+        sb.append(BOUNDARY);
+        sb.append(LINE_END);
+        /**
+         * 这里重点注意： name里面的值为服务端需要key 只有这个key 才可以得到对应的文件
+         * filename是文件的名字，包含后缀名的 比如:abc.png
+         */
+        sb.append("Content-Disposition: form-data; name=\"uploadfile\"; filename=\"" + file.getName() + "\"" + LINE_END);
+        sb.append("Content-Type: application/octet-stream; charset=" + CHARSET + LINE_END);
+        sb.append(LINE_END);
+        dos.write(sb.toString().getBytes());
+        InputStream is = new FileInputStream(file);
+        byte[] bytes = new byte[1024];
+        int len = 0;
+        while ((len = is.read(bytes)) != -1) {
+          dos.write(bytes, 0, len);
         }
-    }
-    public static String bitmap2String(Bitmap photo) {
-        String result = null;
-        try {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] b = stream.toByteArray();
-            // 将图片流以字符串形式存储下来
-            result = new String(Base64Coder.encodeLines(b));//tp 就是最终的参数
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    /**
-     * Android上传文件到服务端
-     *
-     * @param file      需要上传的文件
-     * @param uploadUrl 请求的rul
-     * @return 返回响应的内容
-     */
-    public static boolean uploadFile(File file, String uploadUrl) {
-        String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
-        String PREFIX = "--", LINE_END = "\r\n";
-        String CONTENT_TYPE = "multipart/form-data"; // 内容类型
-        boolean isSuccess = false;
-
-        try {
-            URL url = new URL(uploadUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(TIME_OUT);
-            conn.setConnectTimeout(TIME_OUT);
-            conn.setDoInput(true); // 允许输入流
-            conn.setDoOutput(true); // 允许输出流
-            conn.setUseCaches(false); // 不允许使用缓存
-            conn.setRequestMethod("POST"); // 请求方式
-            conn.setRequestProperty("Charset", CHARSET); // 设置编码
-            conn.setRequestProperty("connection", "keep-alive");
-            conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
-
-
-            if (file != null) {
-                /**
-                 * 当文件不为空，把文件包装并且上传
-                 */
-                DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
-                StringBuffer sb = new StringBuffer();
-                sb.append(PREFIX);
-                sb.append(BOUNDARY);
-                sb.append(LINE_END);
-                /**
-                 * 这里重点注意： name里面的值为服务端需要key 只有这个key 才可以得到对应的文件
-                 * filename是文件的名字，包含后缀名的 比如:abc.png
-                 */
-
-                sb.append("Content-Disposition: form-data; name=\"uploadfile\"; filename=\""
-                        + file.getName() + "\"" + LINE_END);
-                sb.append("Content-Type: application/octet-stream; charset=" + CHARSET + LINE_END);
-                sb.append(LINE_END);
-                dos.write(sb.toString().getBytes());
-                InputStream is = new FileInputStream(file);
-                byte[] bytes = new byte[1024];
-                int len = 0;
-                while ((len = is.read(bytes)) != -1) {
-                    dos.write(bytes, 0, len);
-                }
-                is.close();
-                dos.write(LINE_END.getBytes());
-                byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
-                dos.write(end_data);
-                dos.flush();
-                /**
-                 * 获取响应码 200=成功 当响应成功，获取响应的流
-                 */
-                int res = conn.getResponseCode();
-                if (res == 200) {
-                    isSuccess = true;
+        is.close();
+        dos.write(LINE_END.getBytes());
+        byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
+        dos.write(end_data);
+        dos.flush();
+        /**
+         * 获取响应码 200=成功 当响应成功，获取响应的流
+         */
+        int res = conn.getResponseCode();
+        if (res == 200) {
+          isSuccess = true;
 //                    InputStream input = conn.getInputStream();
 //                    StringBuffer sb1 = new StringBuffer();
 //                    int ss;
@@ -148,111 +155,212 @@ public class UploadUtil {
 //                        sb1.append((char) ss);
 //                    }
 //                    result = sb1.toString();
-                }
-                // else{
-                // Log.e(TAG, "request error");
-                // }
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return isSuccess;
+        // else{
+        // Log.e(TAG, "request error");
+        // }
+      }
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    return isSuccess;
+  }
 
-
-    /**
-     * 通过拼接的方式构造请求内容，实现参数传输以及文件传输
-     *
-     * @param url    Service net address
-     * @param params text content
-     * @param files  pictures
-     * @return String result of Service response
-     * @throws IOException
-     */
-    public static String post(String url, Map<String, String> params, Map<String, File> files)
-            throws IOException {
-        String BOUNDARY = java.util.UUID.randomUUID().toString();
-        String PREFIX = "--", LINEND = "\r\n";
-        String MULTIPART_FROM_DATA = "multipart/form-data";
-        String CHARSET = "UTF-8";
-
-
-        URL uri = new URL(url);
-        HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
-        conn.setReadTimeout(10 * 1000); // 缓存的最长时间
-        conn.setDoInput(true);// 允许输入
-        conn.setDoOutput(true);// 允许输出
-        conn.setUseCaches(false); // 不允许使用缓存
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("connection", "keep-alive");
-        conn.setRequestProperty("Charsert", "UTF-8");
-        conn.setRequestProperty("Content-Type", MULTIPART_FROM_DATA + ";boundary=" + BOUNDARY);
-
-
-        // 首先组拼文本类型的参数
-        StringBuilder sb = new StringBuilder();
+  public static String uploadFile(File file, String uploadUrl, Map<String, String> params) {
+    String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
+    String PREFIX = "--", LINEND = "\r\n";
+    String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+    String CHARSET = "UTF-8";
+    try {
+      URL url = new URL(uploadUrl);
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setReadTimeout(TIME_OUT);
+      conn.setConnectTimeout(TIME_OUT);
+      conn.setDoInput(true); // 允许输入流
+      conn.setDoOutput(true); // 允许输出流
+      conn.setUseCaches(false); // 不允许使用缓存
+      conn.setRequestMethod("POST"); // 请求方式
+      conn.setRequestProperty("Charset", CHARSET); // 设置编码
+      conn.setRequestProperty("connection", "keep-alive");
+      conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+      // 首先组拼文本类型的参数
+      if (params != null) {
+        StringBuilder sbParams = new StringBuilder();
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            sb.append(PREFIX);
-            sb.append(BOUNDARY);
-            sb.append(LINEND);
-            sb.append("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"" + LINEND);
-            sb.append("Content-Type: text/plain; charset=" + CHARSET + LINEND);
-            sb.append("Content-Transfer-Encoding: 8bit" + LINEND);
-            sb.append(LINEND);
-            sb.append(entry.getValue());
-            sb.append(LINEND);
+          sbParams.append(PREFIX);
+          sbParams.append(BOUNDARY);
+          sbParams.append(LINEND);
+          sbParams.append("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"" + LINEND);
+          sbParams.append("Content-Type: text/plain; charset=" + CHARSET + LINEND);
+          sbParams.append("Content-Transfer-Encoding: 8bit" + LINEND);
+          sbParams.append(LINEND);
+          sbParams.append(entry.getValue());
+          sbParams.append(LINEND);
         }
-
-
         DataOutputStream outStream = new DataOutputStream(conn.getOutputStream());
-        outStream.write(sb.toString().getBytes());
-        // 发送文件数据
-        if (files != null)
-            for (Map.Entry<String, File> file : files.entrySet()) {
-                StringBuilder sb1 = new StringBuilder();
-                sb1.append(PREFIX);
-                sb1.append(BOUNDARY);
-                sb1.append(LINEND);
-                sb1.append("Content-Disposition: form-data; name=\"uploadfile\"; filename=\""
-                        + file.getValue().getName() + "\"" + LINEND);
-                sb1.append("Content-Type: application/octet-stream; charset=" + CHARSET + LINEND);
-                sb1.append(LINEND);
-                outStream.write(sb1.toString().getBytes());
-
-
-                InputStream is = new FileInputStream(file.getValue());
-                byte[] buffer = new byte[1024];
-                int len = 0;
-                while ((len = is.read(buffer)) != -1) {
-                    outStream.write(buffer, 0, len);
-                }
-
-
-                is.close();
-                outStream.write(LINEND.getBytes());
-            }
-
-
-        // 请求结束标志
-        byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINEND).getBytes();
-        outStream.write(end_data);
-        outStream.flush();
-        // 得到响应码
-        int res = conn.getResponseCode();
-        InputStream in = conn.getInputStream();
-        StringBuilder sb2 = new StringBuilder();
-        if (res == 200) {
-            int ch;
-            while ((ch = in.read()) != -1) {
-                sb2.append((char) ch);
-            }
+        outStream.write(sbParams.toString().getBytes());
+      }
+      if (file != null) {
+        /**
+         * 当文件不为空，把文件包装并且上传
+         */
+        DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+        StringBuffer sb = new StringBuffer();
+        sb.append(PREFIX);
+        sb.append(BOUNDARY);
+        sb.append(LINEND);
+        /**
+         * 这里重点注意： name里面的值为服务端需要key 只有这个key 才可以得到对应的文件
+         * filename是文件的名字，包含后缀名的 比如:abc.png
+         */
+        sb.append("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"" + LINEND);
+        sb.append("Content-Type: application/octet-stream; charset=" + CHARSET + LINEND);
+        sb.append(LINEND);
+        dos.write(sb.toString().getBytes());
+        InputStream is = new FileInputStream(file);
+        byte[] bytes = new byte[1024];
+        int len = 0;
+        while ((len = is.read(bytes)) != -1) {
+          dos.write(bytes, 0, len);
         }
-        outStream.close();
-        conn.disconnect();
-        return sb2.toString();
+        is.close();
+        dos.write(LINEND.getBytes());
+        byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINEND).getBytes();
+        dos.write(end_data);
+        dos.flush();
+        /**
+         * 获取响应码 200=成功 当响应成功，获取响应的流
+         */
+        int res = conn.getResponseCode();
+        if (res == 200) {
+          InputStream input = conn.getInputStream();
+          StringBuffer sb1 = new StringBuffer();
+          int ss;
+          while ((ss = input.read()) != -1) {
+            sb1.append((char) ss);
+          }
+          return sb1.toString();
+        }
+        // else{
+        // Log.e(TAG, "request error");
+        // }
+      }
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    return null;
+  }
+
+  public static String saveBitmapFile(Bitmap bitmap) {
+    File file = new File(ImageLoader.getInstance().getDiskCache().getDirectory(), MD5Util.md5("upload_tmp") + ".png");//将要保存图片的路径
+    try {
+      BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+      bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+      bos.flush();
+      bos.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return file.getAbsolutePath();
+  }
+
+  public static File bitmapToFile(Bitmap bmp) {
+    if (null == bmp) {
+      return null;
+    }
+    String fileName = MD5Util.md5("upload_tmp" + System.currentTimeMillis()) + ".png";
+    File result = new File(fileName);
+    FileOutputStream outputStream;
+    try {
+      outputStream = new FileOutputStream(result);
+      bmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+      outputStream.flush();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  /**
+   * 通过拼接的方式构造请求内容，实现参数传输以及文件传输
+   *
+   * @param url    Service net address
+   * @param params text content
+   * @param files  pictures
+   * @return String result of Service response
+   * @throws IOException
+   */
+  public static String post(String url, Map<String, String> params, Map<String, File> files) throws IOException {
+    String BOUNDARY = java.util.UUID.randomUUID().toString();
+    String PREFIX = "--", LINEND = "\r\n";
+    String MULTIPART_FROM_DATA = "multipart/form-data";
+    String CHARSET = "UTF-8";
+    URL uri = new URL(url);
+    HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
+    conn.setReadTimeout(10 * 1000); // 缓存的最长时间
+    conn.setDoInput(true);// 允许输入
+    conn.setDoOutput(true);// 允许输出
+    conn.setUseCaches(false); // 不允许使用缓存
+    conn.setRequestMethod("POST");
+    conn.setRequestProperty("connection", "keep-alive");
+    conn.setRequestProperty("Charsert", "UTF-8");
+    conn.setRequestProperty("Content-Type", MULTIPART_FROM_DATA + ";boundary=" + BOUNDARY);
+    // 首先组拼文本类型的参数
+    StringBuilder sb = new StringBuilder();
+    for (Map.Entry<String, String> entry : params.entrySet()) {
+      sb.append(PREFIX);
+      sb.append(BOUNDARY);
+      sb.append(LINEND);
+      sb.append("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"" + LINEND);
+      sb.append("Content-Type: text/plain; charset=" + CHARSET + LINEND);
+      sb.append("Content-Transfer-Encoding: 8bit" + LINEND);
+      sb.append(LINEND);
+      sb.append(entry.getValue());
+      sb.append(LINEND);
+    }
+    DataOutputStream outStream = new DataOutputStream(conn.getOutputStream());
+    outStream.write(sb.toString().getBytes());
+    // 发送文件数据
+    if (files != null) for (Map.Entry<String, File> file : files.entrySet()) {
+      StringBuilder sb1 = new StringBuilder();
+      sb1.append(PREFIX);
+      sb1.append(BOUNDARY);
+      sb1.append(LINEND);
+      sb1.append("Content-Disposition: form-data; name=\"uploadfile\"; filename=\"" + file.getValue().getName() + "\"" + LINEND);
+      sb1.append("Content-Type: application/octet-stream; charset=" + CHARSET + LINEND);
+      sb1.append(LINEND);
+      outStream.write(sb1.toString().getBytes());
+      InputStream is = new FileInputStream(file.getValue());
+      byte[] buffer = new byte[1024];
+      int len = 0;
+      while ((len = is.read(buffer)) != -1) {
+        outStream.write(buffer, 0, len);
+      }
+      is.close();
+      outStream.write(LINEND.getBytes());
+    }
+    // 请求结束标志
+    byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINEND).getBytes();
+    outStream.write(end_data);
+    outStream.flush();
+    // 得到响应码
+    int res = conn.getResponseCode();
+    InputStream in = conn.getInputStream();
+    StringBuilder sb2 = new StringBuilder();
+    if (res == 200) {
+      int ch;
+      while ((ch = in.read()) != -1) {
+        sb2.append((char) ch);
+      }
+    }
+    outStream.close();
+    conn.disconnect();
+    return sb2.toString();
+  }
 
 
 }

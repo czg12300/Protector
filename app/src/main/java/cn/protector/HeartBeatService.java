@@ -31,7 +31,7 @@ public class HeartBeatService extends BaseWorkService {
     /**
      * 每次心跳包之间的间隔时间
      */
-    private static final long TIME_SPIT_TEST = 3 * 1000;
+    private static final long TIME_SPIT_TEST = 30 * 1000;
 
     private static final long TIME_SPIT_RELEASE = 1 * 60 * 1000;
 
