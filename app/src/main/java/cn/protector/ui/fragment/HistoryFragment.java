@@ -63,7 +63,6 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
     private static final int MSG_BACK_LOAD_DATA = 0;
 
     private static final int MSG_UI_HIDE_TIME_TIP_POP = 0;
-
     private static final int MSG_UI_LOAD_DATA = 1;
 
 
@@ -249,7 +248,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                     mHistoryResponse = (HistoryResponse) msg.obj;
                     int hour = getFirstHour(mHistoryResponse);
                     mSbTime.setProgress(hour);
-                        updateUi(mHistoryResponse, hour);
+                    updateUi(mHistoryResponse, hour);
                 } else {
                     if (!isFirstIn) {
                         ToastUtil.showError();
@@ -292,7 +291,6 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         if (info == null) {
             return;
         }
-        mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
         ArrayList<PointInfo> list = getPointList(info, endHour);
         if (list != null && list.size() > 0) {
             ArrayList<MarkerOptions> markerOptionses = new ArrayList<>();
@@ -317,8 +315,14 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                             options.title("终点");
                         }
                     } else {
-                        options.icon(BitmapDescriptorFactory
-                                .fromBitmap(BitmapUtil.decodeResource(R.drawable.ico_map_location)));
+
+                        if (pointInfo.getPosiMode() > 0) {
+                            options.icon(BitmapDescriptorFactory
+                                    .fromBitmap(BitmapUtil.decodeResource(R.drawable.map_dot_green)));
+                        } else {
+                            options.icon(BitmapDescriptorFactory
+                                    .fromBitmap(BitmapUtil.decodeResource(R.drawable.map_dot_blue)));
+                        }
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
                             options.title(pointInfo.getAddress());
                         } else {

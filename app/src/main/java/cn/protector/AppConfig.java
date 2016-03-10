@@ -29,9 +29,7 @@ public class AppConfig {
      * 服务器地址
      */
     public static final String SERVER = isDebug ? TEST_SERVER : RELEASE_SERVER;
-    public static final long REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME_TEST = 5 * 1000;
-    public static final long REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME_RELEASE = 1 * 60 * 1000;
-    public static final long REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME = isDebug ? REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME_TEST : REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME_RELEASE;
+    public static final long AUTO_LOCATE_TIME =  5 * 1000;
 
     static {
         AppException.setDebug(isDebug);
@@ -69,8 +67,6 @@ public class AppConfig {
     public static final String COM_SHUT_DOWN = "Com_Shutdown";
     // 上传图片
     public static final String UPLOAD_IMAGE = "UploadImage";
-    // 设置定位模式
-    public static final String SETUP_LOADMODE = "SetUploadMode";
     //  运动数据
     public static final String GET_SPORT_STAT_DATA = "GetSportStatData";
     // 受压数据
@@ -99,4 +95,6 @@ public class AppConfig {
     public static final String GET_WEARERINFO = "GetWearerInfo";
     //更新穿戴者信息
     public static final String SET_WEARERINFO = "SetWearerInfo";
+    //获取最新位置
+    public static final String GET_POSITIONDATA = "GetPositionData";
 }

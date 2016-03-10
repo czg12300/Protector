@@ -18,7 +18,6 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
@@ -30,12 +29,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import cn.common.AppException;
-import cn.common.bitmap.core.ImageLoader;
-import cn.common.bitmap.core.assist.FailReason;
-import cn.common.bitmap.core.listener.ImageLoadingListener;
 import cn.common.ui.BasePopupWindow;
 import cn.common.ui.fragment.BaseWorkerFragment;
-import cn.common.utils.BitmapUtil;
 import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
@@ -44,6 +39,7 @@ import cn.protector.logic.entity.DeviceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.CommonHasLoginStatusResponse;
+import cn.protector.logic.http.response.LocateInfoResponse;
 import cn.protector.logic.http.response.NowDeviceInfoResponse;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.ui.helper.TipDialogHelper;
@@ -51,6 +47,7 @@ import cn.protector.utils.ToastUtil;
 
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 描述：定位页面
@@ -66,6 +63,9 @@ public class LocateFragment extends BaseWorkerFragment
     private static final int MSG_UI_REFRESH_DEVICE_INFO = 0;
 
     private static final int MSG_UI_LOCATE = 1;
+    private static final int MSG_UI_AUTO_LOCATE = 4;
+
+    private static final int MSG_BACK_AUTO_LOCATE = 3;
     private static final int MSG_UI_HIDE_TIP_DIALOG = 2;
 
     private GeocodeSearch geocoderSearch;
@@ -185,12 +185,12 @@ public class LocateFragment extends BaseWorkerFragment
     protected void initData() {
         super.initData();
         timer = new Timer();
-        // timer.schedule(new TimerTask() {
-        // @Override
-        // public void run() {
-
-        // }
-        // }, 0, AppConfig.REFRESH_POSITION_DEVICE_STATUS_SPIT_TIME);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendEmptyBackgroundMessage(MSG_BACK_AUTO_LOCATE);
+            }
+        }, 0, AppConfig.AUTO_LOCATE_TIME);
         mTipDialogHelper = new TipDialogHelper(getActivity());
         loadDeviceInfo();
     }
@@ -210,7 +210,28 @@ public class LocateFragment extends BaseWorkerFragment
             case MSG_BACK_LOCATE:
                 locateTask();
                 break;
+            case MSG_BACK_AUTO_LOCATE:
+                autoLocateTask();
+                break;
         }
+    }
+
+    private void autoLocateTask() {
+        HttpRequest<LocateInfoResponse> request = new HttpRequest<>(
+                AppConfig.GET_POSITIONDATA, LocateInfoResponse.class);
+        request.addParam("uc", InitSharedData.getUserCode());
+        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+        }
+        Message message = obtainUiMessage();
+        message.what = MSG_UI_AUTO_LOCATE;
+        try {
+            message.obj = request.request();
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+        message.sendToTarget();
     }
 
     private void locateTask() {
@@ -261,6 +282,11 @@ public class LocateFragment extends BaseWorkerFragment
             case MSG_UI_REFRESH_DEVICE_INFO:
                 handleRefreshDeviceInfoResponse(msg);
                 break;
+            case MSG_UI_AUTO_LOCATE:
+                if (msg.obj != null) {
+                    handleAutoLocate((LocateInfoResponse) msg.obj);
+                }
+                break;
             case MSG_UI_LOCATE:
                 if (msg.obj != null) {
                     CommonHasLoginStatusResponse response = (CommonHasLoginStatusResponse) msg.obj;
@@ -283,6 +309,23 @@ public class LocateFragment extends BaseWorkerFragment
                 }
                 break;
         }
+    }
+
+    private void handleAutoLocate(LocateInfoResponse response) {
+        if (mNowDeviceInfo==null){
+            return;
+        }
+        if (response.getLat() > 0) {
+            mNowDeviceInfo.setLat(response.getLat());
+        }
+        if (response.getLon() > 0) {
+            mNowDeviceInfo.setLon(response.getLon());
+        }
+        if (!TextUtils.isEmpty(response.getAddress())) {
+            mNowDeviceInfo.setAddress(response.getAddress());
+        }
+        addMapMark(mNowDeviceInfo);
+        updateBottomUi(mNowDeviceInfo);
     }
 
     private void handleRefreshDeviceInfoResponse(Message msg) {
@@ -310,9 +353,9 @@ public class LocateFragment extends BaseWorkerFragment
             mTvAddress.setText(info.getAddress());
         }
         if (mTvAddressTime != null) {
-            String mode = "GPS定位";
-            if (info.getPosiMode() == 2) {
-                mode = "网络定位";
+            String mode = "网络定位";
+            if (info.getPosiMode() > 0) {
+                mode = "GPS定位";
             }
             String show = "定位模式：" + mode;
             if (info.getPosiPrecision() > 0) {
@@ -337,7 +380,7 @@ public class LocateFragment extends BaseWorkerFragment
         }
         mAMap.clear();
         // 设置Marker的图标样式
-        mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
+//        mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
         LatLng latLng = new LatLng(info.getLat(), info.getLon());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(DeviceInfoHelper.getInstance().getAvatar()));

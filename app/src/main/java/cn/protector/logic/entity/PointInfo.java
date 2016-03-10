@@ -22,6 +22,15 @@ public class PointInfo implements Serializable {
     private double lon;
 
     private double lat;
+private int posiMode;
+
+    public int getPosiMode() {
+        return posiMode;
+    }
+
+    public void setPosiMode(int posiMode) {
+        this.posiMode = posiMode;
+    }
 
     public String getStartTime() {
         return startTime;
@@ -72,16 +81,12 @@ public class PointInfo implements Serializable {
         if (root == null) {
             return null;
         }
-        // "StartTime": "",
-        // "EndTime": "",
-        // "Lon": "",
-        // "Lat": "",
-        // "Address": ""
         setStartTime(root.optString("StartTime"));
         setEndTime(root.optString("EndTime"));
         setAddress(root.optString("Address"));
         setLon(root.optDouble("Lon"));
         setLat(root.optDouble("Lat"));
+        setPosiMode(root.optInt("PosiMode"));
         return this;
     }
 }
