@@ -102,8 +102,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_selector_maplisten"
-                android:visibility="gone" />
+                android:src="@drawable/btn_selector_maplisten" />
 
             <ImageButton
                 android:id="@+id/ib_locate"

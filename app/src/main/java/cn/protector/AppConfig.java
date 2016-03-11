@@ -97,4 +97,6 @@ public class AppConfig {
     public static final String SET_WEARERINFO = "SetWearerInfo";
     //获取最新位置
     public static final String GET_POSITIONDATA = "GetPositionData";
+    //检查二维码是否有效
+    public static final String CHECK_EQUIMENTEXIST = "CheckEquimentExist";
 }

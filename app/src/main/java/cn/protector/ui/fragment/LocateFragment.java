@@ -158,6 +158,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
   protected void initEvent() {
     mIbBattery.setOnClickListener(this);
     mIbStep.setOnClickListener(this);
+    findViewById(R.id.ib_maplisten).setOnClickListener(this);
     findViewById(R.id.ib_mobile).setOnClickListener(this);
     findViewById(R.id.ib_locate).setOnClickListener(this);
     findViewById(R.id.ib_minus).setOnClickListener(this);
@@ -431,10 +432,12 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
       sendEmptyBackgroundMessage(MSG_BACK_LOCATE);
     } else if (id == R.id.ib_battery) {
       showBatteryPopWindow();
-    } else if (id == R.id.ib_mobile) {
+    } else if (id == R.id.ib_maplisten) {
       showCallDialog();
     } else if (id == R.id.ib_steps) {
       showStepsPopWindow();
+    } else if (id == R.id.ib_mobile) {
+      ToastUtil.show("完善中");
     }
   }
 
