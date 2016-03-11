@@ -102,12 +102,13 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
         }
         int msgWhat = MSG_LOGIN;
         if (response != null && !TextUtils.isEmpty(response.getCode())) {
-          loadDeviceListTask();
           // 开始心跳包发送
           InitSharedData.setUserId(response.getUserId());
           InitSharedData.setUserCode(response.getCode());
-          HeartBeatHelper.getInstance().start();
-          msgWhat = MSG_MAIN;
+          if (loadDeviceListTask()) {
+            HeartBeatHelper.getInstance().start();
+            msgWhat = MSG_MAIN;
+          }
         }
         if ((System.currentTimeMillis() - lastTime) >= DELAYED_TIME) {
           sendEmptyUiMessage(msgWhat);
@@ -121,18 +122,20 @@ public class SplashActivity extends BaseWorkerFragmentActivity {
   /**
    * 获取设备列表
    */
-  private void loadDeviceListTask() {
+  private boolean loadDeviceListTask() {
     HttpRequest<GetBaseListResponse> request = new HttpRequest<>(AppConfig.GET_BASE_LIST, GetBaseListResponse.class);
     if (!TextUtils.isEmpty(InitSharedData.getUserCode())) {
       request.addParam("uc", InitSharedData.getUserCode());
     }
     try {
       GetBaseListResponse response = request.request();
-      if (response != null && response.isOk()) {
+      if (response != null && !TextUtils.isEmpty(response.getJson())) {
         InitSharedData.setDeviceData(response.getJson());
+        return true;
       }
     } catch (AppException e) {
       e.printStackTrace();
     }
+    return false;
   }
 }

@@ -65,6 +65,7 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
   public static final String WOMAN = "女";
   public static final int TYPE_FINISH = 0;
   public static final int TYPE_MODIFY = 1;
+  public static final int TYPE_BABY_INFO = 2;
   private static final int MSG_BACK_SUBMIT = 1;
   private static final int MSG_BACK_UPLOAD = 2;
 
@@ -88,14 +89,13 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
 
   private TextView tvRelationship;
   private TextView tvSex;
-
-
   private String eId;
   private StatusView mStatusView;
   private int relationship = 0;
   private String avatarUrl;
   private int type;
   private String otherRelationship = "";
+  private WearInfoResponse mWearInfoResponse;
 
   @Override
   protected void initView() {
@@ -123,6 +123,17 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
         finish();
       }
       loadData();
+    } else if (type == TYPE_BABY_INFO) {
+      mBtnSubmit.setText("保存");
+      mBtnSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_selector_blue));
+      mBtnSubmit.setTextColor(getResources().getColorStateList(R.drawable.text_selector_btn_blue));
+      setTitle("宝贝信息");
+      if (TextUtils.isEmpty(eId)) {
+        ToastUtil.show("初始化失败");
+        finish();
+      }
+      loadData();
+
     } else {
       setTitle(R.string.title_finish_info);
       mStatusView.showContentView();
@@ -145,12 +156,47 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
     findViewById(R.id.ll_sex).setOnClickListener(this);
   }
 
+  private boolean isChangeData() {
+    boolean result = false;
+    if (mWearInfoResponse == null) {
+      return false;
+    }
+    if (!TextUtils.isEmpty(avatarUrl)&&!TextUtils.equals(mWearInfoResponse.getAvatar(), avatarUrl)) {
+      result = true;
+    }
+    if (!TextUtils.equals(mWearInfoResponse.getName(), evName.getText().toString())) {
+      result = true;
+    }
+    if (!TextUtils.equals(mWearInfoResponse.getBirthday(), tvBirthday.getText().toString())) {
+      result = true;
+    }
+    if (mWearInfoResponse.getRelationship() != relationship) {
+      result = true;
+    }
+    if (mWearInfoResponse.getSex() != WearInfoResponse.parseSex(tvSex.getText().toString())) {
+      result = true;
+    }
+    if (mWearInfoResponse.getShoeSize() != Integer.valueOf(evShoeSize.getText().toString())) {
+      result = true;
+    }
+    if (mWearInfoResponse.getWeight() != Integer.valueOf(evWeight.getText().toString())) {
+      result = true;
+    }
+    return result;
+  }
+
   @Override
   public void onClick(View v) {
     int id = v.getId();
     if (id == R.id.ll_birthday) {
       showBirthdayDialog();
     } else if (id == R.id.btn_submit) {
+      if (type != TYPE_FINISH) {
+        if (!isChangeData()) {
+          finish();
+          return;
+        }
+      }
       if (TextUtils.isEmpty(evName.getText())) {
         ToastUtil.show("请输入昵称");
         return;
@@ -159,7 +205,11 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
         ToastUtil.show("请选择关系");
         return;
       }
-      mTipDialogHelper.showLoadingTip("正在努力提交");
+      if (type == TYPE_BABY_INFO) {
+        mTipDialogHelper.showLoadingTip("正在努力保存");
+      } else {
+        mTipDialogHelper.showLoadingTip("正在努力提交");
+      }
       sendEmptyBackgroundMessage(MSG_BACK_SUBMIT);
     } else if (id == R.id.ll_avator) {
       goActivityForResult(ChooseAvatorActivity.class);
@@ -292,6 +342,9 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
           if (type == TYPE_MODIFY) {
             sendBroadcast(BroadcastActions.ACTION_MODIFY_WEAR_INFO_SUCCESS);
             finish();
+          } else if (type == TYPE_BABY_INFO) {
+            sendBroadcast(BroadcastActions.ACTION_UPDATE_DEVICE_LIST_INFO);
+            finish();
           } else {
             goActivity(MainActivity.class);
             sendBroadcast(BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN);
@@ -300,7 +353,11 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
           if (msg.obj != null && !TextUtils.isEmpty(((CommonResponse) msg.obj).getInfo())) {
             ToastUtil.show(((CommonResponse) msg.obj).getInfo());
           } else {
-            ToastUtil.show("提交失败");
+            if (type == TYPE_BABY_INFO) {
+              ToastUtil.show("提交失败");
+            } else {
+              ToastUtil.show("保存失败");
+            }
           }
         }
         break;
@@ -324,6 +381,7 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
   }
 
   private void handleLoadData(WearInfoResponse response) {
+    mWearInfoResponse = response;
     mStatusView.showContentView();
     if (!TextUtils.isEmpty(response.getAvatar())) {
       ImageLoader.getInstance().displayImage(response.getAvatar(), mRivAvatar);
@@ -386,9 +444,14 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
       dialog.setWindow(R.style.alpha_animation, 0.6f);
       dialog.setContentView(R.layout.dialog_select_birthday);
       final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.date_picker);
-      Calendar cal = Calendar.getInstance();
-      cal.setTimeInMillis(System.currentTimeMillis());
-      datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null);
+      if (tvBirthday != null && !TextUtils.isEmpty(tvBirthday.getText())) {
+        int[] times = parseTime(tvBirthday.getText().toString().trim());
+        datePicker.init(times[0], times[1] - 1, times[2], null);
+      } else {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null);
+      }
       dialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -445,10 +508,10 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
       listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+          relationship = position;
           if (position == 0) {
             showEditDialog();
           } else {
-            relationship = position;
             tvRelationship.setText(DeviceInfo.parseRelation(relationship, "其他"));
           }
           dialog.dismiss();
@@ -491,5 +554,16 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
     }
   }
 
+  private int[] parseTime(String time) {
+    int[] result = new int[3];
+    try {
+      result[0] = Integer.valueOf(time.substring(0, 4));
+      result[1] = Integer.valueOf(time.substring(5, 7));
+      result[2] = Integer.valueOf(time.substring(8, 10));
+    } catch (Exception e) {
+    } catch (Error error) {
+    }
+    return result;
+  }
 
 }

@@ -87,9 +87,6 @@
             android:name=".ui.activity.usercenter.FinishInfoActivity"
             android:theme="@style/swipe_activity_style"/>
         <activity
-            android:name=".ui.activity.usercenter.BabyInfoActivity"
-            android:theme="@style/swipe_activity_style"/>
-        <activity
             android:name=".ui.activity.usercenter.ChooseAvatorActivity"
             android:theme="@style/swipe_activity_style"/>
         <activity

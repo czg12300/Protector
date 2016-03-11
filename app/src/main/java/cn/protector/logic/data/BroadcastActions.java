@@ -50,6 +50,10 @@ public interface BroadcastActions {
      * 更新当前设备数据
      */
     String ACTION_UPDATE_POSITION_DEVICE_INFO = "cn.protector.data.BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO";
+    /**
+     * 更新设备列表数据
+     */
+    String ACTION_UPDATE_DEVICE_LIST_INFO = "cn.protector.data.BroadcastActions.ACTION_UPDATE_DEVICE_LIST_INFO";
 
 
 }

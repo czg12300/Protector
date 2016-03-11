@@ -36,7 +36,6 @@ import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.PressResponse;
 import cn.protector.logic.http.response.SportResponse;
 import cn.protector.ui.activity.WebActivity;
-import cn.protector.ui.activity.usercenter.BabyInfoActivity;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.ui.widget.pulltorefresh.HealthListView;
 import cn.protector.utils.ToastUtil;
@@ -46,7 +45,7 @@ import cn.protector.utils.ToastUtil;
  *
  * @author jakechen on 2015/8/13.
  */
-public class HealthFragment extends BaseWorkerFragment implements View.OnClickListener {
+public class HealthFragment extends BaseWorkerFragment {
     private static final int MSG_BACK_LOAD_DATA = 0;
     private static final int MSG_UI_LOAD_DATA = 0;
 
@@ -198,13 +197,6 @@ public class HealthFragment extends BaseWorkerFragment implements View.OnClickLi
         message.sendToTarget();
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.ll_baby_info) {
-            goActivity(BabyInfoActivity.class);
-        }
-    }
 
     @Override
     public void handleBackgroundMessage(Message msg) {

@@ -2,6 +2,7 @@ package cn.protector.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -31,6 +32,7 @@ import cn.protector.logic.entity.DeviceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.CommonHasLoginStatusResponse;
+import cn.protector.logic.http.response.GetBaseListResponse;
 import cn.protector.ui.activity.setting.CareStaffActivity;
 import cn.protector.ui.activity.setting.DeviceManageActivity;
 import cn.protector.ui.activity.setting.FenceSetActivity;
@@ -38,7 +40,7 @@ import cn.protector.ui.activity.setting.LocateModeActivity;
 import cn.protector.ui.activity.setting.LocationRegulateActivity;
 import cn.protector.ui.activity.setting.ModifyPwActivity;
 import cn.protector.ui.activity.setting.QACodeActivity;
-import cn.protector.ui.activity.usercenter.BabyInfoActivity;
+import cn.protector.ui.activity.usercenter.FinishInfoActivity;
 import cn.protector.ui.activity.usercenter.LoginActivity;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.utils.ToastUtil;
@@ -52,6 +54,7 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
   private static final int MSG_BACK_SHUT_DOWN = 0;
 
   private static final int MSG_UI_SHUT_DOWN = 0;
+  private static final int MSG_BACK_UPDATE_DEVICE_LIST = 1;
 
   private MainTitleHelper mTitleHelper;
 
@@ -136,6 +139,7 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
     super.setupBroadcastActions(actions);
     actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
     actions.add(BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO);
+    actions.add(BroadcastActions.ACTION_UPDATE_DEVICE_LIST_INFO);
   }
 
   @Override
@@ -151,6 +155,8 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
         mTitleHelper.setTitle(info.getNikeName());
       }
       updateTop();
+    }else if (TextUtils.equals(action, BroadcastActions.ACTION_UPDATE_DEVICE_LIST_INFO)) {
+      sendEmptyBackgroundMessage(MSG_BACK_UPDATE_DEVICE_LIST);
     }
   }
 
@@ -184,9 +190,30 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
       case MSG_BACK_SHUT_DOWN:
         shutDownTask();
         break;
+      case MSG_BACK_UPDATE_DEVICE_LIST:
+        loadDeviceListTask();
+        break;
     }
   }
 
+  /**
+   * 获取设备列表
+   */
+  private void loadDeviceListTask() {
+    HttpRequest<GetBaseListResponse> request = new HttpRequest<>(AppConfig.GET_BASE_LIST, GetBaseListResponse.class);
+    if (!TextUtils.isEmpty(InitSharedData.getUserCode())) {
+      request.addParam("uc", InitSharedData.getUserCode());
+    }
+    try {
+      GetBaseListResponse response = request.request();
+      if (response != null && response.isOk()) {
+        InitSharedData.setDeviceData(response.getJson());
+        DeviceInfoHelper.getInstance().refreshDeviceList();
+      }
+    } catch (AppException e) {
+      e.printStackTrace();
+    }
+  }
   private void shutDownTask() {
     HttpRequest<CommonHasLoginStatusResponse> request = new HttpRequest<>(AppConfig.COM_SHUT_DOWN, CommonHasLoginStatusResponse.class);
     request.addParam("uc", InitSharedData.getUserCode());
@@ -208,7 +235,15 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
   public void onClick(View v) {
     int id = v.getId();
     if (id == R.id.ll_baby_info) {
-      goActivity(BabyInfoActivity.class);
+      DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+      Bundle bundle = new Bundle();
+      bundle.putInt(FinishInfoActivity.KEY_TYPE, FinishInfoActivity.TYPE_BABY_INFO);
+      try {
+        bundle.putString(FinishInfoActivity.KEY_EID, info.geteId());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      goActivity(FinishInfoActivity.class, bundle);
     } else if (id == R.id.tv_modify_pw) {
       goActivity(ModifyPwActivity.class);
     } else if (id == R.id.tv_device_manage) {
