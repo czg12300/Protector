@@ -95,7 +95,8 @@ public class FinishInfoActivity extends CommonTitleActivity implements View.OnCl
   private int relationship = 0;
   private String avatarUrl;
   private int type;
-private String otherRelationship="";
+  private String otherRelationship = "";
+
   @Override
   protected void initView() {
     mStatusView = new StatusView(this);
@@ -241,7 +242,7 @@ private String otherRelationship="";
     }
     StringBuilder builder = new StringBuilder();
     builder.append("{\"Name\":\"").append(evName.getText().toString()).append("\",");
-    builder.append("\"Sex\":\"").append(tvSex.getText().toString()).append("\",");
+    builder.append("\"Sex\":\"").append(WearInfoResponse.parseSex(tvSex.getText().toString())).append("\",");
     builder.append("\"Birthday\":\"").append(tvBirthday.getText().toString()).append("\",");
     builder.append("\"Relation\":\"").append(relationship).append("\",");
     builder.append("\"OtherRelation\":\"").append(otherRelationship).append("\",");
@@ -328,10 +329,10 @@ private String otherRelationship="";
       ImageLoader.getInstance().displayImage(response.getAvatar(), mRivAvatar);
     }
     evName.setText("" + response.getName());
-    relationship=response.getRelationship();
-    otherRelationship=response.getOtherRelationship();
+    relationship = response.getRelationship();
+    otherRelationship = response.getOtherRelationship();
     tvRelationship.setText(DeviceInfo.parseRelation(response.getRelationship(), response.getOtherRelationship()));
-    tvSex.setText(TextUtils.equals(response.getSex(), MAN) ? MAN : WOMAN);
+    tvSex.setText(response.getSex() == WearInfoResponse.MAN ? MAN : WOMAN);
     if (!TextUtils.isEmpty(response.getBirthday())) {
       tvBirthday.setText(response.getBirthday());
     }
@@ -422,7 +423,7 @@ private String otherRelationship="";
           if (TextUtils.isEmpty(ev.getText())) {
             ToastUtil.show("请输入关系");
           } else {
-            otherRelationship=ev.getText().toString();
+            otherRelationship = ev.getText().toString();
             tvRelationship.setText(otherRelationship);
             CommonUtil.hideSoftInput(FinishInfoActivity.this);
             dialog.dismiss();

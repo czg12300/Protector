@@ -1,5 +1,16 @@
-
 package cn.protector.ui.fragment;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
@@ -16,19 +27,12 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Message;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.common.AppException;
+import cn.common.ui.BaseDialog;
 import cn.common.ui.BasePopupWindow;
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.protector.AppConfig;
@@ -45,491 +49,510 @@ import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.ui.helper.TipDialogHelper;
 import cn.protector.utils.ToastUtil;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
  * 描述：定位页面
  *
  * @author jakechen on 2015/8/13.
  */
-public class LocateFragment extends BaseWorkerFragment
-        implements View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
-    private static final int MSG_BACK_REFRESH_DEVICE_INFO = 0;
+public class LocateFragment extends BaseWorkerFragment implements View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
+  private static final int MSG_BACK_REFRESH_DEVICE_INFO = 0;
 
-    private static final int MSG_BACK_LOCATE = 1;
+  private static final int MSG_BACK_LOCATE = 1;
 
-    private static final int MSG_UI_REFRESH_DEVICE_INFO = 0;
+  private static final int MSG_UI_REFRESH_DEVICE_INFO = 0;
 
-    private static final int MSG_UI_LOCATE = 1;
-    private static final int MSG_UI_AUTO_LOCATE = 4;
+  private static final int MSG_UI_LOCATE = 1;
+  private static final int MSG_UI_AUTO_LOCATE = 4;
 
-    private static final int MSG_BACK_AUTO_LOCATE = 3;
-    private static final int MSG_UI_HIDE_TIP_DIALOG = 2;
+  private static final int MSG_BACK_AUTO_LOCATE = 3;
+  private static final int MSG_UI_HIDE_TIP_DIALOG = 2;
 
-    private GeocodeSearch geocoderSearch;
-    private TipDialogHelper mTipDialogHelper;
+  private GeocodeSearch geocoderSearch;
+  private TipDialogHelper mTipDialogHelper;
 
-    public static LocateFragment newInstance() {
-        return new LocateFragment();
+  public static LocateFragment newInstance() {
+    return new LocateFragment();
+  }
+
+  private MainTitleHelper mTitleHelper;
+
+  private MapView mMapView;
+
+  private AMap mAMap;
+
+  private Timer timer;
+
+  private NowDeviceInfoResponse mNowDeviceInfo;
+
+  private View mVBottom;
+
+  private TextView mTvAddress;
+
+  private TextView mTvAddressTime;
+
+  private TextView mTvAddressTip;
+
+  private ImageButton mIbBattery;
+
+  private ImageButton mIbStep;
+
+  private BasePopupWindow mBatteryPopWindow;
+
+  private BasePopupWindow mStepsPopWindow;
+
+  private TextView mTvBatteryTip;
+
+  private TextView mTvSpeed;
+
+  private TextView mTvSteps;
+
+  private TextView mTvHell;
+
+  private long geocodeSearchId;
+  private View vTopTip;
+
+  @Override
+  public void initView() {
+    setContentView(R.layout.fragment_locate);
+    mVBottom = findViewById(R.id.ll_bottom);
+    vTopTip = findViewById(R.id.ll_tip);
+    mTvAddress = (TextView) findViewById(R.id.tv_locate_title);
+    mTvAddressTime = (TextView) findViewById(R.id.tv_locate_content);
+    mTvAddressTip = (TextView) findViewById(R.id.tv_locate_hint);
+    mIbBattery = (ImageButton) findViewById(R.id.ib_battery);
+    mIbStep = (ImageButton) findViewById(R.id.ib_steps);
+    mMapView = (MapView) findViewById(R.id.mv_map);
+    mVBottom.setVisibility(View.GONE);
+    mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title), MainTitleHelper.STYLE_LOCATE);
+    initMapView();
+    vTopTip.setVisibility(View.GONE);
+  }
+
+  private void initMapView() {
+    mMapView.onCreate(mSavedInstanceState);// 此方法必须重写
+    if (mAMap == null) {
+      mAMap = mMapView.getMap();
     }
+    UiSettings uiSettings = mAMap.getUiSettings();
+    uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+    uiSettings.setZoomControlsEnabled(false);
+    mAMap.setMyLocationRotateAngle(180);
+    mAMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+    // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
+    mAMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+    geocoderSearch = new GeocodeSearch(getActivity());
+    geocoderSearch.setOnGeocodeSearchListener(this);
+  }
 
-    private MainTitleHelper mTitleHelper;
+  /**
+   * 打电话
+   */
+  private void callCustomerService(String phoneNum) {
+    Intent intent = new Intent();
+    intent.setAction(Intent.ACTION_CALL);
+    intent.setData(Uri.parse("tel:" + phoneNum));
+    startActivity(intent);
+  }
 
-    private MapView mMapView;
-
-    private AMap mAMap;
-
-    private Timer timer;
-
-    private NowDeviceInfoResponse mNowDeviceInfo;
-
-    private View mVBottom;
-
-    private TextView mTvAddress;
-
-    private TextView mTvAddressTime;
-
-    private TextView mTvAddressTip;
-
-    private ImageButton mIbBattery;
-
-    private ImageButton mIbStep;
-
-    private BasePopupWindow mBatteryPopWindow;
-
-    private BasePopupWindow mStepsPopWindow;
-
-    private TextView mTvBatteryTip;
-
-    private TextView mTvSpeed;
-
-    private TextView mTvSteps;
-
-    private TextView mTvHell;
-
-    private long geocodeSearchId;
-
-    @Override
-    public void initView() {
-        setContentView(R.layout.fragment_locate);
-        mVBottom = findViewById(R.id.ll_bottom);
-        mTvAddress = (TextView) findViewById(R.id.tv_locate_title);
-        mTvAddressTime = (TextView) findViewById(R.id.tv_locate_content);
-        mTvAddressTip = (TextView) findViewById(R.id.tv_locate_hint);
-        mIbBattery = (ImageButton) findViewById(R.id.ib_battery);
-        mIbStep = (ImageButton) findViewById(R.id.ib_steps);
-        mMapView = (MapView) findViewById(R.id.mv_map);
-        mVBottom.setVisibility(View.GONE);
-        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
-                MainTitleHelper.STYLE_LOCATE);
-        initMapView();
-    }
-
-    private void initMapView() {
-        mMapView.onCreate(mSavedInstanceState);// 此方法必须重写
-        if (mAMap == null) {
-            mAMap = mMapView.getMap();
-        }
-        UiSettings uiSettings = mAMap.getUiSettings();
-        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
-        uiSettings.setZoomControlsEnabled(false);
-        mAMap.setMyLocationRotateAngle(180);
-        mAMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-        mAMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-        geocoderSearch = new GeocodeSearch(getActivity());
-        geocoderSearch.setOnGeocodeSearchListener(this);
-    }
-
-    /**
-     * 打电话
-     */
-    private void callCustomerService(String phoneNum) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_CALL);
-        intent.setData(Uri.parse("tel:" + phoneNum));
-        startActivity(intent);
-    }
-
-    @Override
-    protected void initEvent() {
-        mIbBattery.setOnClickListener(this);
-        mIbStep.setOnClickListener(this);
-        findViewById(R.id.ib_mobile).setOnClickListener(this);
-        findViewById(R.id.ib_locate).setOnClickListener(this);
-        findViewById(R.id.ib_minus).setOnClickListener(this);
-        findViewById(R.id.ib_plus).setOnClickListener(this);
-        findViewById(R.id.ib_locate).setOnClickListener(this);
-        findViewById(R.id.ll_bottom).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
-        mAMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                if (marker.isInfoWindowShown()) {
-                    marker.hideInfoWindow();
-                } else {
-                    marker.showInfoWindow();
-                }
-                return true;
-            }
-        });
-    }
-
-    @Override
-    protected void initData() {
-        super.initData();
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendEmptyBackgroundMessage(MSG_BACK_AUTO_LOCATE);
-            }
-        }, 0, AppConfig.AUTO_LOCATE_TIME);
-        mTipDialogHelper = new TipDialogHelper(getActivity());
-        loadDeviceInfo();
-    }
-
-    private void loadDeviceInfo() {
-        sendEmptyBackgroundMessage(MSG_BACK_REFRESH_DEVICE_INFO);
-        mTipDialogHelper.showLoadingTip("正在获取当前设备信息");
-    }
-
-    @Override
-    public void handleBackgroundMessage(Message msg) {
-        super.handleBackgroundMessage(msg);
-        switch (msg.what) {
-            case MSG_BACK_REFRESH_DEVICE_INFO:
-                refreshDeviceInfoTask();
-                break;
-            case MSG_BACK_LOCATE:
-                locateTask();
-                break;
-            case MSG_BACK_AUTO_LOCATE:
-                autoLocateTask();
-                break;
-        }
-    }
-
-    private void autoLocateTask() {
-        HttpRequest<LocateInfoResponse> request = new HttpRequest<>(
-                AppConfig.GET_POSITIONDATA, LocateInfoResponse.class);
-        request.addParam("uc", InitSharedData.getUserCode());
-        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("eid",
-                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
-        }
-        Message message = obtainUiMessage();
-        message.what = MSG_UI_AUTO_LOCATE;
-        try {
-            message.obj = request.request();
-        } catch (AppException e) {
-            e.printStackTrace();
-        }
-        message.sendToTarget();
-    }
-
-    private void locateTask() {
-        HttpRequest<CommonHasLoginStatusResponse> request = new HttpRequest<>(
-                AppConfig.COM_GEO_LOCATION, CommonHasLoginStatusResponse.class);
-        request.addParam("uc", InitSharedData.getUserCode());
-        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("eid",
-                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
-        }
-        Message message = obtainUiMessage();
-        message.what = MSG_UI_LOCATE;
-        try {
-            message.obj = request.request();
-        } catch (AppException e) {
-            e.printStackTrace();
-        }
-        message.sendToTarget();
-    }
-
-    private void refreshDeviceInfoTask() {
-        HttpRequest<NowDeviceInfoResponse> request = new HttpRequest<>(AppConfig.GET_NOW_DATA,
-                NowDeviceInfoResponse.class);
-        request.addParam("uc", InitSharedData.getUserCode());
-        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("eid",
-                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
-        }
-        Message message = obtainUiMessage();
-        message.what = MSG_UI_REFRESH_DEVICE_INFO;
-        try {
-            message.obj = request.request();
-        } catch (AppException e) {
-            e.printStackTrace();
-        }
-        message.sendToTarget();
-    }
-
-    @Override
-    public void handleUiMessage(Message msg) {
-        super.handleUiMessage(msg);
-        switch (msg.what) {
-            case MSG_UI_HIDE_TIP_DIALOG:
-                if (mTipDialogHelper != null) {
-                    mTipDialogHelper.hideDialog();
-                }
-                break;
-            case MSG_UI_REFRESH_DEVICE_INFO:
-                handleRefreshDeviceInfoResponse(msg);
-                break;
-            case MSG_UI_AUTO_LOCATE:
-                if (msg.obj != null) {
-                    handleAutoLocate((LocateInfoResponse) msg.obj);
-                }
-                break;
-            case MSG_UI_LOCATE:
-                if (msg.obj != null) {
-                    CommonHasLoginStatusResponse response = (CommonHasLoginStatusResponse) msg.obj;
-                    if (response != null) {
-                        if (response.getResult() == CommonHasLoginStatusResponse.SUCCESS) {
-                            sendEmptyBackgroundMessage(MSG_BACK_REFRESH_DEVICE_INFO);
-                            ToastUtil.show("定位成功");
-                        } else {
-                            if (!TextUtils.isEmpty(response.getInfo())) {
-                                ToastUtil.show(response.getInfo());
-                            } else {
-                                ToastUtil.showError();
-                            }
-                        }
-                    } else {
-                        ToastUtil.showError();
-                    }
-                } else {
-                    ToastUtil.showError();
-                }
-                break;
-        }
-    }
-
-    private void handleAutoLocate(LocateInfoResponse response) {
-        if (mNowDeviceInfo==null){
-            return;
-        }
-        if (response.getLat() > 0) {
-            mNowDeviceInfo.setLat(response.getLat());
-        }
-        if (response.getLon() > 0) {
-            mNowDeviceInfo.setLon(response.getLon());
-        }
-        if (!TextUtils.isEmpty(response.getAddress())) {
-            mNowDeviceInfo.setAddress(response.getAddress());
-        }
-        addMapMark(mNowDeviceInfo);
-        updateBottomUi(mNowDeviceInfo);
-    }
-
-    private void handleRefreshDeviceInfoResponse(Message msg) {
-        if (msg.obj != null) {
-            sendEmptyUiMessage(MSG_UI_HIDE_TIP_DIALOG);
-            mVBottom.setVisibility(View.VISIBLE);
-            mNowDeviceInfo = (NowDeviceInfoResponse) msg.obj;
-            addMapMark(mNowDeviceInfo);
-            updateBottomUi(mNowDeviceInfo);
-            if (TextUtils.isEmpty(mNowDeviceInfo.getAddress())) {
-                searchAddressByPosi();
-            }
+  @Override
+  protected void initEvent() {
+    mIbBattery.setOnClickListener(this);
+    mIbStep.setOnClickListener(this);
+    findViewById(R.id.ib_mobile).setOnClickListener(this);
+    findViewById(R.id.ib_locate).setOnClickListener(this);
+    findViewById(R.id.ib_minus).setOnClickListener(this);
+    findViewById(R.id.ib_plus).setOnClickListener(this);
+    findViewById(R.id.ib_locate).setOnClickListener(this);
+    findViewById(R.id.ll_bottom).setOnTouchListener(new View.OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        return true;
+      }
+    });
+    mAMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+      @Override
+      public boolean onMarkerClick(Marker marker) {
+        if (marker.isInfoWindowShown()) {
+          marker.hideInfoWindow();
         } else {
-            mTipDialogHelper.showErrorTip("设备信息获取失败，请点击定位重试");
-            sendEmptyUiMessageDelayed(MSG_UI_HIDE_TIP_DIALOG, 500);
+          marker.showInfoWindow();
         }
+        return true;
+      }
+    });
+  }
+
+  @Override
+  protected void initData() {
+    super.initData();
+    timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        sendEmptyBackgroundMessage(MSG_BACK_AUTO_LOCATE);
+      }
+    }, 0, AppConfig.AUTO_LOCATE_TIME);
+    mTipDialogHelper = new TipDialogHelper(getActivity());
+    loadDeviceInfo();
+  }
+
+  private void loadDeviceInfo() {
+    sendEmptyBackgroundMessage(MSG_BACK_REFRESH_DEVICE_INFO);
+    mTipDialogHelper.showLoadingTip("正在获取当前设备信息");
+  }
+
+  @Override
+  public void handleBackgroundMessage(Message msg) {
+    super.handleBackgroundMessage(msg);
+    switch (msg.what) {
+      case MSG_BACK_REFRESH_DEVICE_INFO:
+        refreshDeviceInfoTask();
+        break;
+      case MSG_BACK_LOCATE:
+        locateTask();
+        break;
+      case MSG_BACK_AUTO_LOCATE:
+        autoLocateTask();
+        break;
     }
+  }
 
-
-    private void updateBottomUi(NowDeviceInfoResponse info) {
-        if (info == null) {
-            return;
-        }
-        if (mTvAddress != null && !TextUtils.isEmpty(info.getAddress())) {
-            mTvAddress.setText(info.getAddress());
-        }
-        if (mTvAddressTime != null) {
-            String mode = "网络定位";
-            if (info.getPosiMode() > 0) {
-                mode = "GPS定位";
-            }
-            String show = "定位模式：" + mode;
-            if (info.getPosiPrecision() > 0) {
-                show = show + "(精度到" + info.getPosiPrecision() + "米)";
-            }
-            mTvAddressTime.setText(show);
-        }
-        if (mTvAddressTip != null && !TextUtils.isEmpty(info.getLastActiveTime())) {
-            mTvAddressTip.setText("更新时间：" + info.getLastActiveTime());
-        }
+  private void autoLocateTask() {
+    HttpRequest<LocateInfoResponse> request = new HttpRequest<>(AppConfig.GET_POSITIONDATA, LocateInfoResponse.class);
+    request.addParam("uc", InitSharedData.getUserCode());
+    if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+      request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
     }
+    Message message = obtainUiMessage();
+    message.what = MSG_UI_AUTO_LOCATE;
+    try {
+      message.obj = request.request();
+    } catch (AppException e) {
+      e.printStackTrace();
+    }
+    message.sendToTarget();
+  }
 
+  private void locateTask() {
+    HttpRequest<CommonHasLoginStatusResponse> request = new HttpRequest<>(AppConfig.COM_GEO_LOCATION, CommonHasLoginStatusResponse.class);
+    request.addParam("uc", InitSharedData.getUserCode());
+    if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+      request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+    }
+    Message message = obtainUiMessage();
+    message.what = MSG_UI_LOCATE;
+    try {
+      message.obj = request.request();
+    } catch (AppException e) {
+      e.printStackTrace();
+    }
+    message.sendToTarget();
+  }
 
-    /**
-     * 添加到地图上
-     *
-     * @param info
-     */
-    private void addMapMark(final NowDeviceInfoResponse info) {
-        if (info == null) {
-            return;
+  private void refreshDeviceInfoTask() {
+    HttpRequest<NowDeviceInfoResponse> request = new HttpRequest<>(AppConfig.GET_NOW_DATA, NowDeviceInfoResponse.class);
+    request.addParam("uc", InitSharedData.getUserCode());
+    if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+      request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+    }
+    Message message = obtainUiMessage();
+    message.what = MSG_UI_REFRESH_DEVICE_INFO;
+    try {
+      message.obj = request.request();
+    } catch (AppException e) {
+      e.printStackTrace();
+    }
+    message.sendToTarget();
+  }
+
+  @Override
+  public void handleUiMessage(Message msg) {
+    super.handleUiMessage(msg);
+    switch (msg.what) {
+      case MSG_UI_HIDE_TIP_DIALOG:
+        if (mTipDialogHelper != null) {
+          mTipDialogHelper.hideDialog();
         }
-        mAMap.clear();
-        // 设置Marker的图标样式
+        break;
+      case MSG_UI_REFRESH_DEVICE_INFO:
+        handleRefreshDeviceInfoResponse(msg);
+        break;
+      case MSG_UI_AUTO_LOCATE:
+        if (msg.obj != null) {
+          handleAutoLocate((LocateInfoResponse) msg.obj);
+        }
+        break;
+      case MSG_UI_LOCATE:
+        if (msg.obj != null) {
+          CommonHasLoginStatusResponse response = (CommonHasLoginStatusResponse) msg.obj;
+          if (response != null) {
+            if (response.getResult() == CommonHasLoginStatusResponse.SUCCESS) {
+              sendEmptyBackgroundMessage(MSG_BACK_REFRESH_DEVICE_INFO);
+              ToastUtil.show("定位成功");
+            } else {
+              if (!TextUtils.isEmpty(response.getInfo())) {
+                ToastUtil.show(response.getInfo());
+              } else {
+                ToastUtil.showError();
+              }
+            }
+          } else {
+            ToastUtil.showError();
+          }
+        } else {
+          ToastUtil.showError();
+        }
+        break;
+    }
+  }
+
+  private void handleAutoLocate(LocateInfoResponse response) {
+    if (mNowDeviceInfo == null) {
+      return;
+    }
+    if (response.getLat() > 0) {
+      mNowDeviceInfo.setLat(response.getLat());
+    }
+    if (response.getLon() > 0) {
+      mNowDeviceInfo.setLon(response.getLon());
+    }
+    if (!TextUtils.isEmpty(response.getAddress())) {
+      mNowDeviceInfo.setAddress(response.getAddress());
+    }
+    addMapMark(mNowDeviceInfo);
+    updateBottomUi(mNowDeviceInfo);
+  }
+
+  private void handleRefreshDeviceInfoResponse(Message msg) {
+    if (msg.obj != null) {
+      sendEmptyUiMessage(MSG_UI_HIDE_TIP_DIALOG);
+      mVBottom.setVisibility(View.VISIBLE);
+      mNowDeviceInfo = (NowDeviceInfoResponse) msg.obj;
+      addMapMark(mNowDeviceInfo);
+      updateBottomUi(mNowDeviceInfo);
+      if (TextUtils.isEmpty(mNowDeviceInfo.getAddress())) {
+        searchAddressByPosi();
+      }
+    } else {
+      mTipDialogHelper.showErrorTip("设备信息获取失败，请点击定位重试");
+      sendEmptyUiMessageDelayed(MSG_UI_HIDE_TIP_DIALOG, 500);
+    }
+  }
+
+
+  private void updateBottomUi(NowDeviceInfoResponse info) {
+    if (info == null) {
+      return;
+    }
+    if (mTvAddress != null && !TextUtils.isEmpty(info.getAddress())) {
+      mTvAddress.setText(info.getAddress());
+    }
+    if (mTvAddressTime != null) {
+      String mode = "网络定位";
+      if (info.getPosiMode() > 0) {
+        mode = "GPS定位";
+      }
+      String show = "定位模式：" + mode;
+      if (info.getPosiPrecision() > 0) {
+        show = show + "(精度到" + info.getPosiPrecision() + "米)";
+      }
+      mTvAddressTime.setText(show);
+    }
+    if (mTvAddressTip != null && !TextUtils.isEmpty(info.getLastActiveTime())) {
+      mTvAddressTip.setText("更新时间：" + info.getLastActiveTime());
+    }
+  }
+
+
+  /**
+   * 添加到地图上
+   *
+   * @param info
+   */
+  private void addMapMark(final NowDeviceInfoResponse info) {
+    if (info == null) {
+      return;
+    }
+    mAMap.clear();
+    // 设置Marker的图标样式
 //        mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
-        LatLng latLng = new LatLng(info.getLat(), info.getLon());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(DeviceInfoHelper.getInstance().getAvatar()));
-        // 设置Marker点击之后显示的标题
-        markerOptions.title(info.getAddress());
-        // 设置Marker的坐标，为我们点击地图的经纬度坐标
-        markerOptions.position(latLng);
-        // 设置Marker的可见性
-        markerOptions.visible(true);
-        // 设置Marker是否可以被拖拽，这里先设置为false，之后会演示Marker的拖拽功能
-        markerOptions.draggable(false);
-        // 将Marker添加到地图上去
-        mAMap.addMarker(markerOptions).setObject(info);
-        mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f));
+    LatLng latLng = new LatLng(info.getLat(), info.getLon());
+    MarkerOptions markerOptions = new MarkerOptions();
+    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(DeviceInfoHelper.getInstance().getAvatar()));
+    // 设置Marker点击之后显示的标题
+    markerOptions.title(info.getAddress());
+    // 设置Marker的坐标，为我们点击地图的经纬度坐标
+    markerOptions.position(latLng);
+    // 设置Marker的可见性
+    markerOptions.visible(true);
+    // 设置Marker是否可以被拖拽，这里先设置为false，之后会演示Marker的拖拽功能
+    markerOptions.draggable(false);
+    // 将Marker添加到地图上去
+    mAMap.addMarker(markerOptions).setObject(info);
+    mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f));
+  }
+
+
+  @Override
+  public void setupBroadcastActions(List<String> actions) {
+    super.setupBroadcastActions(actions);
+    actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
+    actions.add(BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO);
+  }
+
+  @Override
+  public void handleBroadcast(Context context, Intent intent) {
+    super.handleBroadcast(context, intent);
+    String action = intent.getAction();
+    if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
+      DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+      if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
+        mTitleHelper.setTitle(info.getNikeName());
+      }
+      loadDeviceInfo();
+    } else if (TextUtils.equals(action, BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO)) {
+      sendEmptyBackgroundMessage(MSG_BACK_REFRESH_DEVICE_INFO);
+      mTitleHelper.refreshData();
+      DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+      if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
+        mTitleHelper.setTitle(info.getNikeName());
+      }
     }
+  }
 
-
-    @Override
-    public void setupBroadcastActions(List<String> actions) {
-        super.setupBroadcastActions(actions);
-        actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
+  @Override
+  public void onClick(View v) {
+    int id = v.getId();
+    if (id == R.id.ib_plus) {
+      mAMap.moveCamera(CameraUpdateFactory.zoomIn());
+    } else if (id == R.id.ib_minus) {
+      mAMap.moveCamera(CameraUpdateFactory.zoomOut());
+    } else if (id == R.id.ib_locate) {
+      sendEmptyBackgroundMessage(MSG_BACK_LOCATE);
+    } else if (id == R.id.ib_battery) {
+      showBatteryPopWindow();
+    } else if (id == R.id.ib_mobile) {
+      showCallDialog();
+    } else if (id == R.id.ib_steps) {
+      showStepsPopWindow();
     }
+  }
 
-    @Override
-    public void handleBroadcast(Context context, Intent intent) {
-        super.handleBroadcast(context, intent);
-        String action = intent.getAction();
-        if (TextUtils.equals(action, BroadcastActions.ACTION_MAIN_DEVICE_CHANGE)) {
-            DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
-            if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
-                mTitleHelper.setTitle(info.getNikeName());
-            }
-            loadDeviceInfo();
+  private void searchAddressByPosi() {
+    if (mNowDeviceInfo == null) {
+      return;
+    }
+    geocodeSearchId = mNowDeviceInfo.getId();
+    RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(mNowDeviceInfo.getLon(), mNowDeviceInfo.getLat()), 20, GeocodeSearch.AMAP);
+    geocoderSearch.getFromLocationAsyn(query);
+  }
+
+  private void showBatteryPopWindow() {
+    if (getActivity() != null && !getActivity().isFinishing()) {
+      if (mBatteryPopWindow == null) {
+        mBatteryPopWindow = new BasePopupWindow(getActivity());
+        mBatteryPopWindow.setContentView(R.layout.pop_locate_battery);
+        mTvBatteryTip = (TextView) mBatteryPopWindow.findViewById(R.id.tv_content);
+      }
+      int[] location = new int[2];
+      mIbBattery.getLocationOnScreen(location);
+      if (mNowDeviceInfo != null) {
+        String show = "当前电量为" + mNowDeviceInfo.getEleQuantity() + "%";
+        if (mNowDeviceInfo.getEleQuantity() < 1) {
+          show = "当前电量为小于1%，请及时充电哦";
         }
+        mTvBatteryTip.setText(show);
+        mBatteryPopWindow.showAtLocation(mIbBattery, Gravity.NO_GRAVITY, location[0] + mIbBattery.getWidth(), location[1] - mBatteryPopWindow.getHeight());
+      }
     }
+  }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.ib_plus) {
-            mAMap.moveCamera(CameraUpdateFactory.zoomIn());
-        } else if (id == R.id.ib_minus) {
-            mAMap.moveCamera(CameraUpdateFactory.zoomOut());
-        } else if (id == R.id.ib_locate) {
-            sendEmptyBackgroundMessage(MSG_BACK_LOCATE);
-        } else if (id == R.id.ib_battery) {
-            showBatteryPopWindow();
-        } else if (id == R.id.ib_mobile) {
-            callCustomerService(mNowDeviceInfo.getPhoneNum());
-        } else if (id == R.id.ib_steps) {
-            showStepsPopWindow();
+  private void showStepsPopWindow() {
+    if (getActivity() != null && !getActivity().isFinishing()) {
+      if (mStepsPopWindow == null) {
+        mStepsPopWindow = new BasePopupWindow(getActivity());
+        mStepsPopWindow.setContentView(R.layout.pop_locate_steps);
+        mTvSpeed = (TextView) mStepsPopWindow.findViewById(R.id.tv_speed);
+        mTvSteps = (TextView) mStepsPopWindow.findViewById(R.id.tv_step);
+        mTvHell = (TextView) mStepsPopWindow.findViewById(R.id.tv_hell);
+      }
+      int[] location = new int[2];
+      mIbStep.getLocationOnScreen(location);
+      if (mNowDeviceInfo != null) {
+        mTvSpeed.setText("速度：" + mNowDeviceInfo.getSpeed() + "千米/小时");
+        mTvSteps.setText("步数：" + mNowDeviceInfo.getStepNum() + "步");
+        mTvHell.setText("压力：" + mNowDeviceInfo.getSolePress() + "G（脚掌）/" + mNowDeviceInfo.getHellPress() + "G（脚跟）");
+        mStepsPopWindow.showAtLocation(mIbStep, Gravity.NO_GRAVITY, location[0] + mIbStep.getWidth(), location[1] - mStepsPopWindow.getHeight());
+      }
+    }
+  }
+
+  private void showCallDialog() {
+    if (getActivity() != null && !getActivity().isFinishing()) {
+      final BaseDialog dialog = new BaseDialog(getActivity());
+      dialog.setWindow(R.style.alpha_animation, 0.3f);
+      dialog.setContentView(R.layout.dialog_title_content);
+      String title = "设备还没有绑定手机号，请";
+      ((TextView) dialog.findViewById(R.id.tv_title)).setText("设备电话号码为：" + mNowDeviceInfo.getPhoneNum() + "\n确定要呼叫设备吗?");
+      dialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          callCustomerService(mNowDeviceInfo.getPhoneNum());
+          if (dialog != null) {
+            dialog.dismiss();
+          }
         }
-    }
-
-    private void searchAddressByPosi() {
-        if (mNowDeviceInfo == null) {
-            return;
+      });
+      dialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          if (dialog != null) {
+            dialog.dismiss();
+          }
         }
-        geocodeSearchId = mNowDeviceInfo.getId();
-        RegeocodeQuery query = new RegeocodeQuery(
-                new LatLonPoint(mNowDeviceInfo.getLon(), mNowDeviceInfo.getLat()), 20,
-                GeocodeSearch.AMAP);
-        geocoderSearch.getFromLocationAsyn(query);
+      });
+      dialog.show();
     }
+  }
 
-    private void showBatteryPopWindow() {
-        if (getActivity() != null && !getActivity().isFinishing()) {
-            if (mBatteryPopWindow == null) {
-                mBatteryPopWindow = new BasePopupWindow(getActivity());
-                mBatteryPopWindow.setContentView(R.layout.pop_locate_battery);
-                mTvBatteryTip = (TextView) mBatteryPopWindow.findViewById(R.id.tv_content);
-            }
-            int[] location = new int[2];
-            mIbBattery.getLocationOnScreen(location);
-            if (mNowDeviceInfo != null) {
-                String show = "当前电量为" + mNowDeviceInfo.getEleQuantity() + "%";
-                if (mNowDeviceInfo.getEleQuantity() < 1) {
-                    show = "当前电量为小于1%，请及时充电哦";
-                }
-                mTvBatteryTip.setText(show);
-                mBatteryPopWindow.showAtLocation(mIbBattery, Gravity.NO_GRAVITY,
-                        location[0] + mIbBattery.getWidth(),
-                        location[1] - mBatteryPopWindow.getHeight());
-            }
-        }
+  @Override
+  public void onDestroyView() {
+    super.onDestroy();
+    mMapView.onDestroy();
+    if (timer != null) {
+      timer.cancel();
+      timer = null;
     }
+  }
 
-    private void showStepsPopWindow() {
-        if (getActivity() != null && !getActivity().isFinishing()) {
-            if (mStepsPopWindow == null) {
-                mStepsPopWindow = new BasePopupWindow(getActivity());
-                mStepsPopWindow.setContentView(R.layout.pop_locate_steps);
-                mTvSpeed = (TextView) mStepsPopWindow.findViewById(R.id.tv_speed);
-                mTvSteps = (TextView) mStepsPopWindow.findViewById(R.id.tv_step);
-                mTvHell = (TextView) mStepsPopWindow.findViewById(R.id.tv_hell);
-            }
-            int[] location = new int[2];
-            mIbStep.getLocationOnScreen(location);
-            if (mNowDeviceInfo != null) {
-                mTvSpeed.setText("速度：" + mNowDeviceInfo.getSpeed() + "千米/小时");
-                mTvSteps.setText("步数：" + mNowDeviceInfo.getStepNum() + "步");
-                mTvHell.setText("压力：" + mNowDeviceInfo.getSolePress() + "G（脚掌）/"
-                        + mNowDeviceInfo.getHellPress() + "G（脚跟）");
-                mStepsPopWindow.showAtLocation(mIbStep, Gravity.NO_GRAVITY,
-                        location[0] + mIbStep.getWidth(),
-                        location[1] - mStepsPopWindow.getHeight());
-            }
-        }
+  @Override
+  public void onResume() {
+    super.onResume();
+    mMapView.onResume();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    mMapView.onPause();
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    mMapView.onSaveInstanceState(outState);
+  }
+
+  @Override
+  public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int rCode) {
+    if (mNowDeviceInfo != null && geocodeSearchId == mNowDeviceInfo.getId()) {
+      mNowDeviceInfo.setAddress(regeocodeResult.getRegeocodeAddress().getFormatAddress());
     }
+    updateBottomUi(mNowDeviceInfo);
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroy();
-        mMapView.onDestroy();
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
+  }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMapView.onPause();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mMapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int rCode) {
-        if (mNowDeviceInfo != null && geocodeSearchId == mNowDeviceInfo.getId()) {
-            mNowDeviceInfo.setAddress(regeocodeResult.getRegeocodeAddress().getFormatAddress());
-        }
-        updateBottomUi(mNowDeviceInfo);
-
-    }
-
-    @Override
-    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-
-    }
+  @Override
+  public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+  }
 }

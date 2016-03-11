@@ -19,9 +19,10 @@ import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.entity.DeviceInfo;
+import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.CommonResponse;
-import cn.protector.logic.http.response.DeviceListResponse;
+import cn.protector.logic.http.response.GetBaseListResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.activity.usercenter.AddDeviceActivity;
 import cn.protector.ui.activity.usercenter.FinishInfoActivity;
@@ -45,6 +46,7 @@ public class DeviceManageActivity extends CommonTitleActivity {
 
   private DeviceManagerAdapter mDeviceAdapter;
   private StatusView mStatusView;
+  private boolean isReLoadData = false;
 
   @Override
   protected View getTitleLayoutView() {
@@ -123,7 +125,7 @@ public class DeviceManageActivity extends CommonTitleActivity {
       dialog.setContentView(R.layout.dialog_title_content);
       TextView text = (TextView) dialog.findViewById(R.id.tv_title);
       String show = "昵称：" + info.getNikeName() + "\n" +
-              "关系：" +  DeviceInfo.parseRelation(info.getRelation(), info.getOtherRelation()) + "\n地址：" + info.getAddress() + "\n\n确定要删除该设备吗？";
+              "关系：" + DeviceInfo.parseRelation(info.getRelation(), info.getOtherRelation()) + "\n地址：" + info.getAddress() + "\n\n确定要删除该设备吗？";
       text.setText(show);
       dialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
         @Override
@@ -187,7 +189,7 @@ public class DeviceManageActivity extends CommonTitleActivity {
   }
 
   private void loadDataTask() {
-    HttpRequest<DeviceListResponse> request = new HttpRequest<>(AppConfig.GET_BASELIST, DeviceListResponse.class);
+    HttpRequest<GetBaseListResponse> request = new HttpRequest<>(AppConfig.GET_BASELIST, GetBaseListResponse.class);
     request.addParam("uc", InitSharedData.getUserCode());
     Message uiMsg = obtainUiMessage();
     uiMsg.what = MSG_UI_LOAD_DATA;
@@ -205,7 +207,7 @@ public class DeviceManageActivity extends CommonTitleActivity {
     switch (msg.what) {
       case MSG_UI_LOAD_DATA:
         if (msg.obj != null) {
-          handleLoadData((DeviceListResponse) msg.obj);
+          handleLoadData((GetBaseListResponse) msg.obj);
         } else {
           mStatusView.showFailView();
         }
@@ -223,9 +225,13 @@ public class DeviceManageActivity extends CommonTitleActivity {
     }
   }
 
-  private void handleLoadData(DeviceListResponse response) {
+  private void handleLoadData(GetBaseListResponse response) {
     if (response.getList() != null && response.getList().size() > 0) {
       mStatusView.showContentView();
+      if (isReLoadData) {
+        InitSharedData.setDeviceData(response.getJson());
+        DeviceInfoHelper.getInstance().refreshDeviceList();
+      }
       mDeviceAdapter.setDataNotifyDataSetChanged(response.getList());
     } else {
       mStatusView.showNoDataView();
@@ -250,8 +256,9 @@ public class DeviceManageActivity extends CommonTitleActivity {
     super.handleBroadcast(context, intent);
     String action = intent.getAction();
     if (TextUtils.equals(action, BroadcastActions.ACTION_MODIFY_WEAR_INFO_SUCCESS)) {
+      isReLoadData = true;
       sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
-    }else if (TextUtils.equals(action,BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN)){
+    } else if (TextUtils.equals(action, BroadcastActions.ACTION_FINISH_ACTIVITY_BEFORE_MAIN)) {
       finish();
     }
   }

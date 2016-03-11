@@ -216,6 +216,7 @@ public class LoginActivity extends CommonTitleActivity
                 break;
             case MSG_UI_GO_MAIN:
                 goActivity(MainActivity.class);
+                finish();
                 break;
             case MSG_UI_GO_ADD_DEVICE:
                 goActivity(AddDeviceActivity.class);

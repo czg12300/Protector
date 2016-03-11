@@ -104,6 +104,7 @@ public class MessageFragment extends BaseWorkerFragment {
     super.setupBroadcastActions(actions);
     actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
     actions.add(BroadcastActions.ACTION_PUSH_COMMON_MESSAGE);
+    actions.add(BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO);
   }
 
   @Override
@@ -125,6 +126,12 @@ public class MessageFragment extends BaseWorkerFragment {
       }
       InitSharedData.setMessageNum(InitSharedData.getMessageNum() + 1);
       setRedDot();
+    }else if (TextUtils.equals(action, BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO)) {
+      mTitleHelper.refreshData();
+      DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+      if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
+        mTitleHelper.setTitle(info.getNikeName());
+      }
     }
   }
 

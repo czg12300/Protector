@@ -114,6 +114,7 @@ public class HealthFragment extends BaseWorkerFragment implements View.OnClickLi
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
         actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
+        actions.add(BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO);
     }
 
     @Override
@@ -127,6 +128,12 @@ public class HealthFragment extends BaseWorkerFragment implements View.OnClickLi
                     mTitleHelper.setTitle(info.getNikeName());
                 }
                 loadData();
+            }
+        }else if (TextUtils.equals(action, BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO)) {
+            mTitleHelper.refreshData();
+            DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+            if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
+                mTitleHelper.setTitle(info.getNikeName());
             }
         }
     }

@@ -3,11 +3,9 @@ package cn.protector.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
@@ -28,13 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.common.AppException;
-import cn.common.bitmap.core.ImageLoader;
-import cn.common.bitmap.core.assist.FailReason;
-import cn.common.bitmap.core.listener.ImageLoadingListener;
-import cn.common.ui.BasePopupWindow;
 import cn.common.ui.fragment.BaseWorkerFragment;
 import cn.common.utils.BitmapUtil;
-import cn.common.utils.DisplayUtil;
 import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
@@ -44,9 +37,7 @@ import cn.protector.logic.entity.HourPointsInfo;
 import cn.protector.logic.entity.PointInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
-import cn.protector.logic.http.response.CommonHasLoginStatusResponse;
 import cn.protector.logic.http.response.HistoryResponse;
-import cn.protector.logic.http.response.NowDeviceInfoResponse;
 import cn.protector.ui.helper.CalendarHelper;
 import cn.protector.ui.helper.DateUtil;
 import cn.protector.ui.helper.MainTitleHelper;
@@ -396,6 +387,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
         actions.add(BroadcastActions.ACTION_MAIN_DEVICE_CHANGE);
+        actions.add(BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO);
     }
 
     @Override
@@ -408,6 +400,13 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                 mTitleHelper.setTitle(info.getNikeName());
             }
             sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
+        } else if (TextUtils.equals(action, BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO)) {
+            sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
+            mTitleHelper.refreshData();
+            DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
+            if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
+                mTitleHelper.setTitle(info.getNikeName());
+            }
         }
     }
 

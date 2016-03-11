@@ -6,16 +6,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * 描述:重置密码返回数据
+ * 描述:穿戴者信息返回数据
  *
  * @author jakechen
  * @since 2015/11/4 19:38
  */
 public class WearInfoResponse extends Response {
-
+  public static final int MAN = 1;
+  public static final int WOMAN = 0;
   private String eid;
   private String name;
-  private String sex;
+  private int sex;
   private String birthday;
   private int weight;
   private int shoeSize;
@@ -55,11 +56,11 @@ public class WearInfoResponse extends Response {
     this.name = name;
   }
 
-  public String getSex() {
+  public int getSex() {
     return sex;
   }
 
-  public void setSex(String sex) {
+  public void setSex(int sex) {
     this.sex = sex;
   }
 
@@ -104,7 +105,7 @@ public class WearInfoResponse extends Response {
       JSONObject root = new JSONObject(json);
       setEid(root.optString("Eid"));
       setName(root.optString("Name"));
-      setSex(root.optString("Sex"));
+      setSex(root.optInt("Sex"));
       setBirthday(root.optString("Birthday"));
       setAvatar(root.optString("Image"));
       setWeight(root.optInt("Weight"));
@@ -116,5 +117,12 @@ public class WearInfoResponse extends Response {
     }
     setIsOk(true);
     return this;
+  }
+  public static int parseSex(String sex){
+    int result=MAN;
+    if (!TextUtils.equals(sex,"男")){
+      result=WOMAN;
+    }
+    return result;
   }
 }

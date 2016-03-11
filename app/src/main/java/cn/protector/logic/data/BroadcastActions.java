@@ -46,6 +46,10 @@ public interface BroadcastActions {
      * 修改穿戴者信息成功
      */
     String ACTION_MODIFY_WEAR_INFO_SUCCESS = "cn.protector.data.BroadcastActions.ACTION_MODIFY_WEAR_INFO_SUCCESS";
+    /**
+     * 更新当前设备数据
+     */
+    String ACTION_UPDATE_POSITION_DEVICE_INFO = "cn.protector.data.BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO";
 
 
 }

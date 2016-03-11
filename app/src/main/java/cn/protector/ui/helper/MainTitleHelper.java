@@ -76,7 +76,7 @@ public class MainTitleHelper implements View.OnClickListener {
         mVTitle.setBackgroundColor(getColor(R.color.title_background));
         mTvTitle.setOnClickListener(this);
         mIvTitleLeft.setOnClickListener(this);
-        initData();
+        refreshData();
     }
 
     /**
@@ -182,9 +182,9 @@ public class MainTitleHelper implements View.OnClickListener {
     }
 
 
-    public void initData() {
+    public void refreshData() {
         if (DeviceInfoHelper.getInstance().hasAnyDevice()) {
-            DeviceInfo info = DeviceInfoHelper.getInstance().getDefaultDevice();
+            DeviceInfo info = DeviceInfoHelper.getInstance().getPositionDeviceInfo();
             if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
                 setTitle(info.getNikeName());
                 DeviceInfoHelper.getInstance().setPositionDeviceInfo(info);
