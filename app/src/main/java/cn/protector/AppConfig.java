@@ -101,4 +101,7 @@ public class AppConfig {
     public static final String CHECK_EQUIMENTEXIST = "CheckEquimentExist";
     //获取话费余额
     public static final String GET_EQUIBALANCE = "GetEquiBalance";
+    //获取微信支付的账单
+    public static final String GET_PAY_FORM = "http://ishoes.wxpay.e-heneng.com:8007/JsApiPayPage.aspx";
+    public static final String WECHAT_APP_ID = "wxb4ba3c02aa476ea1";
 }

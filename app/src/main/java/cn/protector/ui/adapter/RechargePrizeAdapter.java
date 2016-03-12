@@ -22,12 +22,12 @@ public class RechargePrizeAdapter extends BaseListAdapter<PrizeInfo> {
 
     private static ArrayList<PrizeInfo> getPrizeData() {
         ArrayList<PrizeInfo> list = new ArrayList<>();
-        list.add(new PrizeInfo("1个月", "5元", 5));
-        list.add(new PrizeInfo("2个月", "10元", 10));
-        list.add(new PrizeInfo("3个月(9.8折)", "14.7元", 14.7));
-        list.add(new PrizeInfo("6个月(9.5折)", "28.5元", 28.5));
-        list.add(new PrizeInfo("1年(9折)", "54元", 54));
-        list.add(new PrizeInfo("2年(8折)", "96元", 96));
+        list.add(new PrizeInfo("1个月", "5元", 5, 1));
+        list.add(new PrizeInfo("2个月", "10元", 10, 2));
+        list.add(new PrizeInfo("3个月(9.8折)", "14.7元", 14.7, 3));
+        list.add(new PrizeInfo("6个月(9.5折)", "28.5元", 28.5, 6));
+        list.add(new PrizeInfo("1年(9折)", "54元", 54, 12));
+        list.add(new PrizeInfo("2年(8折)", "96元", 96, 24));
         return list;
     }
 
