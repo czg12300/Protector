@@ -54,6 +54,14 @@ public interface BroadcastActions {
      * 更新设备列表数据
      */
     String ACTION_UPDATE_DEVICE_LIST_INFO = "cn.protector.data.BroadcastActions.ACTION_UPDATE_DEVICE_LIST_INFO";
+    /**
+     * 更新实时定位的数据
+     */
+    String ACTION_PUSH_REAL_TIME_LOCATE_DATA = "cn.protector.data.BroadcastActions.ACTION_PUSH_REAL_TIME_LOCATE_DATA";
+    /**
+     * 话费充值成功
+     */
+    String ACTION_RECHARGE_SUCCESS = "cn.protector.data.BroadcastActions.ACTION_RECHARGE_SUCCESS";
 
 
 }

@@ -99,4 +99,6 @@ public class AppConfig {
     public static final String GET_POSITIONDATA = "GetPositionData";
     //检查二维码是否有效
     public static final String CHECK_EQUIMENTEXIST = "CheckEquimentExist";
+    //获取话费余额
+    public static final String GET_EQUIBALANCE = "GetEquiBalance";
 }

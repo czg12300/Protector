@@ -1,14 +1,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/background_gray">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/title_main"/>
+        <include layout="@layout/title_main" />
 
         <LinearLayout
             android:id="@+id/ll_baby_info"
@@ -23,7 +23,7 @@
                 android:layout_width="@dimen/avatar"
                 android:layout_height="@dimen/avatar"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/img_head_baby"/>
+                android:src="@drawable/img_head_baby" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -36,30 +36,36 @@
                     android:id="@+id/tv_baby_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
                     android:textColor="@color/black_333333"
-                    android:textSize="@dimen/text_title"/>
+                    android:textSize="@dimen/text_content" />
 
                 <TextView
-                    android:id="@+id/tv_baby_steps"
+                    android:id="@+id/tv_huafei"
                     android:layout_width="wrap_content"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:drawableLeft="@drawable/ico_min_steps_blue"
-                    android:drawablePadding="5dp"
-                    android:singleLine="true"
-                    android:text="1252"
-                    android:textColor="@color/blue_03a9f4"
-                    android:textSize="12dp"/>
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="正在努力获取话费信息"
+                    android:textColor="@color/gray_757575"
+                    android:textSize="12dp" />
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_recharge"
+                style="@style/btn_blue"
+                android:layout_width="55dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="充值"
+                android:textSize="14dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/ico_right"/>
+                android:src="@drawable/ico_right" />
         </LinearLayout>
 
         <cn.common.ui.widgt.InnerGridView
@@ -71,7 +77,7 @@
             android:cacheColorHint="@color/trans"
             android:listSelector="@drawable/list_selector_backgroud_gray"
             android:numColumns="3"
-            android:padding="10dp"/>
+            android:padding="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,14 +97,14 @@
                 android:paddingRight="10dp"
                 android:text="@string/modify_pw"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/text_content"/>
+                android:textSize="@dimen/text_content" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@color/divider_menu"/>
+                android:background="@color/divider_menu" />
 
             <TextView
                 android:id="@+id/tv_device_manage"
@@ -111,13 +117,13 @@
                 android:paddingRight="10dp"
                 android:text="@string/device_manage"
                 android:textColor="@color/black_333333"
-                android:textSize="@dimen/text_content"/>
+                android:textSize="@dimen/text_content" />
         </LinearLayout>
 
         <Button
             android:id="@+id/btn_exit"
             style="@style/btn_red"
             android:layout_margin="15dp"
-            android:text="@string/exit_login"/>
+            android:text="@string/exit_login" />
     </LinearLayout>
 </ScrollView>

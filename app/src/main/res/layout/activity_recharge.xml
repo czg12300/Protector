@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:descendantFocusability="afterDescendants"
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="25dp">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="当前余额30元，预计可使用6个月"
+        android:textColor="@color/black_363636"
+        android:textSize="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="由于定位鞋内置SIM卡，通讯费用为每月5元。"
+        android:textColor="@color/gray_757575"
+        android:textSize="12dp" />
+
+    <GridView
+        android:id="@+id/gv_prize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:layout_marginTop="20dp"
+        android:listSelector="@color/trans"
+        android:horizontalSpacing="15dp"
+        android:verticalSpacing="15dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:text="请选择支付方式："
+        android:textColor="@color/gray_757575"
+        android:textSize="14dp" />
+
+    <Button
+        android:id="@+id/btn_wechat"
+        style="@style/btn_blue"
+        android:text="微信支付（立即到账）" />
+</LinearLayout>
