@@ -88,7 +88,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
 
     private Timer timer;
 
-    private NowDeviceInfoResponse mNowDeviceInfo;
+//    private NowDeviceInfoResponse mNowDeviceInfo;
 
     private View mVBottom;
 
@@ -411,20 +411,21 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
 
 
     private void handleAutoLocate(LocateInfoResponse response) {
-        if (mNowDeviceInfo == null) {
+        NowDeviceInfoResponse info = DeviceInfoHelper.getInstance().getNowDeviceInfo();
+        if (info == null) {
             return;
         }
         if (response.getLat() > 0) {
-            mNowDeviceInfo.setLat(response.getLat());
+            info.setLat(response.getLat());
         }
         if (response.getLon() > 0) {
-            mNowDeviceInfo.setLon(response.getLon());
+            info.setLon(response.getLon());
         }
         if (!TextUtils.isEmpty(response.getAddress())) {
-            mNowDeviceInfo.setAddress(response.getAddress());
+            info.setAddress(response.getAddress());
         }
-        addMapMark(mNowDeviceInfo);
-        updateBottomUi(mNowDeviceInfo);
+        addMapMark(info);
+        updateBottomUi(info);
     }
 
     private void handleRefreshDeviceInfoResponse(Message msg) {
@@ -438,13 +439,13 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     }
 
     private void handleUpdateNowDeviceInfo(NowDeviceInfoResponse info) {
+        DeviceInfoHelper.getInstance().setNowDeviceInfo(info);
         if (mVBottom.getVisibility() != View.VISIBLE) {
             mVBottom.setVisibility(View.VISIBLE);
         }
-        mNowDeviceInfo = info;
-        addMapMark(mNowDeviceInfo);
-        updateBottomUi(mNowDeviceInfo);
-        if (TextUtils.isEmpty(mNowDeviceInfo.getAddress())) {
+        addMapMark(info);
+        updateBottomUi(info);
+        if (TextUtils.isEmpty(info.getAddress())) {
             searchAddressByPosi();
         }
     }
@@ -561,11 +562,12 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     }
 
     private void searchAddressByPosi() {
-        if (mNowDeviceInfo == null) {
+        NowDeviceInfoResponse info = DeviceInfoHelper.getInstance().getNowDeviceInfo();
+        if (info == null) {
             return;
         }
-        geocodeSearchId = mNowDeviceInfo.getId();
-        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(mNowDeviceInfo.getLon(), mNowDeviceInfo.getLat()), 20, GeocodeSearch.AMAP);
+        geocodeSearchId = info.getId();
+        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(info.getLon(), info.getLat()), 20, GeocodeSearch.AMAP);
         geocoderSearch.getFromLocationAsyn(query);
     }
 
@@ -578,9 +580,10 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             }
             int[] location = new int[2];
             mIbBattery.getLocationOnScreen(location);
-            if (mNowDeviceInfo != null) {
-                String show = "当前电量为" + mNowDeviceInfo.getEleQuantity() + "%";
-                if (mNowDeviceInfo.getEleQuantity() < 1) {
+            NowDeviceInfoResponse info = DeviceInfoHelper.getInstance().getNowDeviceInfo();
+            if (info != null) {
+                String show = "当前电量为" + info.getEleQuantity() + "%";
+                if (info.getEleQuantity() < 1) {
                     show = "当前电量为小于1%，请及时充电哦";
                 }
                 mTvBatteryTip.setText(show);
@@ -600,10 +603,11 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             }
             int[] location = new int[2];
             mIbStep.getLocationOnScreen(location);
-            if (mNowDeviceInfo != null) {
-                mTvSpeed.setText("速度：" + mNowDeviceInfo.getSpeed() + "千米/小时");
-                mTvSteps.setText("步数：" + mNowDeviceInfo.getStepNum() + "步");
-                mTvHell.setText("压力：" + mNowDeviceInfo.getSolePress() + "G（脚掌）/" + mNowDeviceInfo.getHellPress() + "G（脚跟）");
+            NowDeviceInfoResponse info = DeviceInfoHelper.getInstance().getNowDeviceInfo();
+            if (info != null) {
+                mTvSpeed.setText("速度：" + info.getSpeed() + "千米/小时");
+                mTvSteps.setText("步数：" + info.getStepNum() + "步");
+                mTvHell.setText("压力：" + info.getSolePress() + "G（脚掌）/" + info.getHellPress() + "G（脚跟）");
                 mStepsPopWindow.showAtLocation(mIbStep, Gravity.NO_GRAVITY, location[0] + mIbStep.getWidth(), location[1] - mStepsPopWindow.getHeight());
             }
         }
@@ -637,15 +641,16 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     }
 
     private void showCallDialog() {
-        if (getActivity() != null && !getActivity().isFinishing()) {
+        final NowDeviceInfoResponse info = DeviceInfoHelper.getInstance().getNowDeviceInfo();
+        if (getActivity() != null && !getActivity().isFinishing() && info != null) {
             final BaseDialog dialog = new BaseDialog(getActivity());
             dialog.setWindow(R.style.alpha_animation, 0.3f);
             dialog.setContentView(R.layout.dialog_title_content);
-            ((TextView) dialog.findViewById(R.id.tv_title)).setText("设备电话号码为：" + mNowDeviceInfo.getPhoneNum() + "\n确定要呼叫设备吗?");
+            ((TextView) dialog.findViewById(R.id.tv_title)).setText("设备电话号码为：" + info.getPhoneNum() + "\n确定要呼叫设备吗?");
             dialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callCustomerService(mNowDeviceInfo.getPhoneNum());
+                    callCustomerService(info.getPhoneNum());
                     if (dialog != null) {
                         dialog.dismiss();
                     }
@@ -693,10 +698,12 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
 
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int rCode) {
-        if (mNowDeviceInfo != null && geocodeSearchId == mNowDeviceInfo.getId()) {
-            mNowDeviceInfo.setAddress(regeocodeResult.getRegeocodeAddress().getFormatAddress());
+        NowDeviceInfoResponse info = DeviceInfoHelper.getInstance().getNowDeviceInfo();
+        if (info != null && geocodeSearchId == info.getId()) {
+            info.setAddress(regeocodeResult.getRegeocodeAddress().getFormatAddress());
         }
-        updateBottomUi(mNowDeviceInfo);
+        DeviceInfoHelper.getInstance().setNowDeviceInfo(info);
+        updateBottomUi(info);
 
     }
 

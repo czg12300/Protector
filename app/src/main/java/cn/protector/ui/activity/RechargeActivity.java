@@ -1,6 +1,8 @@
 package cn.protector.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.tencent.mm.sdk.constants.Build;
+import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelpay.PayReq;
@@ -16,9 +19,12 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import java.util.List;
+
 import cn.common.AppException;
 import cn.protector.AppConfig;
 import cn.protector.R;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.entity.PrizeInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
@@ -28,12 +34,13 @@ import cn.protector.logic.http.response.WeChatPayFormResponse;
 import cn.protector.ui.adapter.RechargePrizeAdapter;
 import cn.protector.ui.widget.StatusView;
 import cn.protector.utils.ToastUtil;
+import cn.protector.wxapi.WXPayEntryActivity;
 
 /**
  * 描述：充值页面
  * 作者：jake on 2016/3/12 16:15
  */
-public class RechargeActivity extends CommonTitleActivity implements IWXAPIEventHandler {
+public class RechargeActivity extends CommonTitleActivity {
     private static final int MSG_UI_LOAD_DATA = 0;
     private static final int MSG_BACK_LOAD_DATA = 0;
     private static final int MSG_UI_GET_PAY_FORM = 1;
@@ -42,9 +49,17 @@ public class RechargeActivity extends CommonTitleActivity implements IWXAPIEvent
     private TextView tvHuaFei;
     private GridView gridView;
     private double prize = -1;
-    private double months;
+    private int months;
     private String name;
     private IWXAPI api;
+    private RechargePrizeAdapter mRechargePrizeAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        api = WXAPIFactory.createWXAPI(this, AppConfig.WECHAT_APP_ID);
+        api.registerApp(AppConfig.WECHAT_APP_ID);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void initView() {
@@ -55,9 +70,6 @@ public class RechargeActivity extends CommonTitleActivity implements IWXAPIEvent
         mStatusView.showContentView();
         tvHuaFei = (TextView) findViewById(R.id.tv_title);
         gridView = (GridView) findViewById(R.id.gv_prize);
-        api = WXAPIFactory.createWXAPI(this, AppConfig.WECHAT_APP_ID);
-        api.registerApp(AppConfig.WECHAT_APP_ID);
-        api.handleIntent(getIntent(), this);
     }
 
     @Override
@@ -76,7 +88,7 @@ public class RechargeActivity extends CommonTitleActivity implements IWXAPIEvent
                 PrizeInfo info = (PrizeInfo) adapter.getItem(position);
                 if (info != null) {
                     prize = info.getPrize();
-                    months = info.getPrize();
+                    months = info.getMonths();
                     name = info.getTitle();
                 }
                 adapter.setSelect(position);
@@ -96,7 +108,6 @@ public class RechargeActivity extends CommonTitleActivity implements IWXAPIEvent
             boolean isPaySupported = api.getWXAppSupportAPI() >= Build.PAY_SUPPORTED_SDK_INT;
             if (isPaySupported) {
                 sendEmptyBackgroundMessage(MSG_BACK_GET_PAY_FORM);
-                ToastUtil.show("正在创建账单");
             } else {
                 ToastUtil.show("您的微信不支持支付，请将微信升级到最新版本");
 
@@ -109,7 +120,8 @@ public class RechargeActivity extends CommonTitleActivity implements IWXAPIEvent
     @Override
     protected void initData() {
         super.initData();
-        gridView.setAdapter(new RechargePrizeAdapter(this));
+        mRechargePrizeAdapter=new RechargePrizeAdapter(this);
+        gridView.setAdapter(mRechargePrizeAdapter);
         loadData();
     }
 
@@ -132,17 +144,15 @@ public class RechargeActivity extends CommonTitleActivity implements IWXAPIEvent
     }
 
     private void getPayFormTask() {
-//        String url=AppConfig.GET_PAY_FORM+
-        HttpRequest<WeChatPayFormResponse> request = new HttpRequest<>(AppConfig.GET_PAY_FORM, WeChatPayFormResponse.class);
-        request.setIsGet(false);
+        String eid = "";
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("EID", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+            eid = DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId();
         }
-        request.addParam("uer", InitSharedData.getMobile());
-        request.addParam("body", name);
-        request.addParam("total_fee", "" + prize);
-        request.addParam("PurchaseQuantity", "" + months);
-
+        //todo
+//        String url = AppConfig.GET_PAY_FORM + "uer=" + InitSharedData.getMobile() + "&body=" + name + "&total_fee=" + (int) prize + "&PurchaseQuantity=" + months + "&EID=" + eid;
+        String url = AppConfig.GET_PAY_FORM + "uer=" + InitSharedData.getMobile() + "&body=" + name + "&total_fee=" + 1 + "&PurchaseQuantity=" + months + "&EID=" + eid;
+        HttpRequest<WeChatPayFormResponse> request = new HttpRequest<>(url, WeChatPayFormResponse.class);
+        request.setIsGet(false);
         Message message = obtainUiMessage();
         message.what = MSG_UI_GET_PAY_FORM;
         try {
@@ -188,12 +198,6 @@ public class RechargeActivity extends CommonTitleActivity implements IWXAPIEvent
 //                }
                 break;
             case MSG_UI_GET_PAY_FORM:
-                //测试
-                String json = "{ \"appid\":\"wxb4ba3c02aa476ea1\", \"noncestr\":\"c575bfa543b573e096dc9f86640b2f46\", \"package\":\"Sign=WXPay\", \"partnerid\":\"10000100\", \"prepayid\":\"wx2016031300042780a9cb7b510443959618\", \"timestamp\":\"1457798667\", \"sign\":\"D7532DBF50CE31D79C36F41499000E13\" }";
-                WeChatPayFormResponse response1 =new WeChatPayFormResponse();
-                response1.parse(json);
-                handleWeChat(response1);
-                //--------
                 if (msg.obj != null) {
                     WeChatPayFormResponse response = (WeChatPayFormResponse) msg.obj;
                     handleWeChat(response);
@@ -206,56 +210,44 @@ public class RechargeActivity extends CommonTitleActivity implements IWXAPIEvent
 
     private void handleWeChat(WeChatPayFormResponse response) {
         PayReq req = new PayReq();
-        req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
-//        req.appId = response.getAppid();
+        req.appId = response.getAppid();
+        req.appId = AppConfig.WECHAT_APP_ID;
         req.partnerId = response.getPartnerid();
         req.prepayId = response.getPrepayid();
         req.nonceStr = response.getNoncestr();
         req.timeStamp = response.getTimestamp();
         req.packageValue = response.get_package();
         req.sign = response.getSign();
-        req.extData = "app data"; // optional
         api.sendReq(req);
     }
 
+
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        api.handleIntent(intent, this);
+    public void setupBroadcastActions(List<String> actions) {
+        super.setupBroadcastActions(actions);
+        actions.add(BroadcastActions.ACTION_WECHAT_PAY_RESULT);
     }
 
     @Override
-    public void onReq(BaseReq baseReq) {
+    public void handleBroadcast(Context context, Intent intent) {
+        super.handleBroadcast(context, intent);
+        String action = intent.getAction();
+        if (TextUtils.equals(action, BroadcastActions.ACTION_WECHAT_PAY_RESULT)) {
+            int code = intent.getExtras().getInt(WXPayEntryActivity.KEY_CODE, -1000);
+            if (code < 0) {
+                if (code == BaseResp.ErrCode.ERR_USER_CANCEL) {
+                    ToastUtil.show("取消支付");
 
-    }
-
-    @Override
-    public void onResp(BaseResp resp) {
-//        tic int	ERR_AUTH_DENIED
-//
-//        认证被否决
-//        static int	ERR_COMM
-//
-//        一般错误
-//        static int	ERR_OK
-//
-//        正确返回
-//        static int	ERR_SENT_FAILED
-//
-//        发送失败
-//        static int	ERR_UNSUPPORT
-//
-//        不支持错误
-//        static int	ERR_USER_CANCEL
-//
-//        用户取消
-        ToastUtil.show("errCode=" + resp.errCode);
-        if (resp.errCode == BaseResp.ErrCode.ERR_OK) {
-            ToastUtil.show("支付成功");
-        } else {
-            ToastUtil.show("支付失败");
+                } else {
+                    ToastUtil.show("支付失败");
+                }
+            } else {
+                if (mRechargePrizeAdapter != null) {
+                    mRechargePrizeAdapter.setSelect(-1);
+                }
+                loadData();
+                ToastUtil.show("支付成功");
+            }
         }
-//        }
     }
 }

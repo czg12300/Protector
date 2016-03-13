@@ -62,6 +62,10 @@ public interface BroadcastActions {
      * 话费充值成功
      */
     String ACTION_RECHARGE_SUCCESS = "cn.protector.data.BroadcastActions.ACTION_RECHARGE_SUCCESS";
+    /**
+     * 微信支付的结果
+     */
+    String ACTION_WECHAT_PAY_RESULT = "cn.protector.data.BroadcastActions.ACTION_WECHAT_PAY_RESULT";
 
 
 }

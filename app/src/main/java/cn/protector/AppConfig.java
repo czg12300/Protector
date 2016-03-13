@@ -35,6 +35,10 @@ public class AppConfig {
         AppException.setDebug(isDebug);
     }
 
+    /**
+     * 微信appid
+     */
+    public static final String WECHAT_APP_ID = "wxc4cf91bb330bb376";
     // 登录接口
     public static final String LOGIN = "SystemLogin";
 
@@ -102,6 +106,8 @@ public class AppConfig {
     //获取话费余额
     public static final String GET_EQUIBALANCE = "GetEquiBalance";
     //获取微信支付的账单
-    public static final String GET_PAY_FORM = "http://ishoes.wxpay.e-heneng.com:8007/JsApiPayPage.aspx";
-    public static final String WECHAT_APP_ID = "wxb4ba3c02aa476ea1";
+    public static final String GET_PAY_FORM = "http://ishoes.wxpay.e-heneng.com:8007/JsApiPayPage.aspx?";
+    //位置修订
+    public static final String SET_POSITIONCORRECT = "SetPositionCorrect";
+
 }

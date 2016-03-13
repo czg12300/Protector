@@ -419,24 +419,3 @@ public class AddFenceActivity extends CommonTitleActivity implements GeocodeSear
 
     }
 }
-//    @Override
-//    protected View getTitleLayoutView() {
-//        View vTitle = inflate(R.layout.title_add_fence);
-//        mIvBack = (ImageView) vTitle.findViewById(R.id.iv_back);
-//        mTvTitle = (TextView) vTitle.findViewById(R.id.tv_title);
-//        mIvBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//                onBack();
-//            }
-//        });
-//        vTitle.findViewById(R.id.iv_search).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                goActivity(SearchAreaActivity.class);
-//            }
-//        });
-//
-//        return vTitle;
-//    }

@@ -55,7 +55,6 @@ public class HuaFeiResponse extends Response {
         }
         try {
             JSONObject root = new JSONObject(json);
-//            {"Data":{ "Eid":"E2014110110013000001","Balance":"30","ExpectTime":"6" } ,"Logined":"0/1"}
             JSONObject object = root.optJSONObject("Data");
             setEid(object.optString("Eid"));
             setBalance(object.optInt("Balance"));
