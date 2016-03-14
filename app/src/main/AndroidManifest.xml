@@ -73,6 +73,7 @@
             android:theme="@style/activity_style"/>
         <activity
             android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTop"
             android:theme="@style/activity_style_main"/>
         <activity
             android:name=".ui.activity.usercenter.RegisterActivity"

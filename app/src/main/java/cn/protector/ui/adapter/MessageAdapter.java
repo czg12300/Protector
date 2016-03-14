@@ -53,7 +53,7 @@ public class MessageAdapter extends BaseListAdapter<ChatMessage> {
       ImageLoader.getInstance().displayImage(message.getImage(), holder.ivAvatar);
       holder.tvMessage.setText(message.getContent());
       holder.tvName.setText(message.getSender());
-      holder.tvTime.setText(message.getFormatTime());
+      holder.tvTime.setText(ChatMessage.getFormatTime(message.getTime()));
       if (TextUtils.isEmpty(message.getUrl())) {
         convertView.setEnabled(false);
       } else {

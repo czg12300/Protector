@@ -10,10 +10,10 @@
     android:paddingTop="25dp">
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_recharge_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="当前余额30元，预计可使用6个月"
+        android:text="暂无信息"
         android:textColor="@color/black_363636"
         android:textSize="16dp" />
 

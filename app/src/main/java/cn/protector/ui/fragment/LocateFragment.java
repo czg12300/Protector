@@ -31,7 +31,6 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.common.AppException;
 import cn.common.ui.BaseDialog;
@@ -41,11 +40,9 @@ import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
-import cn.protector.logic.entity.ChatMessage;
 import cn.protector.logic.entity.DeviceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
-import cn.protector.logic.http.response.CommonHasLoginStatusResponse;
 import cn.protector.logic.http.response.LocateInfoResponse;
 import cn.protector.logic.http.response.LocateResponse;
 import cn.protector.logic.http.response.NowDeviceInfoResponse;
@@ -501,7 +498,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         mAMap.addMarker(markerOptions).setObject(info);
         mAMap.addCircle(new CircleOptions().center(latLng)
                 .radius(info.getPosiPrecision()).strokeColor(getColor(R.color.blue_03a9f4)).fillColor(getColor(R.color.blue_3003a9f4))
-                .strokeWidth(6));
+                .strokeWidth(3));
         mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f));
     }
 
@@ -531,6 +528,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             if (info != null && !TextUtils.isEmpty(info.getNikeName())) {
                 mTitleHelper.setTitle(info.getNikeName());
             }
+            addMapMark(DeviceInfoHelper.getInstance().getNowDeviceInfo());
         } else if (TextUtils.equals(action, BroadcastActions.ACTION_PUSH_REAL_TIME_LOCATE_DATA)) {
             NowDeviceInfoResponse info = (NowDeviceInfoResponse) intent.getSerializableExtra(PushMessageReceiver.KEY_EVENT_MESSAGE);
             if (info != null) {

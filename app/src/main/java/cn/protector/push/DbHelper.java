@@ -68,7 +68,7 @@ public class DbHelper extends SQLiteOpenHelper {
     ArrayList<ChatMessage> list = null;
     Cursor cursor = null;
     try {
-      if (time > 0) {
+      if (time >= 0) {
         cursor = db.query("message", null, "_time" + "<?", new String[]{String.valueOf(time)}, null, null, "_time" + " desc", String.valueOf(PAGE_SIZE));
       } else {
         cursor = db.query("message", null, null, null, null, null, "_time" + " desc", String.valueOf(PAGE_SIZE));

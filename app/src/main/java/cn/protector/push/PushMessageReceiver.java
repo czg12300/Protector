@@ -87,8 +87,8 @@ public class PushMessageReceiver extends BroadcastReceiver {
             public void run() {
                 try {
                     JSONObject root = new JSONObject(message);
-                    int type = root.optInt("type",-1);
-                    if (type == 0) {
+                   String  type = root.optString("type");
+                    if (TextUtils.equals(type,"msg")) {
                         JSONObject object = root.optJSONObject("message");
                         if (object != null) {
                             ChatMessage chatMessage = new ChatMessage();
@@ -102,7 +102,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
                             context.sendBroadcast(it);
                             DbHelper.getInstance().insertTable(chatMessage);
                         }
-                    } else if (type == 1) {
+                    } else if (TextUtils.equals(type,"state")) {
                         JSONObject object = root.optJSONObject("message");
                         if (object!=null){
                             NowDeviceInfoResponse response=new NowDeviceInfoResponse();

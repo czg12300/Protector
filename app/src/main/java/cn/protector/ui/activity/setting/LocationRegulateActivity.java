@@ -1,8 +1,6 @@
 
 package cn.protector.ui.activity.setting;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
@@ -24,8 +22,6 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 
-import java.util.List;
-
 import cn.common.AppException;
 import cn.protector.AppConfig;
 import cn.protector.R;
@@ -33,10 +29,8 @@ import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.CommonResponse;
-import cn.protector.logic.http.response.HuaFeiResponse;
 import cn.protector.logic.http.response.NowDeviceInfoResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
-import cn.protector.ui.helper.MapViewHelper;
 import cn.protector.ui.helper.TipDialogHelper;
 import cn.protector.utils.ToastUtil;
 
@@ -190,6 +184,9 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
         HttpRequest<CommonResponse> request = new HttpRequest<>(AppConfig.SET_POSITIONCORRECT, CommonResponse.class);
         if (!TextUtils.isEmpty(InitSharedData.getUserCode())) {
             request.addParam("uc", InitSharedData.getUserCode());
+        }
+        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
         request.addParam("dataid", mNowDeviceInfoResponse.getId() + "");
         request.addParam("lat", ""+mLatLng.latitude);

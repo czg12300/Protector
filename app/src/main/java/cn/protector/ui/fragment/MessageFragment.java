@@ -154,7 +154,7 @@ public class MessageFragment extends BaseWorkerFragment {
             mLvMessage.setCanScrollDown(false);
           }
         } else {
-          list = DbHelper.getInstance().queryMessage(0);
+          list = DbHelper.getInstance().queryMessage(-1);
           list = changeDesc(list);
           if (list!=null&&list.size() < DbHelper.PAGE_SIZE) {
             mLvMessage.setCanScrollDown(false);

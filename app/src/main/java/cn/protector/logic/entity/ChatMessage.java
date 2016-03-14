@@ -1,15 +1,15 @@
 package cn.protector.logic.entity;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * 描述：宝贝信息实体类
  *
  * @author Created by Administrator on 2015/9/4.
  */
-public class ChatMessage implements Serializable{
+public class ChatMessage implements Serializable {
   private int time;
   private String image;
   private String content;
@@ -56,7 +56,7 @@ public class ChatMessage implements Serializable{
     this.url = url;
   }
 
-  public String getFormatTime() {
-    return new SimpleDateFormat("yyyy年MM月dd日  HH:mm:ss").format(new Date(time*1000));
+  public static String getFormatTime(long time) {
+    return new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(new Date(time*1000));
   }
 }

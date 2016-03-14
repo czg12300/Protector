@@ -11,12 +11,9 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.tencent.mm.sdk.constants.Build;
-import com.tencent.mm.sdk.constants.ConstantsAPI;
-import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.util.List;
@@ -68,7 +65,7 @@ public class RechargeActivity extends CommonTitleActivity {
         mStatusView.setContentView(R.layout.activity_recharge);
         setContentView(mStatusView);
         mStatusView.showContentView();
-        tvHuaFei = (TextView) findViewById(R.id.tv_title);
+        tvHuaFei = (TextView) findViewById(R.id.tv_recharge_hint);
         gridView = (GridView) findViewById(R.id.gv_prize);
     }
 
@@ -186,16 +183,15 @@ public class RechargeActivity extends CommonTitleActivity {
         super.handleUiMessage(msg);
         switch (msg.what) {
             case MSG_UI_LOAD_DATA:
-                mStatusView.showContentView();
-//                if (msg.obj != null) {
-//                    mStatusView.showContentView();
-//                    HuaFeiResponse response = (HuaFeiResponse) msg.obj;
-//                    if (tvHuaFei != null) {
-//                        tvHuaFei.setText("当前话费余额" + response.getBalance() + "元，预计可使用" + response.getExpectTime() + "个月");
-//                    }
-//                } else {
-//                    mStatusView.showFailView();
-//                }
+                if (msg.obj != null) {
+                    mStatusView.showContentView();
+                    HuaFeiResponse response = (HuaFeiResponse) msg.obj;
+                    if (tvHuaFei != null) {
+                        tvHuaFei.setText("当前话费余额" + response.getBalance() + "元，预计可使用" + response.getExpectTime() + "个月");
+                    }
+                } else {
+                    mStatusView.showFailView();
+                }
                 break;
             case MSG_UI_GET_PAY_FORM:
                 if (msg.obj != null) {

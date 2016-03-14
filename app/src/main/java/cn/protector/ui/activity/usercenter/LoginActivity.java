@@ -25,6 +25,7 @@ import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
+import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.helper.HeartBeatHelper;
 import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.GetBaseListResponse;
@@ -199,6 +200,7 @@ public class LoginActivity extends CommonTitleActivity
                     GetBaseListResponse response = (GetBaseListResponse) msg.obj;
                     if (response != null && response.isOk()) {
                         InitSharedData.setDeviceData(response.getJson());
+                        DeviceInfoHelper.getInstance().refreshDeviceList();
                         if (AppConfig.isDebug) {
                             ToastUtil.show(response.getJson());
                         }

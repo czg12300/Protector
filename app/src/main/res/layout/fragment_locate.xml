@@ -138,7 +138,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="@string/add_device_hint"
+                    android:text="暂无地址信息 "
                     android:textColor="@color/black_333333"
                     android:textSize="15dp" />
 
@@ -156,7 +156,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="@string/add_device_hint"
+                    android:text="暂无信息"
                     android:textColor="@color/gray_999999"
                     android:textSize="11dp" />
             </LinearLayout>
