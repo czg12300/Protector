@@ -12,7 +12,6 @@ import org.json.JSONObject;
  * @since 2015/10/29 15:37
  */
 public class ModeStateResponse extends Response {
-public static final int MODE_SHUTDOWN=2;
 public static final int MODE_SAVE=3;
 public static final int MODE_NORMAL=4;
 public static final int MODE_FOLLOW=5;

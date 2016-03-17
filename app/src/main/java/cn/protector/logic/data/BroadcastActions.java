@@ -66,6 +66,10 @@ public interface BroadcastActions {
      * 微信支付的结果
      */
     String ACTION_WECHAT_PAY_RESULT = "cn.protector.data.BroadcastActions.ACTION_WECHAT_PAY_RESULT";
+    /**
+     * 同步话费余额
+     */
+    String ACTION_HUAFEI_RESULT_SYNC = "cn.protector.data.BroadcastActions.ACTION_HUAFEI_RESULT_SYNC";
 
 
 }

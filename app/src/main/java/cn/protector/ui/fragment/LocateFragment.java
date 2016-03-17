@@ -1,7 +1,9 @@
+
 package cn.protector.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -10,7 +12,11 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
@@ -47,6 +53,7 @@ import cn.protector.logic.http.response.LocateInfoResponse;
 import cn.protector.logic.http.response.LocateResponse;
 import cn.protector.logic.http.response.NowDeviceInfoResponse;
 import cn.protector.push.PushMessageReceiver;
+import cn.protector.ui.activity.NavigateActivity;
 import cn.protector.ui.helper.MainTitleHelper;
 import cn.protector.ui.helper.TipDialogHelper;
 import cn.protector.utils.ToastUtil;
@@ -56,7 +63,8 @@ import cn.protector.utils.ToastUtil;
  *
  * @author jakechen on 2015/8/13.
  */
-public class LocateFragment extends BaseWorkerFragment implements View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
+public class LocateFragment extends BaseWorkerFragment
+        implements View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener {
     private static final int MSG_BACK_REFRESH_DEVICE_INFO = 0;
 
     private static final int MSG_BACK_LOCATE = 1;
@@ -64,18 +72,18 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     private static final int MSG_UI_REFRESH_DEVICE_INFO = 0;
 
     private static final int MSG_UI_LOCATE = 1;
+
     private static final int MSG_UI_HIDE_TOPTIP = 5;
+
     private static final int MSG_UI_AUTO_LOCATE = 4;
 
     private static final int MSG_BACK_AUTO_LOCATE = 3;
+
     private static final int MSG_UI_HIDE_TIP_DIALOG = 2;
 
     private GeocodeSearch geocoderSearch;
-    private TipDialogHelper mTipDialogHelper;
 
-    public static LocateFragment newInstance() {
-        return new LocateFragment();
-    }
+    private TipDialogHelper mTipDialogHelper;
 
     private MainTitleHelper mTitleHelper;
 
@@ -84,8 +92,6 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     private AMap mAMap;
 
     private Timer timer;
-
-//    private NowDeviceInfoResponse mNowDeviceInfo;
 
     private View mVBottom;
 
@@ -112,9 +118,22 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     private TextView mTvHell;
 
     private long geocodeSearchId;
+
     private View vTopTip;
+
     private TextView tvTip;
+
     private TextView tvCountdown;
+
+    private CountDownTimer locateTimer;
+
+    private ImageView ivRefresh;
+
+    private RotateAnimation reFreshAnimation;
+
+    public static LocateFragment newInstance() {
+        return new LocateFragment();
+    }
 
     @Override
     public void initView() {
@@ -128,11 +147,33 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         mTvAddressTip = (TextView) findViewById(R.id.tv_locate_hint);
         mIbBattery = (ImageButton) findViewById(R.id.ib_battery);
         mIbStep = (ImageButton) findViewById(R.id.ib_steps);
+        ivRefresh = (ImageView) findViewById(R.id.iv_right);
         mMapView = (MapView) findViewById(R.id.mv_map);
         mVBottom.setVisibility(View.GONE);
-        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title), MainTitleHelper.STYLE_LOCATE);
+        mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
+                MainTitleHelper.STYLE_LOCATE);
         initMapView();
         vTopTip.setVisibility(View.GONE);
+        ivRefresh.setImageResource(R.drawable.ico_refesh_navigation);
+        ivRefresh.setVisibility(View.VISIBLE);
+    }
+
+    private void showLoad() {
+        if (reFreshAnimation == null) {
+            reFreshAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF, 0.5f);
+            reFreshAnimation.setDuration(800);
+            reFreshAnimation.setInterpolator(new LinearInterpolator());
+        }
+        reFreshAnimation.setRepeatCount(-1);
+        ivRefresh.clearAnimation();
+        ivRefresh.startAnimation(reFreshAnimation);
+    }
+
+    private void hideLoad() {
+        if (reFreshAnimation != null) {
+            reFreshAnimation.setRepeatCount(0);
+        }
     }
 
     private void initMapView() {
@@ -163,8 +204,10 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
 
     @Override
     protected void initEvent() {
+        ivRefresh.setOnClickListener(this);
         mIbBattery.setOnClickListener(this);
         mIbStep.setOnClickListener(this);
+        findViewById(R.id.btn_navigate).setOnClickListener(this);
         findViewById(R.id.ib_maplisten).setOnClickListener(this);
         findViewById(R.id.ib_mobile).setOnClickListener(this);
         findViewById(R.id.ib_locate).setOnClickListener(this);
@@ -193,14 +236,14 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     @Override
     protected void initData() {
         super.initData();
-        //每隔一段时间就去获取设备信息
-//        timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                sendEmptyBackgroundMessage(MSG_BACK_AUTO_LOCATE);
-//            }
-//        }, 0, AppConfig.AUTO_LOCATE_TIME);
+        // 每隔一段时间就去获取设备信息
+        // timer = new Timer();
+        // timer.schedule(new TimerTask() {
+        // @Override
+        // public void run() {
+        // sendEmptyBackgroundMessage(MSG_BACK_AUTO_LOCATE);
+        // }
+        // }, 0, AppConfig.AUTO_LOCATE_TIME);
         mTipDialogHelper = new TipDialogHelper(getActivity());
         loadDeviceInfo();
     }
@@ -227,10 +270,12 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     }
 
     private void autoLocateTask() {
-        HttpRequest<LocateInfoResponse> request = new HttpRequest<>(AppConfig.GET_POSITIONDATA, LocateInfoResponse.class);
+        HttpRequest<LocateInfoResponse> request = new HttpRequest<>(AppConfig.GET_POSITIONDATA,
+                LocateInfoResponse.class);
         request.addParam("uc", InitSharedData.getUserCode());
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
         Message message = obtainUiMessage();
         message.what = MSG_UI_AUTO_LOCATE;
@@ -243,10 +288,12 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     }
 
     private void locateTask() {
-        HttpRequest<LocateResponse> request = new HttpRequest<>(AppConfig.COM_GEO_LOCATION, LocateResponse.class);
+        HttpRequest<LocateResponse> request = new HttpRequest<>(AppConfig.COM_GEO_LOCATION,
+                LocateResponse.class);
         request.addParam("uc", InitSharedData.getUserCode());
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
         Message message = obtainUiMessage();
         message.what = MSG_UI_LOCATE;
@@ -259,10 +306,12 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     }
 
     private void refreshDeviceInfoTask() {
-        HttpRequest<NowDeviceInfoResponse> request = new HttpRequest<>(AppConfig.GET_NOW_DATA, NowDeviceInfoResponse.class);
+        HttpRequest<NowDeviceInfoResponse> request = new HttpRequest<>(AppConfig.GET_NOW_DATA,
+                NowDeviceInfoResponse.class);
         request.addParam("uc", InitSharedData.getUserCode());
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
         Message message = obtainUiMessage();
         message.what = MSG_UI_REFRESH_DEVICE_INFO;
@@ -312,8 +361,6 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
                 break;
         }
     }
-
-    private CountDownTimer locateTimer;
 
     private void showTopTip(int type) {
         if (getActivity() != null && !getActivity().isFinishing()) {
@@ -406,7 +453,6 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         }
     }
 
-
     private void handleAutoLocate(LocateInfoResponse response) {
         NowDeviceInfoResponse info = DeviceInfoHelper.getInstance().getNowDeviceInfo();
         if (info == null) {
@@ -426,6 +472,7 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
     }
 
     private void handleRefreshDeviceInfoResponse(Message msg) {
+        hideLoad();
         if (msg.obj != null) {
             sendEmptyUiMessage(MSG_UI_HIDE_TIP_DIALOG);
             handleUpdateNowDeviceInfo((NowDeviceInfoResponse) msg.obj);
@@ -446,7 +493,6 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             searchAddressByPosi();
         }
     }
-
 
     private void updateBottomUi(NowDeviceInfoResponse info) {
         if (info == null) {
@@ -471,7 +517,6 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         }
     }
 
-
     /**
      * 添加到地图上
      *
@@ -485,7 +530,9 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         // 设置Marker的图标样式
         LatLng latLng = new LatLng(info.getLat(), info.getLon());
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(DeviceInfoHelper.getInstance().getAvatar()));
+        Bitmap bitmap = DeviceInfoHelper.getInstance().getAvatar();
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+        markerOptions.anchor(0.5f, 0.5f);
         // 设置Marker点击之后显示的标题
         markerOptions.title(info.getAddress());
         // 设置Marker的坐标，为我们点击地图的经纬度坐标
@@ -496,12 +543,13 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
         markerOptions.draggable(false);
         // 将Marker添加到地图上去
         mAMap.addMarker(markerOptions).setObject(info);
-        mAMap.addCircle(new CircleOptions().center(latLng)
-                .radius(info.getPosiPrecision()).strokeColor(getColor(R.color.blue_03a9f4)).fillColor(getColor(R.color.blue_3003a9f4))
-                .strokeWidth(3));
+        // LatLng center = new LatLng(info.getLat() - bitmap.getWidth() / 2,
+        // info.getLon() - bitmap.getHeight() / 2);
+        mAMap.addCircle(new CircleOptions().center(latLng).radius(info.getPosiPrecision())
+                .strokeColor(getColor(R.color.blue_03a9f4))
+                .fillColor(getColor(R.color.blue_3003a9f4)).strokeWidth(3));
         mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f));
     }
-
 
     @Override
     public void setupBroadcastActions(List<String> actions) {
@@ -530,14 +578,14 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             }
             addMapMark(DeviceInfoHelper.getInstance().getNowDeviceInfo());
         } else if (TextUtils.equals(action, BroadcastActions.ACTION_PUSH_REAL_TIME_LOCATE_DATA)) {
-            NowDeviceInfoResponse info = (NowDeviceInfoResponse) intent.getSerializableExtra(PushMessageReceiver.KEY_EVENT_MESSAGE);
+            NowDeviceInfoResponse info = (NowDeviceInfoResponse) intent
+                    .getSerializableExtra(PushMessageReceiver.KEY_EVENT_MESSAGE);
             if (info != null) {
                 handleUpdateNowDeviceInfo(info);
             }
             sendEmptyUiMessage(MSG_UI_HIDE_TOPTIP);
         }
     }
-
 
     @Override
     public void onClick(View v) {
@@ -556,6 +604,11 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             showStepsPopWindow();
         } else if (id == R.id.ib_mobile) {
             ToastUtil.show("完善中");
+        } else if (id == R.id.iv_right) {
+            showLoad();
+            loadDeviceInfo();
+        } else if (id == R.id.btn_navigate) {
+            goActivity(NavigateActivity.class);
         }
     }
 
@@ -565,7 +618,8 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             return;
         }
         geocodeSearchId = info.getId();
-        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(info.getLon(), info.getLat()), 20, GeocodeSearch.AMAP);
+        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(info.getLon(), info.getLat()), 20,
+                GeocodeSearch.AMAP);
         geocoderSearch.getFromLocationAsyn(query);
     }
 
@@ -585,7 +639,9 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
                     show = "当前电量为小于1%，请及时充电哦";
                 }
                 mTvBatteryTip.setText(show);
-                mBatteryPopWindow.showAtLocation(mIbBattery, Gravity.NO_GRAVITY, location[0] + mIbBattery.getWidth(), location[1] - mBatteryPopWindow.getHeight());
+                mBatteryPopWindow.showAtLocation(mIbBattery, Gravity.NO_GRAVITY,
+                        location[0] + mIbBattery.getWidth(),
+                        location[1] - mBatteryPopWindow.getHeight());
             }
         }
     }
@@ -605,8 +661,11 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             if (info != null) {
                 mTvSpeed.setText("速度：" + info.getSpeed() + "千米/小时");
                 mTvSteps.setText("步数：" + info.getStepNum() + "步");
-                mTvHell.setText("压力：" + info.getSolePress() + "G（脚掌）/" + info.getHellPress() + "G（脚跟）");
-                mStepsPopWindow.showAtLocation(mIbStep, Gravity.NO_GRAVITY, location[0] + mIbStep.getWidth(), location[1] - mStepsPopWindow.getHeight());
+                mTvHell.setText(
+                        "压力：" + info.getSolePress() + "G（脚掌）/" + info.getHellPress() + "G（脚跟）");
+                mStepsPopWindow.showAtLocation(mIbStep, Gravity.NO_GRAVITY,
+                        location[0] + mIbStep.getWidth(),
+                        location[1] - mStepsPopWindow.getHeight());
             }
         }
     }
@@ -616,7 +675,8 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             final BaseDialog dialog = new BaseDialog(getActivity());
             dialog.setWindow(R.style.alpha_animation, 0.3f);
             dialog.setContentView(R.layout.dialog_title_content);
-            ((TextView) dialog.findViewById(R.id.tv_title)).setText("系统将获取设备最新位置，定位后需要一定时间更新数据\n" + "确定要定位吗");
+            ((TextView) dialog.findViewById(R.id.tv_title))
+                    .setText("系统将获取设备最新位置，定位后需要一定时间更新数据\n" + "确定要定位吗");
             dialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -644,7 +704,8 @@ public class LocateFragment extends BaseWorkerFragment implements View.OnClickLi
             final BaseDialog dialog = new BaseDialog(getActivity());
             dialog.setWindow(R.style.alpha_animation, 0.3f);
             dialog.setContentView(R.layout.dialog_title_content);
-            ((TextView) dialog.findViewById(R.id.tv_title)).setText("设备电话号码为：" + info.getPhoneNum() + "\n确定要呼叫设备吗?");
+            ((TextView) dialog.findViewById(R.id.tv_title))
+                    .setText("设备电话号码为：" + info.getPhoneNum() + "\n确定要呼叫设备吗?");
             dialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

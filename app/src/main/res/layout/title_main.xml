@@ -37,6 +37,7 @@
             android:layout_alignParentRight="true"
             android:scaleType="center"
             android:src="@drawable/ico_calendar_navigation" />
+
     </RelativeLayout>
 
 </FrameLayout>

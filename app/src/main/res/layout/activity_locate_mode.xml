@@ -78,16 +78,6 @@
             android:text="跟踪模式"
             android:textColor="@color/black_363636"
             android:textSize="18dp"/>
-        <RadioButton
-            android:id="@+id/rb_shutdown"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:button="@drawable/rb_selector_check"
-            android:paddingLeft="10dp"
-            android:text="关机"
-            android:textColor="@color/black_363636"
-            android:textSize="18dp"/>
 
 
     </RadioGroup>

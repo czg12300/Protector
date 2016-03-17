@@ -137,11 +137,16 @@
             android:name=".ui.activity.WebActivity"
             android:theme="@style/swipe_activity_style"/>
         <activity
+            android:name=".ui.activity.NavigateActivity"
+            android:theme="@style/swipe_activity_style"/>
+        <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:theme="@style/swipe_activity_style"/>
 
-        <service android:name=".HeartBeatService"/>
+        <service android:name=".HeartBeatService"
+            android:process=":heartBeat"
+            />
 
 
         <!--个推SDK配置开始-->

@@ -68,6 +68,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
     private AMap mAMap;
 
     private TextView mTvTime;
+    private TextView tvDate;
 
     private SeekBar mSbTime;
 
@@ -83,6 +84,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         setContentView(R.layout.fragment_history);
         mMapView = (MapView) findViewById(R.id.mv_map);
         mTvTime = (TextView) findViewById(R.id.tv_time_tip);
+        tvDate = (TextView) findViewById(R.id.tv_date);
         mSbTime = (SeekBar) findViewById(R.id.sb_time);
         mVTitle = findViewById(R.id.fl_title);
         initMapView();
@@ -94,8 +96,13 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         mSbTime.setProgress(0);
         mCalendarHelper.setSelectItem(today[0], today[1], today[2]);
         sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
-    }
 
+    }
+private void updateDate(String date){
+    if(tvDate!=null){
+        tvDate.setText("当前日期："+date);
+    }
+}
     private void initMapView() {
         mMapView.onCreate(mSavedInstanceState);// 此方法必须重写
         if (mAMap == null) {
@@ -114,6 +121,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             @Override
             public void onItemClick(int position, String date) {
                 mSbTime.setProgress(0);
+                updateDate(mCalendarHelper.getPositionTime());
                 sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
             }
         });
@@ -240,6 +248,7 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                     int hour = getFirstHour(mHistoryResponse);
                     mSbTime.setProgress(hour);
                     updateUi(mHistoryResponse, hour);
+                    updateDate(mCalendarHelper.getPositionTime());
                 } else {
                     if (!isFirstIn) {
                         ToastUtil.showError();
@@ -292,19 +301,19 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                     options.position(new LatLng(pointInfo.getLat(), pointInfo.getLon()));
                     markerOptionses.add(options);
                     if (i == 0 || (i == 0 && i == (list.size() - 1))) {
+                        String title="起始点\n时间："+pointInfo.getStartTime()+"至"+pointInfo.getEndTime();
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
-                            options.title("起始点:" + pointInfo.getAddress());
-                        } else {
-                            options.title("起始点");
+                            title=title+"\n路段："+pointInfo.getAddress();
                         }
+                        options.title(title);
                     } else if (i == list.size() - 1) {
                         options.icon(BitmapDescriptorFactory
                                 .fromBitmap(DeviceInfoHelper.getInstance().getAvatar()));
+                        String title="终点\n时间："+pointInfo.getStartTime()+"至"+pointInfo.getEndTime();
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
-                            options.title("终点点:" + pointInfo.getAddress());
-                        } else {
-                            options.title("终点");
+                            title=title+"\n路段："+pointInfo.getAddress();
                         }
+                        options.title(title);
                     } else {
 
                         if (pointInfo.getPosiMode() > 0) {
@@ -314,11 +323,11 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                             options.icon(BitmapDescriptorFactory
                                     .fromBitmap(BitmapUtil.decodeResource(R.drawable.map_dot_blue)));
                         }
+                        String title="经过\n时间："+pointInfo.getStartTime()+"至"+pointInfo.getEndTime();
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
-                            options.title(pointInfo.getAddress());
-                        } else {
-                            options.title("经过");
+                            title=title+"\n路段："+pointInfo.getAddress();
                         }
+                        options.title(title);
                     }
                 }
             }

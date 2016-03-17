@@ -36,6 +36,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
+                android:visibility="gone"
                 android:src="@drawable/btn_selector_mobile" />
 
             <ImageButton
@@ -117,7 +118,8 @@
         <LinearLayout
             android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:minHeight="65dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="@color/white"
             android:descendantFocusability="blocksDescendants"
@@ -137,7 +139,6 @@
                     android:id="@+id/tv_locate_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
                     android:text="暂无地址信息 "
                     android:textColor="@color/black_333333"
                     android:textSize="15dp" />
@@ -146,7 +147,6 @@
                     android:id="@+id/tv_locate_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
                     android:text="@string/baby_name_hint"
                     android:textColor="@color/black_333333"
                     android:textSize="13dp" />
@@ -155,14 +155,13 @@
                     android:id="@+id/tv_locate_hint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
                     android:text="暂无信息"
                     android:textColor="@color/gray_999999"
                     android:textSize="11dp" />
             </LinearLayout>
 
             <Button
-                android:id="@+id/btn_add"
+                android:id="@+id/btn_navigate"
                 style="@style/btn_blue"
                 android:layout_width="82dp"
                 android:layout_height="30dp"
@@ -176,7 +175,7 @@
                 android:text="@string/go_there"
                 android:textColor="@drawable/text_selector_btn_blue_r"
                 android:textSize="11dp"
-                android:visibility="gone" />
+                android:visibility="visible" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/ll_tip"

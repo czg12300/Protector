@@ -1,3 +1,4 @@
+
 package cn.protector.ui.activity;
 
 import android.content.Context;
@@ -34,21 +35,31 @@ import cn.protector.utils.ToastUtil;
 import cn.protector.wxapi.WXPayEntryActivity;
 
 /**
- * 描述：充值页面
- * 作者：jake on 2016/3/12 16:15
+ * 描述：充值页面 作者：jake on 2016/3/12 16:15
  */
 public class RechargeActivity extends CommonTitleActivity {
     private static final int MSG_UI_LOAD_DATA = 0;
+
     private static final int MSG_BACK_LOAD_DATA = 0;
+
     private static final int MSG_UI_GET_PAY_FORM = 1;
+
     private static final int MSG_BACK_GET_PAY_FORM = 1;
+
     private StatusView mStatusView;
+
     private TextView tvHuaFei;
+
     private GridView gridView;
+
     private double prize = -1;
+
     private int months;
+
     private String name;
+
     private IWXAPI api;
+
     private RechargePrizeAdapter mRechargePrizeAdapter;
 
     @Override
@@ -117,7 +128,7 @@ public class RechargeActivity extends CommonTitleActivity {
     @Override
     protected void initData() {
         super.initData();
-        mRechargePrizeAdapter=new RechargePrizeAdapter(this);
+        mRechargePrizeAdapter = new RechargePrizeAdapter(this);
         gridView.setAdapter(mRechargePrizeAdapter);
         loadData();
     }
@@ -145,10 +156,10 @@ public class RechargeActivity extends CommonTitleActivity {
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
             eid = DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId();
         }
-        //todo
-//        String url = AppConfig.GET_PAY_FORM + "uer=" + InitSharedData.getMobile() + "&body=" + name + "&total_fee=" + (int) prize + "&PurchaseQuantity=" + months + "&EID=" + eid;
-        String url = AppConfig.GET_PAY_FORM + "uer=" + InitSharedData.getMobile() + "&body=" + name + "&total_fee=" + 1 + "&PurchaseQuantity=" + months + "&EID=" + eid;
-        HttpRequest<WeChatPayFormResponse> request = new HttpRequest<>(url, WeChatPayFormResponse.class);
+        String url = AppConfig.GET_PAY_FORM + "uer=" + InitSharedData.getMobile() + "&body=" + name
+                + "&total_fee=" + prize + "&PurchaseQuantity=" + months + "&EID=" + eid;
+        HttpRequest<WeChatPayFormResponse> request = new HttpRequest<>(url,
+                WeChatPayFormResponse.class);
         request.setIsGet(false);
         Message message = obtainUiMessage();
         message.what = MSG_UI_GET_PAY_FORM;
@@ -161,12 +172,14 @@ public class RechargeActivity extends CommonTitleActivity {
     }
 
     private void loadDataTask() {
-        HttpRequest<HuaFeiResponse> request = new HttpRequest<>(AppConfig.GET_EQUIBALANCE, HuaFeiResponse.class);
+        HttpRequest<HuaFeiResponse> request = new HttpRequest<>(AppConfig.GET_EQUIBALANCE,
+                HuaFeiResponse.class);
         if (!TextUtils.isEmpty(InitSharedData.getUserCode())) {
             request.addParam("uc", InitSharedData.getUserCode());
         }
         if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
-            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+            request.addParam("eid",
+                    DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
         Message message = obtainUiMessage();
         message.what = MSG_UI_LOAD_DATA;
@@ -186,8 +199,12 @@ public class RechargeActivity extends CommonTitleActivity {
                 if (msg.obj != null) {
                     mStatusView.showContentView();
                     HuaFeiResponse response = (HuaFeiResponse) msg.obj;
+                    Intent it = new Intent(BroadcastActions.ACTION_HUAFEI_RESULT_SYNC);
+                    it.putExtra("huafei", response);
+                    sendBroadcast(it);
                     if (tvHuaFei != null) {
-                        tvHuaFei.setText("当前话费余额" + response.getBalance() + "元，预计可使用" + response.getExpectTime() + "个月");
+                        tvHuaFei.setText("当前话费余额" + response.getBalance() + "元，预计可使用"
+                                + response.getExpectTime() + "个月");
                     }
                 } else {
                     mStatusView.showFailView();
@@ -207,7 +224,6 @@ public class RechargeActivity extends CommonTitleActivity {
     private void handleWeChat(WeChatPayFormResponse response) {
         PayReq req = new PayReq();
         req.appId = response.getAppid();
-        req.appId = AppConfig.WECHAT_APP_ID;
         req.partnerId = response.getPartnerid();
         req.prepayId = response.getPrepayid();
         req.nonceStr = response.getNoncestr();
@@ -216,7 +232,6 @@ public class RechargeActivity extends CommonTitleActivity {
         req.sign = response.getSign();
         api.sendReq(req);
     }
-
 
     @Override
     public void setupBroadcastActions(List<String> actions) {
