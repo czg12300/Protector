@@ -8,6 +8,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -41,6 +42,7 @@ import cn.protector.logic.http.response.HistoryResponse;
 import cn.protector.ui.helper.CalendarHelper;
 import cn.protector.ui.helper.DateUtil;
 import cn.protector.ui.helper.MainTitleHelper;
+import cn.protector.ui.widget.StatusView;
 import cn.protector.utils.ToastUtil;
 
 /**
@@ -54,20 +56,17 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
     private static final int MSG_BACK_LOAD_DATA = 0;
 
     private static final int MSG_UI_HIDE_TIME_TIP_POP = 0;
+
     private static final int MSG_UI_LOAD_DATA = 1;
 
-
     private MainTitleHelper mTitleHelper;
-
-    public static HistoryFragment newInstance() {
-        return new HistoryFragment();
-    }
 
     private MapView mMapView;
 
     private AMap mAMap;
 
     private TextView mTvTime;
+
     private TextView tvDate;
 
     private SeekBar mSbTime;
@@ -77,11 +76,24 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
     private View mVTitle;
 
     private HistoryResponse mHistoryResponse;
+
     private boolean isFirstIn = true;
+
+    private StatusView mStatusView;
+
+    public static HistoryFragment newInstance() {
+        return new HistoryFragment();
+    }
 
     @Override
     public void initView() {
-        setContentView(R.layout.fragment_history);
+        mStatusView = new StatusView(getActivity());
+        mStatusView.setContentView(R.layout.fragment_history);
+        LinearLayout layout=new LinearLayout(getActivity());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.addView(inflate(R.layout.title_main));
+        layout.addView(mStatusView,new LinearLayout.LayoutParams(-1,-1));
+        setContentView(layout);
         mMapView = (MapView) findViewById(R.id.mv_map);
         mTvTime = (TextView) findViewById(R.id.tv_time_tip);
         tvDate = (TextView) findViewById(R.id.tv_date);
@@ -95,14 +107,20 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         mSbTime.setMax(24);
         mSbTime.setProgress(0);
         mCalendarHelper.setSelectItem(today[0], today[1], today[2]);
-        sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
+        loadData();
+    }
 
+    private void loadData() {
+        sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
+        mStatusView.showLoadingView();
     }
-private void updateDate(String date){
-    if(tvDate!=null){
-        tvDate.setText("当前日期："+date);
+
+    private void updateDate(String date) {
+        if (tvDate != null) {
+            tvDate.setText("当前日期：" + date);
+        }
     }
-}
+
     private void initMapView() {
         mMapView.onCreate(mSavedInstanceState);// 此方法必须重写
         if (mAMap == null) {
@@ -122,7 +140,7 @@ private void updateDate(String date){
             public void onItemClick(int position, String date) {
                 mSbTime.setProgress(0);
                 updateDate(mCalendarHelper.getPositionTime());
-                sendEmptyBackgroundMessage(MSG_BACK_LOAD_DATA);
+                loadData();
             }
         });
         mTitleHelper.setRightButtonClickListener(new View.OnClickListener() {
@@ -245,11 +263,18 @@ private void updateDate(String date){
             case MSG_UI_LOAD_DATA:
                 if (msg.obj != null) {
                     mHistoryResponse = (HistoryResponse) msg.obj;
+                    if (mHistoryResponse.getList() != null
+                            && mHistoryResponse.getList().size() > 0) {
+                        mStatusView.showContentView();
+                    } else {
+                        mStatusView.showNoDataView();
+                    }
                     int hour = getFirstHour(mHistoryResponse);
                     mSbTime.setProgress(hour);
                     updateUi(mHistoryResponse, hour);
                     updateDate(mCalendarHelper.getPositionTime());
                 } else {
+                    mStatusView.showFailView();
                     if (!isFirstIn) {
                         ToastUtil.showError();
                     }
@@ -301,31 +326,34 @@ private void updateDate(String date){
                     options.position(new LatLng(pointInfo.getLat(), pointInfo.getLon()));
                     markerOptionses.add(options);
                     if (i == 0 || (i == 0 && i == (list.size() - 1))) {
-                        String title="起始点\n时间："+pointInfo.getStartTime()+"至"+pointInfo.getEndTime();
+                        String title = "起始点\n时间：" + pointInfo.getStartTime() + "至"
+                                + pointInfo.getEndTime();
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
-                            title=title+"\n路段："+pointInfo.getAddress();
+                            title = title + "\n路段：" + pointInfo.getAddress();
                         }
                         options.title(title);
                     } else if (i == list.size() - 1) {
                         options.icon(BitmapDescriptorFactory
                                 .fromBitmap(DeviceInfoHelper.getInstance().getAvatar()));
-                        String title="终点\n时间："+pointInfo.getStartTime()+"至"+pointInfo.getEndTime();
+                        String title = "终点\n时间：" + pointInfo.getStartTime() + "至"
+                                + pointInfo.getEndTime();
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
-                            title=title+"\n路段："+pointInfo.getAddress();
+                            title = title + "\n路段：" + pointInfo.getAddress();
                         }
                         options.title(title);
                     } else {
 
                         if (pointInfo.getPosiMode() > 0) {
-                            options.icon(BitmapDescriptorFactory
-                                    .fromBitmap(BitmapUtil.decodeResource(R.drawable.map_dot_green)));
+                            options.icon(BitmapDescriptorFactory.fromBitmap(
+                                    BitmapUtil.decodeResource(R.drawable.map_dot_green)));
                         } else {
-                            options.icon(BitmapDescriptorFactory
-                                    .fromBitmap(BitmapUtil.decodeResource(R.drawable.map_dot_blue)));
+                            options.icon(BitmapDescriptorFactory.fromBitmap(
+                                    BitmapUtil.decodeResource(R.drawable.map_dot_blue)));
                         }
-                        String title="经过\n时间："+pointInfo.getStartTime()+"至"+pointInfo.getEndTime();
+                        String title = "经过\n时间：" + pointInfo.getStartTime() + "至"
+                                + pointInfo.getEndTime();
                         if (!TextUtils.isEmpty(pointInfo.getAddress())) {
-                            title=title+"\n路段："+pointInfo.getAddress();
+                            title = title + "\n路段：" + pointInfo.getAddress();
                         }
                         options.title(title);
                     }
@@ -335,7 +363,6 @@ private void updateDate(String date){
         }
 
     }
-
 
     private void addPolyline(HistoryResponse info, int endHour) {
         if (info == null || info != null && info.getList() == null
@@ -391,7 +418,6 @@ private void updateDate(String date){
         return list;
     }
 
-
     @Override
     public void setupBroadcastActions(List<String> actions) {
         super.setupBroadcastActions(actions);
@@ -428,7 +454,6 @@ private void updateDate(String date){
             mAMap.moveCamera(CameraUpdateFactory.zoomOut());
         }
     }
-
 
     @Override
     public void onDestroyView() {

@@ -1,5 +1,5 @@
-package cn.protector.logic.helper;
 
+package cn.protector.logic.helper;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,13 +30,32 @@ import cn.protector.logic.http.response.NowDeviceInfoResponse;
  */
 public class DeviceInfoHelper {
     private static DeviceInfoHelper mInstance;
+
     private ArrayList<DeviceInfo> list;
+
     private DeviceInfo positionDeviceInfo;
+
     private Bitmap bmAvatar;
+
     private String lastAvatar;
+
     private ArrayList<IAvatarListener> listeners;
+
     private String positionEid;
+
     private NowDeviceInfoResponse nowDeviceInfo;
+
+    private DeviceInfoHelper() {
+        listeners = new ArrayList<>();
+        refreshDeviceList();
+    }
+
+    public static DeviceInfoHelper getInstance() {
+        if (mInstance == null) {
+            mInstance = new DeviceInfoHelper();
+        }
+        return mInstance;
+    }
 
     public NowDeviceInfoResponse getNowDeviceInfo() {
         return nowDeviceInfo;
@@ -48,6 +67,11 @@ public class DeviceInfoHelper {
         }
     }
 
+    public void resetNowDeviceInfo() {
+        this.nowDeviceInfo = null;
+        this.bmAvatar = null;
+    }
+
     public void addListener(IAvatarListener listener) {
         listeners.add(listener);
     }
@@ -57,7 +81,8 @@ public class DeviceInfoHelper {
     }
 
     public Bitmap getAvatar() {
-        int wh = (int) ProtectorApplication.getInstance().getResources().getDimension(R.dimen.avatar);
+        int wh = (int) ProtectorApplication.getInstance().getResources()
+                .getDimension(R.dimen.avatar);
         if (bmAvatar == null) {
             bmAvatar = BitmapUtil.decodeResource(R.drawable.img_head_baby, wh, wh);
         }
@@ -89,7 +114,8 @@ public class DeviceInfoHelper {
 
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    int wh = (int) ProtectorApplication.getInstance().getResources().getDimension(R.dimen.avatar);
+                    int wh = (int) ProtectorApplication.getInstance().getResources()
+                            .getDimension(R.dimen.avatar);
                     bmAvatar = BitmapUtil.scale(loadedImage, wh, wh);
                     for (IAvatarListener listener : listeners) {
                         if (listener != null) {
@@ -104,11 +130,6 @@ public class DeviceInfoHelper {
                 }
             });
         }
-    }
-
-    private DeviceInfoHelper() {
-        listeners = new ArrayList<>();
-        refreshDeviceList();
     }
 
     public void refreshDeviceList() {
@@ -143,15 +164,9 @@ public class DeviceInfoHelper {
                 positionDeviceInfo = list.get(0);
                 positionEid = positionDeviceInfo.geteId();
             }
-            ProtectorApplication.getInstance().sendBroadcast(new Intent(BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO));
+            ProtectorApplication.getInstance()
+                    .sendBroadcast(new Intent(BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO));
         }
-    }
-
-    public static DeviceInfoHelper getInstance() {
-        if (mInstance == null) {
-            mInstance = new DeviceInfoHelper();
-        }
-        return mInstance;
     }
 
     public boolean hasAnyDevice() {

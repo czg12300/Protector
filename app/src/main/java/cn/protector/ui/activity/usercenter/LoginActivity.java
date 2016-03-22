@@ -200,6 +200,7 @@ public class LoginActivity extends CommonTitleActivity
                     GetBaseListResponse response = (GetBaseListResponse) msg.obj;
                     if (response != null && response.isOk()) {
                         InitSharedData.setDeviceData(response.getJson());
+                        DeviceInfoHelper.getInstance().resetNowDeviceInfo();
                         DeviceInfoHelper.getInstance().refreshDeviceList();
                         if (AppConfig.isDebug) {
                             ToastUtil.show(response.getJson());

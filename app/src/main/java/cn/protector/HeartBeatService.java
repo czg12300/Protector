@@ -33,7 +33,7 @@ public class HeartBeatService extends BaseWorkService {
      */
     private static final long TIME_SPIT_TEST = 30 * 1000;
 
-    private static final long TIME_SPIT_RELEASE = 1 * 60 * 1000;
+    private static final long TIME_SPIT_RELEASE =  30 * 1000;
 
     private static final long TIME_SPIT = AppConfig.isDebug ? TIME_SPIT_TEST : TIME_SPIT_RELEASE;
 
@@ -70,6 +70,12 @@ public class HeartBeatService extends BaseWorkService {
                 sendEmptyBackgroundMessage(MSG_BACK_SEND_HEART_BEAT);
             }
         }, 0, TIME_SPIT);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+               System.out.print("如来神掌");
+            }
+        }, 0, 5*1000);
     }
 
     @Override

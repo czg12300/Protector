@@ -36,11 +36,17 @@ public class CalendarHelper {
     private OnCalendarListener mOnCalendarListener;
 
     private TextView mTvCenter;
+
     private int positionYear = -1;
+
     private int positionMonth = -1;
+
     private int selectYear = -1;
+
     private int selectMonth = -1;
+
     private int selectDay = -1;
+
     private String positionTime;
 
     public CalendarHelper(Context context) {
@@ -98,7 +104,8 @@ public class CalendarHelper {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TimeInfo info = (TimeInfo) parent.getAdapter().getItem(position);
-                if (info != null && info.status == TimeInfo.STATUS_POSITION_MONTH || info != null && info.status == TimeInfo.STATUS_TODAY) {
+                if (info != null && info.status == TimeInfo.STATUS_POSITION_MONTH
+                        || info != null && info.status == TimeInfo.STATUS_TODAY) {
                     selectYear = info.year;
                     selectMonth = info.month;
                     selectDay = info.day;
@@ -106,20 +113,9 @@ public class CalendarHelper {
                     mTvCenter.setText(info.month + "月" + info.day + "日");
                     if (mOnCalendarListener != null && info != null) {
                         positionTime = formatDate(info.year, info.month, info.day);
-                        mOnCalendarListener.onItemClick(position,
-                                positionTime);
+                        mOnCalendarListener.onItemClick(position, positionTime);
                     }
-
-                    if (view != null) {
-                        view.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mCalendarPop.dismiss();
-                            }
-                        }, 500);
-                    } else {
-                        mCalendarPop.dismiss();
-                    }
+                    mCalendarPop.dismiss();
                 }
             }
         });
@@ -177,7 +173,8 @@ public class CalendarHelper {
             } else {
                 info.hasData = false;
             }
-            if (dayInfo.type == DateUtil.DayInfo.TYPE_POSITION_MONTH && year == today[0] && month == today[1] && dayInfo.day == today[2]) {
+            if (dayInfo.type == DateUtil.DayInfo.TYPE_POSITION_MONTH && year == today[0]
+                    && month == today[1] && dayInfo.day == today[2]) {
                 info.status = TimeInfo.STATUS_TODAY;
             }
             info.day = dayInfo.day;
@@ -204,12 +201,58 @@ public class CalendarHelper {
         return mContentView.findViewById(id);
     }
 
+    public View getView() {
+        return mContentView;
+    }
+
+    /**
+     * 显示日历控件
+     */
+    public void showCalendar(View parent) {
+        if (mCalendarPop == null) {
+            mCalendarPop = new BasePopupWindow(mContext);
+            mCalendarPop.setContentView(mContentView);
+            mCalendarPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        }
+        mCalendarPop.showAsDropDown(parent);
+    }
+
+    public void setOnCalendarListener(OnCalendarListener listener) {
+        if (listener != null) {
+            mOnCalendarListener = listener;
+        }
+    }
+
+    public static interface OnCalendarListener {
+        void onItemClick(int position, String date);
+    }
+
+    private static class TimeInfo {
+        public static final int STATUS_TODAY = 1;
+
+        public static final int STATUS_NOT_POSITION_MONTH = 2;
+
+        public static final int STATUS_POSITION_MONTH = 3;
+
+        int status;
+
+        String tip;
+
+        int year;
+
+        int month;
+
+        int day;
+
+        boolean hasData;
+    }
+
     private class CalendarAdapter extends BaseListAdapter<TimeInfo> {
+        private int selectIndex;
+
         public CalendarAdapter(Context context) {
             super(context);
         }
-
-        private int selectIndex;
 
         public void setSelectItem(int position) {
             selectIndex = position;
@@ -281,51 +324,5 @@ public class CalendarHelper {
             // public ImageView ivTip;
 
         }
-    }
-
-    private static class TimeInfo {
-        public static final int STATUS_TODAY = 1;
-
-        public static final int STATUS_NOT_POSITION_MONTH = 2;
-
-        public static final int STATUS_POSITION_MONTH = 3;
-
-        int status;
-
-        String tip;
-
-        int year;
-
-        int month;
-
-        int day;
-
-        boolean hasData;
-    }
-
-    public View getView() {
-        return mContentView;
-    }
-
-    /**
-     * 显示日历控件
-     */
-    public void showCalendar(View parent) {
-        if (mCalendarPop == null) {
-            mCalendarPop = new BasePopupWindow(mContext);
-            mCalendarPop.setContentView(mContentView);
-            mCalendarPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        }
-        mCalendarPop.showAsDropDown(parent);
-    }
-
-    public void setOnCalendarListener(OnCalendarListener listener) {
-        if (listener != null) {
-            mOnCalendarListener = listener;
-        }
-    }
-
-    public static interface OnCalendarListener {
-        void onItemClick(int position, String date);
     }
 }

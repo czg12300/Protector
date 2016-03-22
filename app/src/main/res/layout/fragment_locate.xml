@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <include layout="@layout/title_main" />
+    <include layout="@layout/title_main"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         <com.amap.api.maps.MapView
             android:id="@+id/mv_map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
                 android:layout_height="@dimen/locate_top_btn"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_selector_battery" />
+                android:src="@drawable/btn_selector_battery"/>
 
             <ImageButton
                 android:id="@+id/ib_mobile"
@@ -36,8 +36,8 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:visibility="gone"
-                android:src="@drawable/btn_selector_mobile" />
+                android:src="@drawable/btn_selector_mobile"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/ib_steps"
@@ -46,7 +46,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_selector_steps" />
+                android:src="@drawable/btn_selector_steps"/>
 
             <ImageButton
                 android:id="@+id/ib_record"
@@ -57,7 +57,7 @@
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
                 android:src="@drawable/btn_selector_record"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout
@@ -75,7 +75,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_selector_plus" />
+                android:src="@drawable/btn_selector_plus"/>
 
             <ImageButton
                 android:id="@+id/ib_minus"
@@ -85,7 +85,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_selector_minus" />
+                android:src="@drawable/btn_selector_minus"/>
         </LinearLayout>
 
         <LinearLayout
@@ -103,7 +103,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_selector_maplisten" />
+                android:src="@drawable/btn_selector_maplisten"/>
 
             <ImageButton
                 android:id="@+id/ib_locate"
@@ -112,96 +112,108 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_selector_mapcontrol"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_selector_maplocate" />
+                android:src="@drawable/btn_selector_maplocate"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
-            android:minHeight="65dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="@color/white"
             android:descendantFocusability="blocksDescendants"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            android:paddingTop="10dp"
+            android:minHeight="65dp"
+            android:orientation="vertical"
             android:paddingBottom="10dp"
-            android:paddingRight="15dp">
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/tv_locate_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="暂无地址信息 "
+                android:textColor="@color/black_333333"
+                android:textSize="14dp"/>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_locate_title"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="暂无地址信息 "
-                    android:textColor="@color/black_333333"
-                    android:textSize="15dp" />
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_locate_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/baby_name_hint"
-                    android:textColor="@color/black_333333"
-                    android:textSize="13dp" />
+                    <TextView
+                        android:id="@+id/tv_locate_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/baby_name_hint"
+                        android:textColor="@color/black_333333"
+                        android:textSize="12dp"/>
 
-                <TextView
-                    android:id="@+id/tv_locate_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="暂无信息"
-                    android:textColor="@color/gray_999999"
-                    android:textSize="11dp" />
+                    <TextView
+                        android:id="@+id/tv_locate_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_height="wrap_content"
+                        android:text="暂无信息"
+                        android:textColor="@color/gray_999999"
+                        android:textSize="11dp"/>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_navigate"
+                    style="@style/btn_blue"
+                    android:layout_width="82dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/btn_selector_blue_r"
+                    android:drawableLeft="@drawable/btn_selector_gostraight"
+                    android:gravity="center_vertical"
+                    android:onClick="onClick"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/go_there"
+                    android:textColor="@drawable/text_selector_btn_blue_r"
+                    android:textSize="11dp"
+                    android:visibility="visible"/>
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_navigate"
-                style="@style/btn_blue"
-                android:layout_width="82dp"
-                android:layout_height="30dp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/btn_selector_blue_r"
-                android:drawableLeft="@drawable/btn_selector_gostraight"
-                android:gravity="center_vertical"
-                android:onClick="onClick"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:text="@string/go_there"
-                android:textColor="@drawable/text_selector_btn_blue_r"
-                android:textSize="11dp"
-                android:visibility="visible" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/ll_tip"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:padding="10dp"
+            android:layout_height="wrap_content"
             android:background="@color/trans_90000000"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal"
+            android:padding="10dp">
+
             <TextView
                 android:id="@+id/tv_tip"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="14dp"
                 android:gravity="center_horizontal"
                 android:text="设备处于关机状态，不能定位。"
                 android:textColor="@color/white"
-                android:layout_height="wrap_content" />
+                android:textSize="14dp"/>
+
             <TextView
                 android:id="@+id/tv_countdown"
                 android:layout_width="wrap_content"
-                android:textSize="16dp"
+                android:layout_height="wrap_content"
                 android:text="10秒"
                 android:textColor="@color/white"
-                android:layout_height="wrap_content" />
+                android:textSize="16dp"/>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

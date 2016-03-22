@@ -13,8 +13,17 @@ import cn.protector.logic.entity.CareStaffInfo;
 
 public class CareStaffAdapter extends BaseListAdapter<CareStaffInfo> {
   private View.OnClickListener listener;
+private boolean canDelete=false;
 
-  public CareStaffAdapter(Context context,View.OnClickListener listener) {
+  public void setCanDelete(boolean canDelete) {
+    this.canDelete = canDelete;
+  }
+
+  public boolean isCanDelete() {
+    return canDelete;
+  }
+
+  public CareStaffAdapter(Context context, View.OnClickListener listener) {
     super(context);
     this.listener = listener;
   }
@@ -45,9 +54,9 @@ public class CareStaffAdapter extends BaseListAdapter<CareStaffInfo> {
         convertView.setEnabled(true);
         holder.tvManager.setVisibility(View.GONE);
       }
-      holder.tvRelationship.setText("（" + info.getRelation() + "）");
-      if (!TextUtils.isEmpty(info.getNickName())) {
-        holder.tvNickName.setText(info.getNickName());
+      holder.tvRelationship.setText("（" + info.getPhoneNum() + "）");
+      if (!TextUtils.isEmpty(info.getRelation())) {
+        holder.tvNickName.setText(info.getRelation());
       }
     }
     return convertView;
