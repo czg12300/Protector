@@ -210,6 +210,7 @@ public class CareStaffActivity extends CommonTitleActivity {
         if (response.isOk()) {
             if (response.getList() != null && response.getList().size() > 0) {
                 mStatusView.showContentView();
+                mCareStaffAdapter.setCanDelete(response.isAdmin());
                 mCareStaffAdapter.setData(response.getList());
                 mCareStaffAdapter.notifyDataSetChanged();
             } else {

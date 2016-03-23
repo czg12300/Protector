@@ -1,3 +1,4 @@
+
 package cn.protector.push;
 
 import android.content.BroadcastReceiver;
@@ -10,25 +11,27 @@ import android.util.Log;
 import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.PushManager;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.common.utils.ThreadPoolUtil;
 import cn.protector.AppConfig;
 import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.entity.ChatMessage;
+import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.response.NowDeviceInfoResponse;
 import cn.protector.utils.ToastUtil;
 
 public class PushMessageReceiver extends BroadcastReceiver {
+
+    public static final String KEY_COMMON_MESSAGE = "key_common_message";
+
+    public static final String KEY_EVENT_MESSAGE = "key_event_message";
 
     /**
      * 应用未启动, 个推 service已经被唤醒,保存在该时间段内离线消息(此时 GetuiSdkDemoActivity.tLogView ==
      * null)
      */
     public static StringBuilder payloadData = new StringBuilder();
-    public static final String KEY_COMMON_MESSAGE = "key_common_message";
-    public static final String KEY_EVENT_MESSAGE = "key_event_message";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -42,7 +45,8 @@ public class PushMessageReceiver extends BroadcastReceiver {
                 String taskid = bundle.getString("taskid");
                 String messageid = bundle.getString("messageid");
                 // smartPush第三方回执调用接口，actionid范围为90000-90999，可根据业务场景执行
-                boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskid, messageid, 90001);
+                boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskid,
+                        messageid, 90001);
                 System.out.println("第三方回执接口调用" + (result ? "成功" : "失败"));
                 if (payload != null) {
                     String data = new String(payload);
@@ -87,8 +91,8 @@ public class PushMessageReceiver extends BroadcastReceiver {
             public void run() {
                 try {
                     JSONObject root = new JSONObject(message);
-                   String  type = root.optString("type");
-                    if (TextUtils.equals(type,"msg")) {
+                    String type = root.optString("type");
+                    if (TextUtils.equals(type, "msg")) {
                         JSONObject object = root.optJSONObject("message");
                         if (object != null) {
                             ChatMessage chatMessage = new ChatMessage();
@@ -102,18 +106,23 @@ public class PushMessageReceiver extends BroadcastReceiver {
                             context.sendBroadcast(it);
                             DbHelper.getInstance().insertTable(chatMessage);
                         }
-                    } else if (TextUtils.equals(type,"state")) {
+                    } else if (TextUtils.equals(type, "state")) {
                         JSONObject object = root.optJSONObject("message");
-                        if (object!=null){
-                            NowDeviceInfoResponse response=new NowDeviceInfoResponse();
+                        if (object != null) {
+                            NowDeviceInfoResponse response = new NowDeviceInfoResponse();
                             response.parse(object.toString());
-                            Intent it = new Intent(BroadcastActions.ACTION_PUSH_REAL_TIME_LOCATE_DATA);
-                            it.putExtra(KEY_EVENT_MESSAGE, response);
-                            context.sendBroadcast(it);
+                            if (TextUtils.equals(response.geteId(),
+                                    DeviceInfoHelper.getInstance().getNowDeviceInfo().geteId())) {
+                                Intent it = new Intent(
+                                        BroadcastActions.ACTION_PUSH_REAL_TIME_LOCATE_DATA);
+                                it.putExtra(KEY_EVENT_MESSAGE, response);
+                                context.sendBroadcast(it);
+                            }
                         }
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                } catch (Error error) {
                 }
             }
         });

@@ -30,6 +30,7 @@ import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.entity.DeviceInfo;
 import cn.protector.logic.helper.DeviceInfoHelper;
+import cn.protector.logic.helper.HeartBeatHelper;
 import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.CommonHasLoginStatusResponse;
 import cn.protector.logic.http.response.GetBaseListResponse;
@@ -308,6 +309,7 @@ public class SettingFragment extends BaseWorkerFragment implements View.OnClickL
     } else if (id == R.id.btn_exit) {
       InitSharedData.setUserId("");
       getActivity().finish();
+      HeartBeatHelper.getInstance().stop();
       goActivity(LoginActivity.class);
     } else if (id == R.id.tv_huafei) {
       loadHuaFei();

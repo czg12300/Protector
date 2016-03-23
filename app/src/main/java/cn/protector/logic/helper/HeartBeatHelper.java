@@ -35,4 +35,8 @@ public class HeartBeatHelper {
         Intent it = new Intent(mContext, HeartBeatService.class);
         mContext.startService(it);
     }
+    public void stop() {
+        Intent it = new Intent(mContext, HeartBeatService.class);
+        mContext.stopService(it);
+    }
 }
