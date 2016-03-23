@@ -69,6 +69,8 @@ public class NavigateActivity extends CommonTitleActivity
 
     private LatLonPoint mEndPoint;// 终点，
 
+    private int clickId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +87,7 @@ public class NavigateActivity extends CommonTitleActivity
         mAMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 18.5f));
                 marker.showInfoWindow();
                 return false;
             }
@@ -110,7 +113,6 @@ public class NavigateActivity extends CommonTitleActivity
         findViewById(R.id.btn_walk).setOnClickListener(this);
     }
 
-
     private void update(String address) {
         NowDeviceInfoResponse info = DeviceInfoHelper.getInstance().getNowDeviceInfo();
         if (info != null && !TextUtils.isEmpty(info.getAddress())) {
@@ -125,7 +127,12 @@ public class NavigateActivity extends CommonTitleActivity
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        onClick(id);
+    }
+
+    private void onClick(int id) {
         if (id == R.id.btn_drive) {
+            clickId = R.id.btn_drive;
             // 驾车路径规划
             RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(
                     new RouteSearch.FromAndTo(mStartPoint, mEndPoint), RouteSearch.DrivingDefault,
@@ -133,6 +140,7 @@ public class NavigateActivity extends CommonTitleActivity
             mRouteSearch.calculateDriveRouteAsyn(query);// 异步路径规划驾车模式查询
 
         } else if (id == R.id.btn_walk) {
+            clickId = R.id.btn_walk;
             RouteSearch.WalkRouteQuery query = new RouteSearch.WalkRouteQuery(
                     new RouteSearch.FromAndTo(mStartPoint, mEndPoint), RouteSearch.WalkDefault);
             mRouteSearch.calculateWalkRouteAsyn(query);// 异步路径规划步行模式查询
@@ -141,7 +149,6 @@ public class NavigateActivity extends CommonTitleActivity
             startLocate();
         }
     }
-
 
     /**
      * 设置一些amap的属性
@@ -175,15 +182,19 @@ public class NavigateActivity extends CommonTitleActivity
         if (mOnLocationChangedListener != null && aLocation != null) {
             mStartPoint = new LatLonPoint(aLocation.getLatitude(), aLocation.getLongitude());
             update(aLocation.getAddress());
-            mOnLocationChangedListener.onLocationChanged(aLocation);// 显示系统小蓝点
-            mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
-            LatLng latLng = new LatLng(aLocation.getLatitude(), aLocation.getLongitude());
-            mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f));
-
+            if (clickId == -1) {
+                mOnLocationChangedListener.onLocationChanged(aLocation);// 显示系统小蓝点
+                mAMap.setMyLocationRotateAngle(mAMap.getCameraPosition().bearing);// 设置小蓝点旋转角度
+                LatLng latLng = new LatLng(aLocation.getLatitude(), aLocation.getLongitude());
+                mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f));
+            } else {
+                onClick(clickId);
+            }
         } else {
             ToastUtil.show("定位失败");
         }
     }
+
     /**
      * 开始定位
      */
@@ -250,50 +261,50 @@ public class NavigateActivity extends CommonTitleActivity
     @Override
     public void onDriveRouteSearched(DriveRouteResult result, int errorCode) {
         mAMap.clear();// 清理地图上的所有覆盖物
-//        if (errorCode == 1000) {
-            if (result != null && result.getPaths() != null) {
-                if (result.getPaths().size() > 0) {
-                    final DrivePath drivePath = result.getPaths().get(0);
-                    DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, mAMap,
-                            drivePath, result.getStartPos(), result.getTargetPos());
-                    drivingRouteOverlay.removeFromMap();
-                    drivingRouteOverlay.addToMap();
-                    drivingRouteOverlay.zoomToSpan();
-                } else if (result != null && result.getPaths() == null) {
-                    ToastUtil.show("查询没有结果");
-                }
-
-            } else {
+        // if (errorCode == 1000) {
+        if (result != null && result.getPaths() != null) {
+            if (result.getPaths().size() > 0) {
+                final DrivePath drivePath = result.getPaths().get(0);
+                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, mAMap,
+                        drivePath, result.getStartPos(), result.getTargetPos());
+                drivingRouteOverlay.removeFromMap();
+                drivingRouteOverlay.addToMap();
+                drivingRouteOverlay.zoomToSpan();
+            } else if (result != null && result.getPaths() == null) {
                 ToastUtil.show("查询没有结果");
             }
-//        } else {
-//            ToastUtil.showError();
-//        }
+
+        } else {
+            ToastUtil.show("查询没有结果");
+        }
+        // } else {
+        // ToastUtil.showError();
+        // }
 
     }
 
     @Override
     public void onWalkRouteSearched(WalkRouteResult result, int errorCode) {
         mAMap.clear();// 清理地图上的所有覆盖物
-//        if (errorCode == 1000) {
-            if (result != null && result.getPaths() != null) {
-                if (result.getPaths().size() > 0) {
-                    final WalkPath walkPath = result.getPaths().get(0);
-                    WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(this, mAMap, walkPath,
-                            result.getStartPos(), result.getTargetPos());
-                    walkRouteOverlay.removeFromMap();
-                    walkRouteOverlay.addToMap();
-                    walkRouteOverlay.zoomToSpan();
-                } else if (result != null && result.getPaths() == null) {
-                    ToastUtil.show("查询没有结果");
-                }
-
-            } else {
+        // if (errorCode == 1000) {
+        if (result != null && result.getPaths() != null) {
+            if (result.getPaths().size() > 0) {
+                final WalkPath walkPath = result.getPaths().get(0);
+                WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(this, mAMap, walkPath,
+                        result.getStartPos(), result.getTargetPos());
+                walkRouteOverlay.removeFromMap();
+                walkRouteOverlay.addToMap();
+                walkRouteOverlay.zoomToSpan();
+            } else if (result != null && result.getPaths() == null) {
                 ToastUtil.show("查询没有结果");
             }
-//        } else {
-//            ToastUtil.showError();
-//        }
+
+        } else {
+            ToastUtil.show("查询没有结果");
+        }
+        // } else {
+        // ToastUtil.showError();
+        // }
     }
 
     @Override

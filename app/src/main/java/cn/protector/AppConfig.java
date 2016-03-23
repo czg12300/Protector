@@ -13,7 +13,7 @@ public class AppConfig {
     /**
      * 当前运行版本是否为测试包
      */
-    public static final boolean isDebug = true;
+    public static final boolean isDebug = false;
 
     /**
      * 测试服务器地址
