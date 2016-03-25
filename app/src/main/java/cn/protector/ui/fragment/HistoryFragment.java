@@ -3,6 +3,13 @@ package cn.protector.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
@@ -28,7 +35,6 @@ import java.util.List;
 
 import cn.common.AppException;
 import cn.common.ui.fragment.BaseWorkerFragment;
-import cn.common.utils.BitmapUtil;
 import cn.protector.AppConfig;
 import cn.protector.R;
 import cn.protector.logic.data.BroadcastActions;
@@ -89,10 +95,10 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
     public void initView() {
         mStatusView = new StatusView(getActivity());
         mStatusView.setContentView(R.layout.fragment_history);
-        LinearLayout layout=new LinearLayout(getActivity());
+        LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.addView(inflate(R.layout.title_main));
-        layout.addView(mStatusView,new LinearLayout.LayoutParams(-1,-1));
+        layout.addView(mStatusView, new LinearLayout.LayoutParams(-1, -1));
         setContentView(layout);
         mMapView = (MapView) findViewById(R.id.mv_map);
         mTvTime = (TextView) findViewById(R.id.tv_time_tip);
@@ -190,12 +196,15 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
         mAMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if (marker.isInfoWindowShown()) {
-                    marker.hideInfoWindow();
-                } else {
-                    marker.showInfoWindow();
-                }
-                return true;
+                mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 18.5f));
+                marker.showInfoWindow();
+                return false;
+            }
+        });
+        mAMap.setOnInfoWindowClickListener(new AMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                marker.hideInfoWindow();
             }
         });
     }
@@ -344,11 +353,19 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
                     } else {
 
                         if (pointInfo.getPosiMode() > 0) {
-                            options.icon(BitmapDescriptorFactory.fromBitmap(
-                                    BitmapUtil.decodeResource(R.drawable.map_dot_green)));
+                            try {
+                                options.icon(BitmapDescriptorFactory.fromBitmap(
+                                        drawTextToBitmap(R.drawable.map_dot_green, "" + i)));
+                            } catch (Exception e) {
+                            } catch (Error error) {
+                            }
                         } else {
-                            options.icon(BitmapDescriptorFactory.fromBitmap(
-                                    BitmapUtil.decodeResource(R.drawable.map_dot_blue)));
+                            try {
+                                options.icon(BitmapDescriptorFactory.fromBitmap(
+                                        drawTextToBitmap(R.drawable.map_dot_blue, "" + i)));
+                            } catch (Exception e) {
+                            } catch (Error error) {
+                            }
                         }
                         String title = "经过\n时间：" + pointInfo.getStartTime() + "至"
                                 + pointInfo.getEndTime();
@@ -381,6 +398,60 @@ public class HistoryFragment extends BaseWorkerFragment implements View.OnClickL
             mAMap.addPolyline(options);
             mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngs.get(list.size() - 1), ZOOM));
         }
+    }
+
+    private Bitmap scaleWithWH(Bitmap src, double w, double h) {
+        if (w == 0 || h == 0 || src == null) {
+            return src;
+        } else {
+            // 记录src的宽高
+            int width = src.getWidth();
+            int height = src.getHeight();
+            // 创建一个matrix容器
+            Matrix matrix = new Matrix();
+            // 计算缩放比例
+            float scaleWidth = (float) (w / width);
+            float scaleHeight = (float) (h / height);
+            // 开始缩放
+            matrix.postScale(scaleWidth, scaleHeight);
+            // 创建缩放后的图片
+            return Bitmap.createBitmap(src, 0, 0, width, height, matrix, true);
+        }
+    }
+
+    private Bitmap drawTextToBitmap(int resId, String text) {
+        Resources resources = getResources();
+        float scale = resources.getDisplayMetrics().density;
+        Bitmap bitmap = BitmapFactory.decodeResource(resources, resId);
+
+        bitmap = scaleWithWH(bitmap, 30 * scale, 35 * scale);
+
+        android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
+
+        // set default bitmap config if none
+        if (bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        // resource bitmaps are imutable,
+        // so we need to convert it to mutable one
+        bitmap = bitmap.copy(bitmapConfig, true);
+        Canvas canvas = new Canvas(bitmap);
+        // new antialised Paint
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        // text color - #3D3D3D
+        paint.setColor(Color.WHITE);
+        float textSize = bitmap.getWidth() / text.length();
+        if (text.length() < 2) {
+            textSize = bitmap.getWidth() / 2;
+        }
+        // TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,25,getResources().getDisplayMetrics())
+        paint.setTextSize(textSize);
+        paint.setDither(true); // 获取跟清晰的图像采样
+        paint.setFilterBitmap(true);// 过滤一些
+        int textW = (int) paint.measureText(text) / 2;
+        canvas.drawText(text, bitmap.getWidth() / 2 - textW,
+                bitmap.getHeight() / 2 + textSize / 2 - 2 * scale, paint);
+        return bitmap;
     }
 
     private ArrayList<LatLng> getLatlngListByPointList(ArrayList<PointInfo> list) {
