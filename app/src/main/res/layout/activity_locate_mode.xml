@@ -75,7 +75,7 @@
             android:layout_marginTop="10dp"
             android:button="@drawable/rb_selector_check"
             android:paddingLeft="10dp"
-            android:text="跟踪模式"
+            android:text="旅游模式"
             android:textColor="@color/black_363636"
             android:textSize="18dp"/>
 

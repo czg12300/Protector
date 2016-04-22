@@ -140,7 +140,7 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
         setRadioEnable(false);
         int checkedId = radioGroup.getCheckedRadioButtonId();
         if (checkedId == R.id.rb_follow) {
-            rbFollow.setText(Html.fromHtml("跟踪模式  <font color=\"#ff5b5b\">    切换中</font>"));
+            rbFollow.setText(Html.fromHtml("旅游模式  <font color=\"#ff5b5b\">    切换中</font>"));
         } else if (checkedId == R.id.rb_save) {
             rbSave.setText(Html.fromHtml("省电模式  <font color=\"#ff5b5b\">     切换中</font>"));
         } else if (checkedId == R.id.rb_normal) {
@@ -151,7 +151,7 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
 
     private void resetModeSelected() {
         radioGroup.setEnabled(true);
-        rbFollow.setText("跟踪模式");
+        rbFollow.setText("旅游模式");
         rbSave.setText("省电模式");
         rbNormal.setText("正常模式");
     }
@@ -288,7 +288,7 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
                         radioGroup.check(R.id.rb_normal);
                         break;
                     case ModeStateResponse.MODE_FOLLOW:
-                        tvMode.setText("跟踪模式");
+                        tvMode.setText("旅游模式");
                         radioGroup.check(R.id.rb_follow);
                         break;
                 }
@@ -306,7 +306,7 @@ public class LocateModeActivity extends CommonTitleActivity implements View.OnCl
                             break;
                         case ModeStateResponse.MODE_FOLLOW:
                             rbFollow.setText(
-                                    Html.fromHtml("跟踪模式  <font color=\"#ff5b5b\">    切换中</font>"));
+                                    Html.fromHtml("旅游模式  <font color=\"#ff5b5b\">    切换中</font>"));
                             radioGroup.check(R.id.rb_follow);
                             break;
                     }
