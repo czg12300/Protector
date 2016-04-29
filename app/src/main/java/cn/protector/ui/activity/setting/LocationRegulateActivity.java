@@ -25,10 +25,12 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import cn.common.AppException;
 import cn.protector.AppConfig;
 import cn.protector.R;
+import cn.protector.logic.data.BroadcastActions;
 import cn.protector.logic.data.InitSharedData;
 import cn.protector.logic.helper.DeviceInfoHelper;
 import cn.protector.logic.http.HttpRequest;
 import cn.protector.logic.http.response.CommonResponse;
+import cn.protector.logic.http.response.LocateInfoResponse;
 import cn.protector.logic.http.response.NowDeviceInfoResponse;
 import cn.protector.ui.activity.CommonTitleActivity;
 import cn.protector.ui.helper.TipDialogHelper;
@@ -40,9 +42,16 @@ import cn.protector.utils.ToastUtil;
  * @author jake
  * @since 2015/9/21 23:15
  */
-public class LocationRegulateActivity extends CommonTitleActivity implements GeocodeSearch.OnGeocodeSearchListener {
+public class LocationRegulateActivity extends CommonTitleActivity implements
+        GeocodeSearch.OnGeocodeSearchListener {
+    private static final int MSG_UI_GET_LOCATE = 1;
+
+    private static final int MSG_BACK_GET_LOCATE = 1;
+
     private static final int MSG_UI_SAVE = 0;
+
     private static final int MSG_BACK_SAVE = 0;
+
     private MapView mMapView;
 
     private TextView tvInfo;
@@ -50,28 +59,25 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
     private TextView tvAddress;
 
     private View mVBottom;
+
     private AMap mAMap;
+
     private NowDeviceInfoResponse mNowDeviceInfoResponse;
+
     private TipDialogHelper mTipDialogHelper;
+
     private LatLng mLatLng;
+
     private GeocodeSearch geocoderSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mNowDeviceInfoResponse = DeviceInfoHelper.getInstance().getNowDeviceInfo();
-        if (mNowDeviceInfoResponse == null) {
-            ToastUtil.show("初始化失败,请重试");
-            finish();
-        }
-
-        mLatLng = new LatLng(mNowDeviceInfoResponse.getLat(), mNowDeviceInfoResponse.getLon());
         super.onCreate(savedInstanceState);
         mMapView.onCreate(savedInstanceState);// 此方法必须重写
         if (mAMap == null) {
             mAMap = mMapView.getMap();
         }
         setSwipeBackEnable(false);
-
     }
 
     @Override
@@ -101,7 +107,8 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
         findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.equals(tvAddress.getText().toString().trim(), mNowDeviceInfoResponse.getAddress().trim())) {
+                if (!TextUtils.equals(tvAddress.getText().toString().trim(), mNowDeviceInfoResponse
+                        .getAddress().trim())) {
                     save();
                 } else {
                     ToastUtil.show("请长按头像，移动到想要修定的位置");
@@ -118,8 +125,7 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
     @Override
     protected void initData() {
         super.initData();
-        addMarker();
-        updateUi(mNowDeviceInfoResponse.getAddress());
+        sendEmptyBackgroundMessage(MSG_BACK_GET_LOCATE);
     }
 
     private void updateUi(String address) {
@@ -135,9 +141,11 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
         mAMap.clear();
         // 设置Marker的图标样式
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(DeviceInfoHelper.getInstance().getAvatar()));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(DeviceInfoHelper.getInstance()
+                .getAvatar()));
         // 设置Marker点击之后显示的标题
         markerOptions.title(mNowDeviceInfoResponse.getAddress());
+        markerOptions.anchor(0.5f, 0.5f);
         // 设置Marker的坐标，为我们点击地图的经纬度坐标
         markerOptions.position(mLatLng);
         // 设置Marker的可见性
@@ -147,8 +155,9 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
         // 将Marker添加到地图上去
         mAMap.addMarker(markerOptions).setObject(mNowDeviceInfoResponse);
         mAMap.addCircle(new CircleOptions().center(mLatLng)
-                .radius(mNowDeviceInfoResponse.getPosiPrecision()).strokeColor(getColor(R.color.blue_03a9f4)).fillColor(getColor(R.color.blue_3003a9f4))
-                .strokeWidth(6));
+                .radius(mNowDeviceInfoResponse.getPosiPrecision())
+                .strokeColor(getColor(R.color.blue_03a9f4))
+                .fillColor(getColor(R.color.blue_3003a9f4)).strokeWidth(6));
         mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 18.5f));
         mAMap.setOnMarkerDragListener(new AMap.OnMarkerDragListener() {
             @Override
@@ -165,7 +174,8 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
             public void onMarkerDragEnd(Marker marker) {
                 mLatLng = marker.getPosition();
                 LatLonPoint point = new LatLonPoint(mLatLng.latitude, mLatLng.longitude);
-                geocoderSearch.getFromLocationAsyn(new RegeocodeQuery(point, 200, GeocodeSearch.AMAP));
+                geocoderSearch.getFromLocationAsyn(new RegeocodeQuery(point, 200,
+                        GeocodeSearch.AMAP));
             }
         });
     }
@@ -177,11 +187,32 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
             case MSG_BACK_SAVE:
                 saveTask();
                 break;
+            case MSG_BACK_GET_LOCATE:
+                getLocateTask();
+                break;
         }
     }
 
+    private void getLocateTask() {
+        HttpRequest<LocateInfoResponse> request = new HttpRequest<>(AppConfig.GET_POSITIONDATA,
+                LocateInfoResponse.class);
+        request.addParam("uc", InitSharedData.getUserCode());
+        if (DeviceInfoHelper.getInstance().getPositionDeviceInfo() != null) {
+            request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
+        }
+        Message message = obtainUiMessage();
+        message.what = MSG_UI_GET_LOCATE;
+        try {
+            message.obj = request.request();
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+        message.sendToTarget();
+    }
+
     private void saveTask() {
-        HttpRequest<CommonResponse> request = new HttpRequest<>(AppConfig.SET_POSITIONCORRECT, CommonResponse.class);
+        HttpRequest<CommonResponse> request = new HttpRequest<>(AppConfig.SET_POSITIONCORRECT,
+                CommonResponse.class);
         if (!TextUtils.isEmpty(InitSharedData.getUserCode())) {
             request.addParam("uc", InitSharedData.getUserCode());
         }
@@ -189,8 +220,8 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
             request.addParam("eid", DeviceInfoHelper.getInstance().getPositionDeviceInfo().geteId());
         }
         request.addParam("dataid", mNowDeviceInfoResponse.getId() + "");
-        request.addParam("lat", ""+mLatLng.latitude);
-        request.addParam("lon", ""+mLatLng.longitude);
+        request.addParam("lat", "" + mLatLng.latitude);
+        request.addParam("lon", "" + mLatLng.longitude);
         Message message = obtainUiMessage();
         message.what = MSG_UI_SAVE;
         try {
@@ -205,6 +236,9 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
     public void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         switch (msg.what) {
+            case MSG_UI_GET_LOCATE:
+                handleGetLocate(msg.obj != null ? (LocateInfoResponse) msg.obj : null);
+                break;
             case MSG_UI_SAVE:
                 if (mTipDialogHelper != null) {
                     mTipDialogHelper.hideDialog();
@@ -226,6 +260,29 @@ public class LocationRegulateActivity extends CommonTitleActivity implements Geo
                 }
                 break;
         }
+    }
+
+    private void handleGetLocate(LocateInfoResponse response) {
+        NowDeviceInfoResponse info = DeviceInfoHelper.getInstance().getNowDeviceInfo();
+        if (info == null) {
+            ToastUtil.show("初始化失败,请重试");
+            finish();
+            return;
+        }
+        if (response.getLat() > 0) {
+            info.setLat(response.getLat());
+        }
+        if (response.getLon() > 0) {
+            info.setLon(response.getLon());
+        }
+        if (!TextUtils.isEmpty(response.getAddress())) {
+            info.setAddress(response.getAddress());
+        }
+        mNowDeviceInfoResponse=info;
+        sendBroadcast(BroadcastActions.ACTION_UPDATE_POSITION_DEVICE_INFO);
+        mLatLng = new LatLng(response.getLat(), response.getLon());
+        addMarker();
+        updateUi(mNowDeviceInfoResponse.getAddress());
     }
 
     @Override

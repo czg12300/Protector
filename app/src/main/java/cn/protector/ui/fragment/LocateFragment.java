@@ -130,7 +130,7 @@ public class LocateFragment extends BaseWorkerFragment
     private ImageView ivRefresh;
 
     private RotateAnimation reFreshAnimation;
-
+private ImageButton ibLocate;
     public static LocateFragment newInstance() {
         return new LocateFragment();
     }
@@ -149,6 +149,7 @@ public class LocateFragment extends BaseWorkerFragment
         mIbStep = (ImageButton) findViewById(R.id.ib_steps);
         ivRefresh = (ImageView) findViewById(R.id.iv_right);
         mMapView = (MapView) findViewById(R.id.mv_map);
+        ibLocate = (ImageButton) findViewById(R.id.ib_locate);
         mVBottom.setVisibility(View.GONE);
         mTitleHelper = new MainTitleHelper(findViewById(R.id.fl_title),
                 MainTitleHelper.STYLE_LOCATE);
@@ -210,7 +211,7 @@ public class LocateFragment extends BaseWorkerFragment
         findViewById(R.id.btn_navigate).setOnClickListener(this);
         findViewById(R.id.ib_maplisten).setOnClickListener(this);
         findViewById(R.id.ib_mobile).setOnClickListener(this);
-        findViewById(R.id.ib_locate).setOnClickListener(this);
+        ibLocate.setOnClickListener(this);
         findViewById(R.id.ib_minus).setOnClickListener(this);
         findViewById(R.id.ib_plus).setOnClickListener(this);
         findViewById(R.id.ib_locate).setOnClickListener(this);
@@ -369,19 +370,19 @@ public class LocateFragment extends BaseWorkerFragment
                     vTopTip.setVisibility(View.VISIBLE);
                 }
                 if (type == 4) {
-                    locateTimer = new CountDownTimer(60 * 1000L, 1000L) {
+                    locateTimer = new CountDownTimer(2*60 * 1000L, 1000L) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             long time = millisUntilFinished / 1000;
-                            if (time < 20) {
+                            if (time <  2*20) {
                                 if (tvTip != null) {
                                     tvTip.setText("正在上传信息");
                                 }
-                            } else if (time < 40) {
+                            } else if (time <  2*40) {
                                 if (tvTip != null) {
                                     tvTip.setText("正在收集定位信息");
                                 }
-                            } else if (time < 60) {
+                            } else if (time < 2*60) {
                                 if (tvTip != null) {
                                     tvTip.setText("正在呼叫设备");
                                 }
@@ -394,6 +395,7 @@ public class LocateFragment extends BaseWorkerFragment
 
                         @Override
                         public void onFinish() {
+                            ibLocate.setEnabled(true);
                             if (tvTip != null) {
                                 tvTip.setText("获取失败，请重试");
                             }
@@ -405,6 +407,7 @@ public class LocateFragment extends BaseWorkerFragment
                         }
                     };
                     locateTimer.start();
+                    ibLocate.setEnabled(false);
                 } else if (type == 5) {
                     locateTimer = new CountDownTimer(20 * 1000L, 1000L) {
                         @Override
@@ -433,9 +436,11 @@ public class LocateFragment extends BaseWorkerFragment
                                 tvCountdown.setText("");
                             }
                             sendEmptyUiMessageDelayed(MSG_UI_HIDE_TOPTIP, 500);
+                            ibLocate.setEnabled(true);
                         }
                     };
                     locateTimer.start();
+                    ibLocate.setEnabled(false);
                 }
             } else {
                 ToastUtil.show("定位失败");
